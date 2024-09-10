@@ -23,7 +23,8 @@
     "baseUrl": ".",
     "paths": {
       "@scripts/*": ["src/scripts/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+      "@game/*": ["src/scripts/game/*"],
     }
   },
   "include": ["src/**/*"]

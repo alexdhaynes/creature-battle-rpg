@@ -18,3 +18,16 @@ export const sceneList: SceneList = [
     scene: BattleScene,
   },
 ];
+
+// Eventually move this to a specific battleSceneData file
+export enum BattleMenuOptions {
+  FIGHT = "FIGHT",
+  SWITCH = "SWITCH",
+  ITEM = "ITEM",
+  FLEE = "FLEE",
+}
+
+export const battleUITextStyle = {
+  color: "black",
+  fontSize: "30px",
+};

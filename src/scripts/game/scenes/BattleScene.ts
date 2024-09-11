@@ -1,5 +1,9 @@
 import { BaseScene } from "@scripts/game/scenes/BaseScene";
-import { SceneKeys } from "@game/scenes/sceneData";
+import {
+  BattleMenuOptions,
+  SceneKeys,
+  battleUITextStyle,
+} from "@game/scenes/sceneData";
 import {
   BattleAssetKeys,
   BattleBackgroundAssetKeys,
@@ -100,7 +104,30 @@ export class BattleScene extends BaseScene {
         fontStyle: "italic",
       }),
     ]);
-  }
+
+    // render the main info pane (a wrapper for the subpage)
+    this.#createMainInfoPane();
+    // render the sub pane
+    // Battle actions menu
+    // Displays on the right
+    this.add.container(520, 448, [
+      this.#createMainInfoSubPane(),
+      this.add.text(55, 22, BattleMenuOptions.FIGHT, battleUITextStyle),
+      this.add.text(240, 22, BattleMenuOptions.SWITCH, battleUITextStyle),
+      this.add.text(55, 70, BattleMenuOptions.ITEM, battleUITextStyle),
+      this.add.text(240, 70, BattleMenuOptions.FLEE, battleUITextStyle),
+    ]);
+
+    // Contextual menu depending on which battle action has been chosen
+    // Displays on the left
+    // When "Fight" option is chosen, display  available attacks
+    this.add.container(0, 448, [
+      this.add.text(55, 22, "slash", battleUITextStyle),
+      this.add.text(240, 22, "growl", battleUITextStyle),
+      this.add.text(55, 70, "-", battleUITextStyle),
+      this.add.text(240, 70, "-", battleUITextStyle),
+    ]);
+  } //end create()
 
   // private method to generate the health bar
   #createHealthBar(x: number, y: number) {
@@ -123,5 +150,32 @@ export class BattleScene extends BaseScene {
       .setScale(1, scaleY);
 
     return this.add.container(x, y, [leftCap, middle, rightCap]);
+  }
+
+  #createMainInfoPane() {
+    const rectHeight = 124;
+    const padding = 4;
+
+    this.add
+      .rectangle(
+        padding, //x
+        this.scale.height - rectHeight - padding, // y
+        this.scale.width - padding * 2, //width
+        rectHeight, //height
+        0xede4f3, //fil
+        1
+      )
+      .setOrigin(0)
+      .setStrokeStyle(8, 0x382350, 1);
+  }
+
+  #createMainInfoSubPane() {
+    const rectWidth = 500;
+    const rectHeight = 124;
+
+    return this.add
+      .rectangle(0, 0, rectWidth, rectHeight, 0xede4f3, 1)
+      .setOrigin(0)
+      .setStrokeStyle(8, 0x905ac2, 1);
   }
 }

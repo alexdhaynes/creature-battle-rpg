@@ -60,6 +60,24 @@ export class BattleScene extends BaseScene {
         this.#cursorKeys?.shift
       );
 
+      // Listen for *single* down key press
+      const wasDownPressed = Phaser.Input.Keyboard.JustDown(
+        this.#cursorKeys.down
+      );
+
+      // Listen for *single* up key press
+      const wasUpPressed = Phaser.Input.Keyboard.JustDown(this.#cursorKeys.up);
+
+      // Listen for *single* left key press
+      const wasLeftPressed = Phaser.Input.Keyboard.JustDown(
+        this.#cursorKeys.left
+      );
+
+      // Listen for *single* right key press
+      const wasRightPressed = Phaser.Input.Keyboard.JustDown(
+        this.#cursorKeys.right
+      );
+
       if (wasSpaceKeyPressed) {
         this.#battleMenu.handlePlayerInput(GameActions.OK);
         return;
@@ -69,8 +87,23 @@ export class BattleScene extends BaseScene {
         this.#battleMenu.handlePlayerInput(GameActions.CANCEL);
         return;
       }
+
+      if (wasDownPressed) {
+        this.#battleMenu.handlePlayerInput(Directions.DOWN);
+      }
+      if (wasUpPressed) {
+        this.#battleMenu.handlePlayerInput(Directions.UP);
+      }
+      if (wasLeftPressed) {
+        this.#battleMenu.handlePlayerInput(Directions.LEFT);
+      }
+      if (wasRightPressed) {
+        this.#battleMenu.handlePlayerInput(Directions.RIGHT);
+      }
     }
 
+    /*
+    // These listeners run as long as the key is pressed, rather than just once
     // Set direction based on the arrow key
     let selectedDirection: keyof typeof Directions = Directions.NONE;
 
@@ -80,13 +113,10 @@ export class BattleScene extends BaseScene {
       selectedDirection = Directions.RIGHT;
     } else if (this.#cursorKeys?.up.isDown) {
       selectedDirection = Directions.UP;
-    } else if (this.#cursorKeys?.down.isDown) {
-      selectedDirection = Directions.DOWN;
     }
-
-    // If a direction is currently selected, have the battle menu handle the player's input
     if (selectedDirection != Directions.NONE) {
       this.#battleMenu.handlePlayerInput(selectedDirection);
     }
+    */
   } //end update()
 }

@@ -4,6 +4,9 @@ import {
   battleMenuCursorInitialPosition,
   battleMenuItemCursorPositions,
   battleMenuItemNavigationPath,
+  AttackMenuOptions,
+  attackMenuItemNavigationPath,
+  attackMenuItemCursorPositions,
 } from "@game/battle/battleUIConstants";
 import {
   MonsterAssetKeys,
@@ -18,16 +21,19 @@ export class BattleMenu {
   #battleTextGameObjectLine1!: Phaser.GameObjects.Text;
   #battleTextGameObjectLine2!: Phaser.GameObjects.Text;
   #mainBattleMenuCursorPhaserImageGameObject!: Phaser.GameObjects.Image;
-  #selectedBattleMenuItem!: BattleMenuOptions;
+  #attackBattleMenuCursorPhaserImageGameObject!: Phaser.GameObjects.Image;
+  #selectedBattleMenuOption!: BattleMenuOptions;
+  #selectedAttackMenuOption!: AttackMenuOptions;
 
   constructor(scene: Phaser.Scene) {
     this.#scene = scene;
+    this.#selectedBattleMenuOption = BattleMenuOptions.DEFAULT; // initially selected battle menu action
+    this.#selectedAttackMenuOption = AttackMenuOptions.DEFAULT; // initially selected attack action
   }
 
   // Putting the class's initial states in a render method so I have more control over when to call these initial states
   // creates the main battle menu
   render() {
-    this.#selectedBattleMenuItem = BattleMenuOptions.DEFAULT; // initially selected battle action
     this.#createMainInfoPane();
     this.#createMainBattleMenuContainer();
     this.#createMonsterAttackSubMenuContainer();
@@ -48,7 +54,7 @@ export class BattleMenu {
       battleMenuCursorInitialPosition.y
     );
     // reset the initial battle action to default
-    this.#selectedBattleMenuItem = BattleMenuOptions.DEFAULT;
+    this.#selectedBattleMenuOption = BattleMenuOptions.DEFAULT;
   }
 
   // Hide the main battle menu
@@ -90,6 +96,8 @@ export class BattleMenu {
     if (Object.values(Directions).includes(input as Directions)) {
       this.#updateSelectedBattleMenuOptionFromInput(input);
       this.#moveMainBattleMenuCursor();
+      this.#updateSelectedAttackMenuOptionFromInput(input);
+      this.#moveAttackMenuCursor();
     }
   }
 
@@ -156,10 +164,20 @@ export class BattleMenu {
     this.hideMainBattleMenu();
   }
 
-  // Contextual menu depending on which battle action has been chosen
+  // Contextual submenu depending on which battle action has been chosen
   // Displays on the left in the main info wrapper pane
   // When "Fight" option is chosen, display  available attacks
   #createMonsterAttackSubMenuContainer() {
+    // create attack battle menu cursor
+    this.#attackBattleMenuCursorPhaserImageGameObject = this.#scene.add
+      .image(
+        battleMenuCursorInitialPosition.x,
+        battleMenuCursorInitialPosition.y,
+        UIAssetKeys.CURSOR,
+        0
+      )
+      .setOrigin(0.5)
+      .setScale(2.5);
     // Store container in a reference variable
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject =
       this.#scene.add.container(0, 448, [
@@ -167,6 +185,7 @@ export class BattleMenu {
         this.#scene.add.text(240, 22, "growl", battleUITextStyle),
         this.#scene.add.text(55, 70, "-", battleUITextStyle),
         this.#scene.add.text(240, 70, "-", battleUITextStyle),
+        this.#attackBattleMenuCursorPhaserImageGameObject,
       ]);
 
     this.hideMonsterAttackSubMenu();
@@ -206,27 +225,56 @@ export class BattleMenu {
   #updateSelectedBattleMenuOptionFromInput(direction: keyof typeof Directions) {
     // if a battle menu option is selected (which it always should be),
     // set the new battle menu option
-    const currentBattleMenuItemNavigationPath =
-      battleMenuItemNavigationPath[this.#selectedBattleMenuItem];
+    const currentBattleMenuOptionNavigationPath =
+      battleMenuItemNavigationPath[this.#selectedBattleMenuOption];
 
-    const newBattleMenuItemPath = currentBattleMenuItemNavigationPath
-      ? currentBattleMenuItemNavigationPath[direction]
+    const newBattleMenuOptionPath = currentBattleMenuOptionNavigationPath
+      ? currentBattleMenuOptionNavigationPath[direction]
       : undefined;
 
-    if (newBattleMenuItemPath) {
-      this.#selectedBattleMenuItem = newBattleMenuItemPath;
+    if (newBattleMenuOptionPath) {
+      this.#selectedBattleMenuOption = newBattleMenuOptionPath;
     }
   }
 
   // Move the cursor depending on the current selected battle menu option
   #moveMainBattleMenuCursor() {
     const newCursorX =
-      battleMenuItemCursorPositions[this.#selectedBattleMenuItem].cursorX;
+      battleMenuItemCursorPositions[this.#selectedBattleMenuOption].cursorX;
 
     const newCursorY =
-      battleMenuItemCursorPositions[this.#selectedBattleMenuItem].cursorY;
+      battleMenuItemCursorPositions[this.#selectedBattleMenuOption].cursorY;
 
     this.#mainBattleMenuCursorPhaserImageGameObject.setPosition(
+      newCursorX,
+      newCursorY
+    );
+  }
+
+  // Store the currently selected attack
+  #updateSelectedAttackMenuOptionFromInput(direction: keyof typeof Directions) {
+    // set the new attack menu option
+    const currentAttackMenuOptionNavigationPath =
+      attackMenuItemNavigationPath[this.#selectedAttackMenuOption];
+
+    const newAttackMenuOptionPath = currentAttackMenuOptionNavigationPath
+      ? currentAttackMenuOptionNavigationPath[direction]
+      : undefined;
+
+    if (newAttackMenuOptionPath) {
+      this.#selectedAttackMenuOption = newAttackMenuOptionPath;
+    }
+  }
+
+  // move the cursor on the attack menu
+  #moveAttackMenuCursor() {
+    const newCursorX =
+      attackMenuItemCursorPositions[this.#selectedAttackMenuOption].cursorX;
+
+    const newCursorY =
+      attackMenuItemCursorPositions[this.#selectedAttackMenuOption].cursorY;
+
+    this.#attackBattleMenuCursorPhaserImageGameObject.setPosition(
       newCursorX,
       newCursorY
     );

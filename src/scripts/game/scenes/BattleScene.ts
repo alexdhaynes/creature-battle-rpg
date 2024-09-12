@@ -1,5 +1,5 @@
 import { BaseScene } from "@game/scenes/BaseScene";
-import { SceneKeys } from "@game/scenes/sceneData";
+import { SceneKeys } from "@scripts/game/scenes/sceneConstants";
 import {
   BattleBackgroundAssetKeys,
   MonsterAssetKeys,

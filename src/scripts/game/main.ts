@@ -2,8 +2,8 @@
 
 import "@styles/index.css"; //import root css
 import Phaser, { Types as PhaserTypes } from "phaser"; // Import Phaser and types
-import { SceneKeys } from "@game/scenes/sceneData";
-import { sceneList } from "@game/scenes/sceneData";
+import { SceneKeys } from "@scripts/game/scenes/sceneConstants";
+import { sceneList } from "@scripts/game/scenes/sceneConstants";
 import { GAME_DIMENSIONS } from "@scripts/game/gameConstants";
 
 const config: PhaserTypes.Core.GameConfig = {

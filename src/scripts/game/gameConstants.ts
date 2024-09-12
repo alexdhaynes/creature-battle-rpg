@@ -6,3 +6,17 @@ export const GAME_DIMENSIONS = {
   height: 576,
 };
 export const GAME_CONTAINER_ID = "game-container";
+
+// Directions
+export enum Directions {
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
+  UP = "UP",
+  DOWN = "DOWN",
+  NONE = "NONE",
+}
+
+export enum GameActions {
+  OK = "OK",
+  CANCEL = "CANCEL",
+}

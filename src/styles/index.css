@@ -18,6 +18,20 @@ a:hover {
   color: #535bf2;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  margin: 0;
+}
+
+html {
+  overflow-x: hidden;
+}
+
 body {
   width: 100vw;
   height: 100vh;
@@ -37,7 +51,6 @@ body {
   }
 }
 
-
 .game-wrapper {
   width: 100%;
   height: 100%;
@@ -51,12 +64,11 @@ body {
   width: 100%;
   max-width: 1024px;
   aspect-ratio: 16/9;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
   position: relative;
-  
 }
 
 /* Lg Screen Media Query */
 @media screen and (min-width: 960px) {
- 
 }

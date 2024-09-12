@@ -1,6 +1,9 @@
-import type { AssetList } from "@scripts/game/assets/types";
+import type { AssetList } from "@game/assets/types";
 
-import { KENNEYS_ASSET_PATH, MONSTER_TAMER_ASSET_PATH } from "@game/constants";
+import {
+  KENNEYS_ASSET_PATH,
+  MONSTER_TAMER_ASSET_PATH,
+} from "@scripts/game/gameConstants";
 
 export enum BattleBackgroundAssetKeys {
   FOREST = "FOREST",
@@ -21,6 +24,11 @@ export enum HealthBarAssetKeys {
   MIDDLE = "MIDDLE",
 }
 
+export enum UIAssetKeys {
+  CURSOR = "CURSOR",
+}
+
+// The grand list of game assets
 export const assetList: AssetList = [
   // Backgrounds
   {
@@ -54,5 +62,10 @@ export const assetList: AssetList = [
   {
     key: MonsterAssetKeys.CARNODUSK,
     imagePath: `${MONSTER_TAMER_ASSET_PATH}/monsters/${MonsterAssetKeys.CARNODUSK.toLocaleLowerCase()}.png`,
+  },
+  // UI: cursor
+  {
+    key: UIAssetKeys.CURSOR,
+    imagePath: `${MONSTER_TAMER_ASSET_PATH}/ui/cursor.png`,
   },
 ];

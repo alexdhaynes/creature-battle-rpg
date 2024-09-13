@@ -49,56 +49,25 @@ export class BattleScene extends BaseScene {
 
   // Update lifecycle method (called every frame of the game)
   update() {
-    // If #cursorKeys are defined, listenfor keypresses
-    if (this.#cursorKeys) {
-      // Listen for *single* space key press
-      const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(
-        this.#cursorKeys.space
-      );
-      // Listen for *single* shift key press
-      const wasShiftKeyPressed = Phaser.Input.Keyboard.JustDown(
-        this.#cursorKeys?.shift
-      );
+    // If #cursorKeys are defined, exit
+    if (!this.#cursorKeys) return;
 
-      // Listen for *single* down key press
-      const wasDownPressed = Phaser.Input.Keyboard.JustDown(
-        this.#cursorKeys.down
-      );
+    // Mapping of key presses to actions
+    const keyPressActions = [
+      { keyboardKey: this.#cursorKeys.space, action: GameActions.OK },
+      { keyboardKey: this.#cursorKeys.shift, action: GameActions.CANCEL },
+      { keyboardKey: this.#cursorKeys.down, action: Directions.DOWN },
+      { keyboardKey: this.#cursorKeys.up, action: Directions.UP },
+      { keyboardKey: this.#cursorKeys.left, action: Directions.LEFT },
+      { keyboardKey: this.#cursorKeys.right, action: Directions.RIGHT },
+    ];
 
-      // Listen for *single* up key press
-      const wasUpPressed = Phaser.Input.Keyboard.JustDown(this.#cursorKeys.up);
-
-      // Listen for *single* left key press
-      const wasLeftPressed = Phaser.Input.Keyboard.JustDown(
-        this.#cursorKeys.left
-      );
-
-      // Listen for *single* right key press
-      const wasRightPressed = Phaser.Input.Keyboard.JustDown(
-        this.#cursorKeys.right
-      );
-
-      if (wasSpaceKeyPressed) {
-        this.#battleMenu.handlePlayerInput(GameActions.OK);
+    // Iterate over the mapping and handle the first key press
+    for (const { keyboardKey, action } of keyPressActions) {
+      // JustDown is called only once per key press
+      if (Phaser.Input.Keyboard.JustDown(keyboardKey)) {
+        this.#battleMenu.handlePlayerInput(action);
         return;
-      }
-
-      if (wasShiftKeyPressed) {
-        this.#battleMenu.handlePlayerInput(GameActions.CANCEL);
-        return;
-      }
-
-      if (wasDownPressed) {
-        this.#battleMenu.handlePlayerInput(Directions.DOWN);
-      }
-      if (wasUpPressed) {
-        this.#battleMenu.handlePlayerInput(Directions.UP);
-      }
-      if (wasLeftPressed) {
-        this.#battleMenu.handlePlayerInput(Directions.LEFT);
-      }
-      if (wasRightPressed) {
-        this.#battleMenu.handlePlayerInput(Directions.RIGHT);
       }
     }
 

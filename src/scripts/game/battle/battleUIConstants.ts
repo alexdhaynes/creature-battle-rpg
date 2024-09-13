@@ -21,6 +21,15 @@ export enum AttackMenuOptions {
   MOVE_4 = "MOVE_4",
 }
 
+export enum BattleMenuStates {
+  DEFAULT = "BATTLE_MAIN",
+  BATTLE_MAIN = "BATTLE_MAIN",
+  BATTLE_SELECT_MOVE = "BATTLE_SELECT_MOVE",
+  BATTLE_ITEM = "BATTLE_ITEM",
+  BATTLE_SWITCH = "BATTLE_SWITCH",
+  BATTLE_FLEE = "BATTLE_FLEE",
+}
+
 export const battleMenuCursorInitialPosition = {
   x: 42,
   y: 38,
@@ -102,8 +111,21 @@ export const battleMenuItemNavigationPath: TBattleMenuOptionNavigationPath = {
   },
 };
 
+// the type that stores the mapping between a direction
+// and the corresponding attack menu option
+export type TAttackMenuNavigationOptionsByDirection = Partial<
+  Record<Directions, AttackMenuOptions>
+>;
+
+// the type that stores the mapping between an attack menu option
+// and the navigation paths available to it
+export type TAttackMenuOptionNavigationPath = Record<
+  AttackMenuOptions,
+  TAttackMenuNavigationOptionsByDirection
+>;
+
 // The action to which the cursor can move on the Attack Menu
-export const attackMenuItemNavigationPath = {
+export const attackMenuItemNavigationPath: TAttackMenuOptionNavigationPath = {
   // the action to which the cursor can move from "Fight"
   [AttackMenuOptions.MOVE_1]: {
     [Directions.RIGHT]: AttackMenuOptions.MOVE_2,
@@ -121,7 +143,7 @@ export const attackMenuItemNavigationPath = {
   },
   //the directions and actions the cursor can move from "Flee"
   [AttackMenuOptions.MOVE_4]: {
-    [Directions.LEFT]: AttackMenuOptions.MOVE_1,
+    [Directions.LEFT]: AttackMenuOptions.MOVE_3,
     [Directions.UP]: AttackMenuOptions.MOVE_2,
   },
 };

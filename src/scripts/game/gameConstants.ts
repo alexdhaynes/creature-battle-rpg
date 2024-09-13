@@ -20,3 +20,8 @@ export enum GameActions {
   OK = "OK",
   CANCEL = "CANCEL",
 }
+
+export interface KeyActionMap {
+  keyboardKey: string;
+  action: GameActions | Directions;
+}

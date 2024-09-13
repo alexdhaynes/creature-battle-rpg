@@ -7,6 +7,7 @@ import {
   AttackMenuOptions,
   attackMenuItemNavigationPath,
   attackMenuItemCursorPositions,
+  BattleMenuStates,
 } from "@game/battle/battleUIConstants";
 import {
   MonsterAssetKeys,
@@ -24,9 +25,11 @@ export class BattleMenu {
   #attackBattleMenuCursorPhaserImageGameObject!: Phaser.GameObjects.Image;
   #selectedBattleMenuOption!: BattleMenuOptions;
   #selectedAttackMenuOption!: AttackMenuOptions;
+  #currentBattleMenuState!: BattleMenuStates;
 
   constructor(scene: Phaser.Scene) {
     this.#scene = scene;
+    this.#currentBattleMenuState = BattleMenuStates.DEFAULT; // initial battle menu state
     this.#selectedBattleMenuOption = BattleMenuOptions.DEFAULT; // initially selected battle menu action
     this.#selectedAttackMenuOption = AttackMenuOptions.DEFAULT; // initially selected attack action
   }
@@ -41,6 +44,8 @@ export class BattleMenu {
 
   // Show the main battle menu
   showMainBattleMenu() {
+    // Update Battle Menu State
+    this.#currentBattleMenuState = BattleMenuStates.BATTLE_MAIN;
     // update the battle text before showing the main battle menu
     this.#battleTextGameObjectLine1.setText("What should");
     this.#mainBattleMenuPhaserContainerGameObject.setAlpha(1);
@@ -66,6 +71,8 @@ export class BattleMenu {
   }
   // Show the main battle menu
   showMonsterAttackSubMenu() {
+    // Update Battle Menu State
+    this.#currentBattleMenuState = BattleMenuStates.BATTLE_SELECT_MOVE;
     this.#moveSelectionSubBattleMenuPhaserContainerGameObject.setAlpha(1);
   }
 
@@ -239,6 +246,9 @@ export class BattleMenu {
 
   // Move the cursor depending on the current selected battle menu option
   #moveMainBattleMenuCursor() {
+    // only move the cursor if we are in the Battle Main state
+    if (this.#currentBattleMenuState !== BattleMenuStates.BATTLE_MAIN) return;
+
     const newCursorX =
       battleMenuItemCursorPositions[this.#selectedBattleMenuOption].cursorX;
 
@@ -268,6 +278,10 @@ export class BattleMenu {
 
   // move the cursor on the attack menu
   #moveAttackMenuCursor() {
+    // only move the cursor if we are in the Battle Main state
+    if (this.#currentBattleMenuState !== BattleMenuStates.BATTLE_SELECT_MOVE)
+      return;
+
     const newCursorX =
       attackMenuItemCursorPositions[this.#selectedAttackMenuOption].cursorX;
 

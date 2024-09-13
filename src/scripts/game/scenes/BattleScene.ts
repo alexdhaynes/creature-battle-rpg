@@ -35,13 +35,13 @@ export class BattleScene extends BaseScene {
 
     // instantiate then render the player health status container
     this.#healthStatus = new HealthStatus(this);
-    this.#healthStatus.render();
+    this.#healthStatus.init();
 
     // instantiate then render the main info and sub info pane
     this.#battleMenu = new BattleMenu(this);
-    this.#battleMenu.render();
+    this.#battleMenu.init();
     // Show the main battle menu
-    this.#battleMenu.showMainBattleMenu();
+    this.#battleMenu.showMainMenu();
 
     // Create hotkeys for keyboard input
     this.#cursorKeys = this.input.keyboard?.createCursorKeys();

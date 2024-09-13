@@ -15,6 +15,12 @@ import {
 } from "@scripts/game/assets/assetConstants";
 import { Directions, GameActions } from "@scripts/game/gameConstants";
 
+import {
+  BattleMenuStateMachine,
+  BattleMenuTriggers,
+  BattleMenuStates as BattleMenuStatesNew,
+} from "@game/battle/battleStateMachine";
+
 export class BattleMenu {
   #scene: Phaser.Scene;
   #mainBattleMenuPhaserContainerGameObject!: Phaser.GameObjects.Container;
@@ -40,6 +46,16 @@ export class BattleMenu {
     this.#createMainInfoPane();
     this.#createMainBattleMenuContainer();
     this.#createMonsterAttackSubMenuContainer();
+
+    // test state machine
+    // Example Usage
+    const battleMenuStateMachine = new BattleMenuStateMachine(
+      BattleMenuStatesNew.Main
+    );
+
+    battleMenuStateMachine.transition(BattleMenuTriggers.SelectMenuItemFight);
+    battleMenuStateMachine.transition(BattleMenuTriggers.SelectAttack1);
+    battleMenuStateMachine.transition(BattleMenuTriggers.Timeout);
   }
 
   // Show the main battle menu

@@ -17,7 +17,7 @@ export class HealthStatus {
 
   // A render method
   // creates the player and enemy health status containers
-  render() {
+  init() {
     this.#createPlayerHealthStatusContainer();
     this.#createEnemyHealthStatusContainer();
   }

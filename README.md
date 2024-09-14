@@ -20,6 +20,7 @@ _Demo coming soon._
 - **[Phaser 3](https://github.com/photonstorm/phaser)**: A 2D game framework for handling game logic and rendering.
 - **TypeScript**
 - **Vite**: Build tool for fast development and bundling.
+- **PostCSS**: CSS processor
 - **React** _(upcoming)_: Will be used for the outer website surrounding the game.
 
 ## 💻 Commands

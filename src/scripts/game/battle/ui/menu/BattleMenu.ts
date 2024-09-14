@@ -1,6 +1,4 @@
 import {
-  battleUITextStyle,
-  BattleMenuOptionLabels,
   battleMenuCursorInitialPosition,
   battleMenu2x2CursorPositions,
   battleMenuNavigationMap,
@@ -8,16 +6,19 @@ import {
   battleMainMenu2x2Grid,
   battleAttackMenu2x2Grid,
 } from "@game/battle/battleUIConstants";
-import {
-  MonsterAssetKeys,
-  UIAssetKeys,
-} from "@scripts/game/assets/assetConstants";
+
 import { Directions, GameActions } from "@scripts/game/gameConstants";
 
 import {
   BattleMenuStateMachine,
   BattleMenuStates,
-} from "@scripts/game/battle/BattleMenuStateMachine";
+} from "@game/battle/BattleMenuStateMachine";
+
+import {
+  createMainMenu,
+  createAttackMenu,
+  createMainInfoPane,
+} from "@game/battle/ui/menu/battleMenuGameObjects";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
@@ -45,12 +46,39 @@ export class BattleMenu {
     );
   }
 
-  // Putting the class's initial states in an init method so I have more control over when to call these initial states
+  // Putting the class's initial states in an init method
+  //so I have more control over when to call these initial states
   // Here, create the game objects and instantiate state machine
   init() {
-    this.#createMainInfoPane();
-    this.#createMainMenu();
-    this.#createAttackMenu();
+    // create the info pane
+    createMainInfoPane(this.#scene);
+
+    // create the main menu
+    const {
+      displayTextLine1,
+      displayTextLine2,
+      battleMenuCursor,
+      battleMenuMain,
+    } = createMainMenu(this.#scene);
+
+    // create the attack menu
+    const { attackMenuCursor, battleMenuAttack } = createAttackMenu(
+      this.#scene
+    );
+
+    this.#displayTextLine1 = displayTextLine1;
+    this.#displayTextLine2 = displayTextLine2;
+
+    this.#battleMenuMain = battleMenuMain;
+    this.#battleMenuAttack = battleMenuAttack;
+
+    this.#battleMenuCursor = battleMenuCursor;
+    this.#attackMenuCursor = attackMenuCursor;
+
+    // Hide the main menu initially
+    this.hideMainMenu();
+    this.hideAttackMenu();
+
     // initialize the state machine
     this.#stateMachine.currentState = BattleMenuStates.Main;
   }
@@ -149,125 +177,5 @@ export class BattleMenu {
   // Hide the main battle menu
   hideAttackMenu() {
     this.#battleMenuAttack.setAlpha(0);
-  }
-
-  // Create Main Menu
-  #createMainMenu() {
-    // battle menu display text object
-    this.#displayTextLine1 = this.#scene.add.text(
-      20,
-      468,
-      "What should",
-      battleUITextStyle
-    );
-    // battle menu display text object
-    this.#displayTextLine2 = this.#scene.add.text(
-      20,
-      512,
-      `${MonsterAssetKeys.IGUANIGNITE} do next?`,
-      battleUITextStyle
-    );
-
-    // cursor game object
-    this.#battleMenuCursor = this.#scene.add
-      .image(
-        battleMenuCursorInitialPosition.x,
-        battleMenuCursorInitialPosition.y,
-        UIAssetKeys.CURSOR,
-        0
-      )
-      .setOrigin(0.5)
-      .setScale(2.5);
-
-    // add all the battle menu game objects to a container
-
-    this.#battleMenuMain = this.#scene.add.container(520, 448, [
-      this.#createMainInfoSubPane(),
-      this.#scene.add.text(
-        55,
-        22,
-        BattleMenuOptionLabels.FIGHT,
-        battleUITextStyle
-      ),
-      this.#scene.add.text(
-        240,
-        22,
-        BattleMenuOptionLabels.SWITCH,
-        battleUITextStyle
-      ),
-      this.#scene.add.text(
-        55,
-        70,
-        BattleMenuOptionLabels.ITEM,
-        battleUITextStyle
-      ),
-      this.#scene.add.text(
-        240,
-        70,
-        BattleMenuOptionLabels.FLEE,
-        battleUITextStyle
-      ),
-      this.#battleMenuCursor,
-    ]);
-
-    // Hide the main battle menu initially
-    this.hideMainMenu();
-  }
-
-  // Contextual submenu depending on which battle action has been chosen
-  // Displays on the left in the main info wrapper pane
-  // When "Fight" option is chosen, display  available attacks
-  #createAttackMenu() {
-    // create attack battle menu cursor
-    this.#attackMenuCursor = this.#scene.add
-      .image(
-        battleMenuCursorInitialPosition.x,
-        battleMenuCursorInitialPosition.y,
-        UIAssetKeys.CURSOR,
-        0
-      )
-      .setOrigin(0.5)
-      .setScale(2.5);
-    // Store container in a reference variable
-    this.#battleMenuAttack = this.#scene.add.container(0, 448, [
-      this.#scene.add.text(55, 22, "slash", battleUITextStyle),
-      this.#scene.add.text(240, 22, "growl", battleUITextStyle),
-      this.#scene.add.text(55, 70, "-", battleUITextStyle),
-      this.#scene.add.text(240, 70, "-", battleUITextStyle),
-      this.#attackMenuCursor,
-    ]);
-
-    this.hideAttackMenu();
-  }
-
-  // The main info pane at the left-bottom of the screen
-  // This is a wrapper for the sub info pane
-  #createMainInfoPane() {
-    const rectHeight = 124;
-    const padding = 4;
-
-    this.#scene.add
-      .rectangle(
-        padding, //x
-        this.#scene.scale.height - rectHeight - padding, // y
-        this.#scene.scale.width - padding * 2, //width
-        rectHeight, //height
-        0xede4f3, //fil
-        1
-      )
-      .setOrigin(0)
-      .setStrokeStyle(8, 0x382350, 1);
-  }
-
-  // The sub info pane
-  // Displays on the right side
-  #createMainInfoSubPane() {
-    const rectWidth = 500;
-    const rectHeight = 124;
-
-    return this.#scene.add
-      .rectangle(0, 0, rectWidth, rectHeight, 0xede4f3, 1)
-      .setOrigin(0)
-      .setStrokeStyle(8, 0x905ac2, 1);
   }
 }

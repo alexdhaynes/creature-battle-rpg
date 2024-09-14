@@ -41,14 +41,17 @@ html {
 }
 
 body {
-  width: 100vw;
+  width: calc(100% - 40px); /* account for decorative ridge border */
   height: 100%;
   margin: 0;
-  padding-bottom: 100px;
   overscroll-behavior: none;
   opacity: 0.8;
-  background-image: radial-gradient(#0d3a7c 0.5px, #d3ebf4 0.5px);
+  padding-bottom: 80px;
+  background-color: #c5f5f9;
+  opacity: 0.8;
+  background-image: radial-gradient(#5aa5bf 0.5px, #c5f5f9 0.5px);
   background-size: 10px 10px;
+  border: 20px ridge #ffaf50;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -66,21 +69,21 @@ header {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  transform: translateX(-30px); /* optically center header */
 
   h1 {
     display: inline-block;
     font-family: "Yoster", sans-serif;
-    font-size: 64px;
-    color: #311c06;
+    font-size: 52px;
+    color: #7e5211;
     align-items: center;
   }
 }
 
 #cat-icon {
   position: sticky;
-  width: 200px;
+  width: 150px;
   padding: 10px 20px;
-
   top: 0;
   left: 0;
 }

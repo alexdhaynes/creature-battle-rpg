@@ -14,7 +14,7 @@ export enum BattleMenuOptionLabels {
 
 export enum AttackMenuOptionLabels {
   MOVE_1 = "slash",
-  MOVE_2 = "growl",
+  MOVE_2 = "hiss",
   MOVE_3 = "MOVE_3",
   MOVE_4 = "MOVE_4",
   NO_MOVE = "-",

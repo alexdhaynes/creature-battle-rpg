@@ -97,13 +97,17 @@ export class BattleMenu {
       return;
     }
     if (input === InputActions.OK) {
-      let grid = battleMainMenu2x2Grid;
       if (currentState === BattleMenuStates.Attacks) {
-        grid = battleAttackMenu2x2Grid;
+        this.#stateMachine.dispatch(InputActions.OK, {
+          menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
+        });
       }
-      this.#stateMachine.dispatch(InputActions.OK, {
-        menuItem: grid[this.#currentMenuCell],
-      });
+
+      if (currentState === BattleMenuStates.Attacks) {
+        this.#stateMachine.dispatch(InputActions.OK, {
+          menuItem: battleAttackMenu2x2Grid[this.#currentMenuCell],
+        });
+      }
       return;
     }
     // Move the cursor for directional input

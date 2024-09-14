@@ -7,7 +7,7 @@ import {
   battleAttackMenu2x2Grid,
 } from "@game/battle/battleUIConstants";
 
-import { Directions, GameActions } from "@scripts/game/gameConstants";
+import { Directions, InputActions } from "@scripts/game/gameConstants";
 
 import {
   BattleMenuStateMachine,
@@ -84,22 +84,24 @@ export class BattleMenu {
   }
 
   // Respond to keyboard inputs
-  handlePlayerInput(input: keyof typeof GameActions | keyof typeof Directions) {
+  handlePlayerInput(
+    input: keyof typeof InputActions | keyof typeof Directions
+  ) {
     const currentState = this.#stateMachine.currentState;
 
     // Dispatch state actions
-    if (input === GameActions.CANCEL) {
-      this.#stateMachine.dispatch(GameActions.CANCEL, {
+    if (input === InputActions.CANCEL) {
+      this.#stateMachine.dispatch(InputActions.CANCEL, {
         menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
       });
       return;
     }
-    if (input === GameActions.OK) {
+    if (input === InputActions.OK) {
       let grid = battleMainMenu2x2Grid;
       if (currentState === BattleMenuStates.Attacks) {
         grid = battleAttackMenu2x2Grid;
       }
-      this.#stateMachine.dispatch(GameActions.OK, {
+      this.#stateMachine.dispatch(InputActions.OK, {
         menuItem: grid[this.#currentMenuCell],
       });
       return;

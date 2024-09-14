@@ -16,12 +16,12 @@ export enum Directions {
   NONE = "NONE",
 }
 
-export enum GameActions {
+export enum InputActions {
   OK = "OK",
   CANCEL = "CANCEL",
 }
 
 export interface KeyActionMap {
   keyboardKey: string;
-  action: GameActions | Directions;
+  action: InputActions | Directions;
 }

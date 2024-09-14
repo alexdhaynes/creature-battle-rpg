@@ -6,7 +6,7 @@ import {
 } from "@scripts/game/assets/assetConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
-import { Directions, GameActions } from "@scripts/game/gameConstants";
+import { Directions, InputActions } from "@scripts/game/gameConstants";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
@@ -54,8 +54,8 @@ export class BattleScene extends BaseScene {
 
     // Mapping of key presses to actions
     const keyPressActions = [
-      { keyboardKey: this.#cursorKeys.space, action: GameActions.OK },
-      { keyboardKey: this.#cursorKeys.shift, action: GameActions.CANCEL },
+      { keyboardKey: this.#cursorKeys.space, action: InputActions.OK },
+      { keyboardKey: this.#cursorKeys.shift, action: InputActions.CANCEL },
       { keyboardKey: this.#cursorKeys.down, action: Directions.DOWN },
       { keyboardKey: this.#cursorKeys.up, action: Directions.UP },
       { keyboardKey: this.#cursorKeys.left, action: Directions.LEFT },

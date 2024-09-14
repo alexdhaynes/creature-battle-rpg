@@ -1,5 +1,7 @@
-import { GameActions } from "@game/gameConstants";
+import { InputActions } from "@game/gameConstants";
+import { StateMachine, TransitionPayload } from "@game/StateMachine";
 import { BattleMenuOptionLabels } from "@game/battle/battleUIConstants";
+import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 
 export enum BattleMenuStates {
   Main = "BATTLE_MENU_MAIN",
@@ -9,15 +11,16 @@ export enum BattleMenuStates {
   StatusDisplay = "BATTLE_MENU_STATUS_DISPLAY",
 }
 
-export class BattleMenuStateMachine {
+export class BattleMenuStateMachine extends StateMachine<
+  BattleMenuStates,
+  InputActions
+> {
   battleMenu; //reference to the BattleMenu class for updating its UI
-  currentState;
-  transitions;
+  // currentState and transitions{} are in the superclass
 
-  constructor(currentState, battleMenu) {
+  constructor(currentState: BattleMenuStates, battleMenu: BattleMenu) {
+    super(currentState);
     this.battleMenu = battleMenu;
-    this.currentState = currentState;
-    this.transitions = {};
     this.initializeTransitions();
   }
 
@@ -26,45 +29,30 @@ export class BattleMenuStateMachine {
     // bind this to the handlers because they lose their "this"
     this.transitions = {
       [BattleMenuStates.Main]: {
-        [GameActions.OK]: this.handleMainOk.bind(this),
-        [GameActions.CANCEL]: this.handleMainCancel.bind(this),
+        [InputActions.OK]: this.handleMainOk.bind(this),
+        [InputActions.CANCEL]: this.handleMainCancel.bind(this),
       },
       [BattleMenuStates.Attacks]: {
-        [GameActions.OK]: this.handleAttacksOk.bind(this),
-        [GameActions.CANCEL]: this.handleAttacksCancel.bind(this),
+        [InputActions.OK]: this.handleAttacksOk.bind(this),
+        [InputActions.CANCEL]: this.handleAttacksCancel.bind(this),
       },
       [BattleMenuStates.Inventory]: {
-        [GameActions.OK]: this.handleInventoryOk.bind(this),
-        [GameActions.CANCEL]: this.handleInventoryCancel.bind(this),
+        [InputActions.OK]: this.handleInventoryOk.bind(this),
+        [InputActions.CANCEL]: this.handleInventoryCancel.bind(this),
       },
       [BattleMenuStates.Monsters]: {
-        [GameActions.OK]: this.handleMonstersOk.bind(this),
-        [GameActions.CANCEL]: this.handleMonstersCancel.bind(this),
+        [InputActions.OK]: this.handleMonstersOk.bind(this),
+        [InputActions.CANCEL]: this.handleMonstersCancel.bind(this),
       },
       [BattleMenuStates.StatusDisplay]: {
-        [GameActions.OK]: this.handleStatusDisplayOk.bind(this),
-        [GameActions.CANCEL]: this.handleStatusDisplayCancel.bind(this),
+        [InputActions.OK]: this.handleStatusDisplayOk.bind(this),
+        [InputActions.CANCEL]: this.handleStatusDisplayCancel.bind(this),
       },
     };
   }
 
-  // Dispatch an action based on the current state
-  dispatch(actionName, payload) {
-    const action = this.transitions[this.currentState]?.[actionName];
-    if (action) {
-      action(payload);
-    } else {
-      console.error(`${actionName} is not valid for ${this.currentState}`);
-    }
-  }
-
-  // Update the current state
-  updateState(newState) {
-    this.currentState = newState;
-  }
-
   // Handler methods for the transitions
-  handleMainOk(payload) {
+  handleMainOk(payload: TransitionPayload) {
     console.log(`MenuItem: ${payload.menuItem}`);
     if (payload.menuItem === BattleMenuOptionLabels.FIGHT) {
       this.updateState(BattleMenuStates.Attacks);
@@ -74,15 +62,15 @@ export class BattleMenuStateMachine {
     }
   }
 
-  handleMainCancel(payload) {
+  handleMainCancel(payload: TransitionPayload) {
     console.log(`MenuItem: ${payload.menuItem}`);
   }
 
-  handleAttacksOk(payload) {
+  handleAttacksOk(payload: TransitionPayload) {
     console.log(`MenuItem: ${payload.menuItem}`);
   }
 
-  handleAttacksCancel(payload) {
+  handleAttacksCancel(payload: TransitionPayload) {
     console.log(`MenuItem: ${payload.menuItem}`);
     this.updateState(BattleMenuStates.Main);
     // show the Main Menu
@@ -90,27 +78,33 @@ export class BattleMenuStateMachine {
     this.battleMenu.showMainMenu();
   }
 
-  handleInventoryOk(payload) {
+  handleInventoryOk(payload: TransitionPayload) {
     // Handle Inventory OK action
+    console.log(payload);
   }
 
-  handleInventoryCancel(payload) {
+  handleInventoryCancel(payload: TransitionPayload) {
     // Handle Inventory CANCEL action
+    console.log(payload);
   }
 
-  handleMonstersOk(payload) {
+  handleMonstersOk(payload: TransitionPayload) {
     // Handle Monsters OK action
+    console.log(payload);
   }
 
-  handleMonstersCancel(payload) {
+  handleMonstersCancel(payload: TransitionPayload) {
     // Handle Monsters CANCEL action
+    console.log(payload);
   }
 
-  handleStatusDisplayOk(payload) {
+  handleStatusDisplayOk(payload: TransitionPayload) {
     // Handle Status Display OK action
+    console.log(payload);
   }
 
-  handleStatusDisplayCancel(payload) {
+  handleStatusDisplayCancel(payload: TransitionPayload) {
     // Handle Status Display CANCEL action
+    console.log(payload);
   }
 }

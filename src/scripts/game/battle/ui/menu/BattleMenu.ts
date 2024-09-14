@@ -30,10 +30,8 @@ export class BattleMenu {
   #battleMenuCursor!: Phaser.GameObjects.Image;
   #attackMenuCursor!: Phaser.GameObjects.Image; // TODO: do we need 2 cursor objects?
 
-  // stores the currently selected cell of a 2x2 menu matrix
-  #currentMenuCell!: CursorPositions2x2;
-  //state machine
-  #stateMachine!: any;
+  #currentMenuCell!: CursorPositions2x2; // stores the currently selected cell of a 2x2 menu matrix
+  #stateMachine!: BattleMenuStateMachine;
 
   // Set initial states
   constructor(scene: Phaser.Scene) {
@@ -97,17 +95,12 @@ export class BattleMenu {
       return;
     }
     if (input === InputActions.OK) {
-      if (currentState === BattleMenuStates.Attacks) {
-        this.#stateMachine.dispatch(InputActions.OK, {
-          menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
-        });
-      }
+      const menuItem =
+        currentState === BattleMenuStates.Attacks
+          ? battleAttackMenu2x2Grid[this.#currentMenuCell]
+          : battleMainMenu2x2Grid[this.#currentMenuCell];
 
-      if (currentState === BattleMenuStates.Attacks) {
-        this.#stateMachine.dispatch(InputActions.OK, {
-          menuItem: battleAttackMenu2x2Grid[this.#currentMenuCell],
-        });
-      }
+      this.#stateMachine.dispatch(InputActions.OK, { menuItem });
       return;
     }
     // Move the cursor for directional input
@@ -124,11 +117,10 @@ export class BattleMenu {
 
   // Given a directional input, move the cursor to the appropriate cell
   #moveCursor(direction: keyof typeof Directions) {
-    let currentCursor = this.#battleMenuCursor;
-    if (this.#stateMachine.currentState === BattleMenuStates.Attacks) {
-      currentCursor = this.#attackMenuCursor;
-      ``;
-    }
+    const currentCursor =
+      this.#stateMachine.currentState === BattleMenuStates.Attacks
+        ? this.#attackMenuCursor
+        : this.#battleMenuCursor;
 
     // pass the current 2x2 cell to the navigation map
     const currentCell = battleMenuNavigationMap[this.#currentMenuCell];
@@ -139,14 +131,11 @@ export class BattleMenu {
       // update the current cursor location on the battleMenu instance
       this.#currentMenuCell = newCell;
       // Use navigation mapping to deermine new cursor coords
-      const newCursorX =
-        battleMenu2x2CursorPositions[this.#currentMenuCell].cursorX;
-
-      const newCursorY =
-        battleMenu2x2CursorPositions[this.#currentMenuCell].cursorY;
+      const { cursorX, cursorY } =
+        battleMenu2x2CursorPositions[this.#currentMenuCell];
 
       // set the cursor's position
-      currentCursor.setPosition(newCursorX, newCursorY);
+      currentCursor.setPosition(cursorX, cursorY);
     }
   }
 

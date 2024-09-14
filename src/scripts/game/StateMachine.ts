@@ -1,4 +1,4 @@
-export type TState = string; // TODO: be more specific here
+export type TState = string; // TODO: be more specific about which string constants are allowed here
 export type TAction = string;
 
 export type TransitionsType<TState extends string, TAction extends string> = {

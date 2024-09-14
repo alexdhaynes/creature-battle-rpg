@@ -16,7 +16,8 @@ export class BattleMenuStateMachine extends StateMachine<
   InputActions
 > {
   battleMenu; //reference to the BattleMenu class for updating its UI
-  // currentState and transitions{} are in the superclass
+
+  // currentState, transitions{}, dispatch(), updateState() are in the superclass
 
   constructor(currentState: BattleMenuStates, battleMenu: BattleMenu) {
     super(currentState);

@@ -13,10 +13,11 @@ export enum BattleMenuOptionLabels {
 }
 
 export enum AttackMenuOptionLabels {
-  MOVE_1 = "MOVE_1",
-  MOVE_2 = "MOVE_2",
+  MOVE_1 = "slash",
+  MOVE_2 = "growl",
   MOVE_3 = "MOVE_3",
   MOVE_4 = "MOVE_4",
+  NO_MOVE = "-",
 }
 
 export const battleMenuCursorInitialPosition = {
@@ -105,16 +106,21 @@ export const battleMenuNavigationMap: TBattleMenuOptionNavigationPath = {
 };
 
 // the type that stores the mapping between a direction
-// and the corresponding attack menu option
-export type TAttackMenuNavigationOptionsByDirection = Partial<
-  Record<Directions, AttackMenuOptionLabels>
->;
+// and the corresponding menu option
+export type NavigationPath<
+  TOption extends string,
+  TDirection extends string
+> = {
+  [key in TOption]?: {
+    [dir in TDirection]?: TOption;
+  };
+};
 
-// the type that stores the mapping between an attack menu option
+// the type that stores the mapping between a menu option
 // and the navigation paths available to it
-export type TAttackMenuOptionNavigationPath = Record<
+export type TAttackMenuOptionNavigationPath = NavigationPath<
   AttackMenuOptionLabels,
-  TAttackMenuNavigationOptionsByDirection
+  Directions
 >;
 
 // The action to which the cursor can move on the Attack Menu

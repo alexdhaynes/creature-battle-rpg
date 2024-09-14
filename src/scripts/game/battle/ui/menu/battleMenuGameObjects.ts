@@ -2,6 +2,7 @@ import {
   battleUITextStyle,
   BattleMenuOptionLabels,
   battleMenuCursorInitialPosition,
+  AttackMenuOptionLabels,
 } from "@game/battle/battleUIConstants";
 
 import {
@@ -72,10 +73,10 @@ export const createAttackMenu = (scene: Phaser.Scene) => {
     .setScale(2.5);
 
   const battleMenuAttack = scene.add.container(0, 448, [
-    scene.add.text(55, 22, "slash", battleUITextStyle),
-    scene.add.text(240, 22, "growl", battleUITextStyle),
-    scene.add.text(55, 70, "-", battleUITextStyle),
-    scene.add.text(240, 70, "-", battleUITextStyle),
+    scene.add.text(55, 22, AttackMenuOptionLabels.MOVE_1, battleUITextStyle),
+    scene.add.text(240, 22, AttackMenuOptionLabels.MOVE_2, battleUITextStyle),
+    scene.add.text(55, 70, AttackMenuOptionLabels.NO_MOVE, battleUITextStyle),
+    scene.add.text(240, 70, AttackMenuOptionLabels.NO_MOVE, battleUITextStyle),
     attackMenuCursor,
   ]);
 

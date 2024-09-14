@@ -139,6 +139,22 @@ export class BattleMenu {
     }
   }
 
+  // reset cursor to the top left of the grid
+  resetCursorPosition() {
+    const currentCursor =
+      this.#stateMachine.currentState === BattleMenuStates.Attacks
+        ? this.#attackMenuCursor
+        : this.#battleMenuCursor;
+    // set the cursor's position
+    const { cursorX, cursorY } =
+      battleMenu2x2CursorPositions[CursorPositions2x2.TOP_LEFT];
+
+    // reset the current cell to top left
+    this.#currentMenuCell = CursorPositions2x2.TOP_LEFT;
+
+    currentCursor.setPosition(cursorX, cursorY);
+  }
+
   // ========= All methods below either create or toggle game objects =========
 
   // Show the main battle menu

@@ -55,8 +55,13 @@ export class BattleMenuStateMachine extends StateMachine<
   // Handler methods for the transitions
   handleMainOk(payload: TransitionPayload) {
     console.log(`MenuItem: ${payload.menuItem}`);
+
+    // If the Fight menu item is selected
     if (payload.menuItem === BattleMenuOptionLabels.FIGHT) {
       this.updateState(BattleMenuStates.Attacks);
+      // reset the cursor position
+      this.battleMenu.resetCursorPosition();
+
       // show the Attack Menu
       this.battleMenu.hideMainMenu();
       this.battleMenu.showAttackMenu();
@@ -71,9 +76,11 @@ export class BattleMenuStateMachine extends StateMachine<
     console.log(`MenuItem: ${payload.menuItem}`);
   }
 
-  handleAttacksCancel(payload: TransitionPayload) {
-    console.log(`MenuItem: ${payload.menuItem}`);
+  handleAttacksCancel() {
+    console.log("cancel attacks");
     this.updateState(BattleMenuStates.Main);
+    // reset the cursor position
+    this.battleMenu.resetCursorPosition();
     // show the Main Menu
     this.battleMenu.hideAttackMenu();
     this.battleMenu.showMainMenu();

@@ -44,5 +44,6 @@ export class StateMachine<TState extends string, TAction extends string> {
   // Update the current state
   updateState(newState: TState): void {
     this.currentState = newState;
+    console.log(`called updateState(); new state: ${newState}`);
   }
 }

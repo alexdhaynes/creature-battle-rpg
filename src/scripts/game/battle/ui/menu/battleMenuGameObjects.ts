@@ -6,7 +6,7 @@ import {
 } from "@game/battle/battleUIConstants";
 
 import {
-  MonsterAssetKeys,
+  CreatureAssetKeys,
   UIAssetKeys,
 } from "@scripts/game/assets/assetConstants";
 
@@ -23,7 +23,7 @@ export const createMainMenu = (scene: Phaser.Scene) => {
   const displayTextLine2 = scene.add.text(
     20,
     512,
-    `${MonsterAssetKeys.IGUANIGNITE} do next?`,
+    `${CreatureAssetKeys.IGUANIGNITE} do next?`,
     battleUITextStyle
   );
 

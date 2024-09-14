@@ -1,18 +1,18 @@
 import {
   BattleAssetKeys,
   HealthBarAssetKeys,
-  MonsterAssetKeys,
+  CreatureAssetKeys,
 } from "@scripts/game/assets/assetConstants";
 
 export class HealthStatus {
   #scene;
-  #enemyMonsterName;
-  #playerMonsterName;
+  #enemyCreatureName;
+  #playerCreatureName;
 
   constructor(scene: Phaser.Scene) {
     this.#scene = scene;
-    this.#enemyMonsterName = this.#createEnemyMonsterName();
-    this.#playerMonsterName = this.#createPlayerMonsterName();
+    this.#enemyCreatureName = this.#createEnemyCreatureName();
+    this.#playerCreatureName = this.#createPlayerCreatureName();
   }
 
   // A render method
@@ -23,33 +23,33 @@ export class HealthStatus {
   }
 
   // Create the Player's name label
-  #createPlayerMonsterName() {
-    const _playerMonsterName = this.#scene.add.text(
+  #createPlayerCreatureName() {
+    const _playerCreatureName = this.#scene.add.text(
       30,
       20,
-      MonsterAssetKeys.IGUANIGNITE,
+      CreatureAssetKeys.IGUANIGNITE,
       {
         color: "#7e3d3f",
         fontSize: "32px",
       }
     );
 
-    return _playerMonsterName;
+    return _playerCreatureName;
   }
 
   // Create the Enemy's name label
-  #createEnemyMonsterName() {
-    const _enemyMonsterName = this.#scene.add.text(
+  #createEnemyCreatureName() {
+    const _enemyCreatureName = this.#scene.add.text(
       30,
       20,
-      MonsterAssetKeys.CARNODUSK,
+      CreatureAssetKeys.CARNODUSK,
       {
         color: "#7e3d3f",
         fontSize: "32px",
       }
     );
 
-    return _enemyMonsterName;
+    return _enemyCreatureName;
   }
 
   // Render the health bar
@@ -85,12 +85,12 @@ export class HealthStatus {
       this.#scene.add
         .image(0, 0, BattleAssetKeys.HEALTH_BAR_BACKGROUND)
         .setOrigin(0),
-      // Add Player Monster Name label to container
-      this.#playerMonsterName,
+      // Add Player Creature Name label to container
+      this.#playerCreatureName,
       // Add the health bar to container
       this.#createHealthBar(34, 34),
       // Add the Level label to container
-      this.#scene.add.text(this.#playerMonsterName.width + 35, 23, "L5", {
+      this.#scene.add.text(this.#playerCreatureName.width + 35, 23, "L5", {
         color: "#ED474b",
         fontSize: "28px",
       }),
@@ -122,12 +122,12 @@ export class HealthStatus {
         .image(0, 0, BattleAssetKeys.HEALTH_BAR_BACKGROUND)
         .setOrigin(0)
         .setScale(1, 0.8), // reduce y-scale of enemy health status container to accommodate for no HP score label
-      // Add Enemy Monster Name label to container
-      this.#enemyMonsterName,
+      // Add Enemy Creature Name label to container
+      this.#enemyCreatureName,
       // Add the health bar to container
       this.#createHealthBar(34, 34),
       // Add the Level label to container
-      this.#scene.add.text(this.#enemyMonsterName.width + 35, 23, "L5", {
+      this.#scene.add.text(this.#enemyCreatureName.width + 35, 23, "L5", {
         color: "#ED474b",
         fontSize: "28px",
       }),

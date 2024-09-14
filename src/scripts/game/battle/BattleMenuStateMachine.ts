@@ -6,7 +6,7 @@ import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 export enum BattleMenuStates {
   Main = "BATTLE_MENU_MAIN",
   Attacks = "BATTLE_MENU_ATTACKS",
-  Monsters = "BATTLE_MENU_MONSTERS",
+  Creatures = "BATTLE_MENU_MONSTERS",
   Inventory = "BATTLE_MENU_INVENTORY",
   StatusDisplay = "BATTLE_MENU_STATUS_DISPLAY",
 }
@@ -41,9 +41,9 @@ export class BattleMenuStateMachine extends StateMachine<
         [InputActions.OK]: this.handleInventoryOk.bind(this),
         [InputActions.CANCEL]: this.handleInventoryCancel.bind(this),
       },
-      [BattleMenuStates.Monsters]: {
-        [InputActions.OK]: this.handleMonstersOk.bind(this),
-        [InputActions.CANCEL]: this.handleMonstersCancel.bind(this),
+      [BattleMenuStates.Creatures]: {
+        [InputActions.OK]: this.handleCreaturesOk.bind(this),
+        [InputActions.CANCEL]: this.handleCreaturesCancel.bind(this),
       },
       [BattleMenuStates.StatusDisplay]: {
         [InputActions.OK]: this.handleStatusDisplayOk.bind(this),
@@ -89,13 +89,13 @@ export class BattleMenuStateMachine extends StateMachine<
     console.log(payload);
   }
 
-  handleMonstersOk(payload: TransitionPayload) {
-    // Handle Monsters OK action
+  handleCreaturesOk(payload: TransitionPayload) {
+    // Handle Creatures OK action
     console.log(payload);
   }
 
-  handleMonstersCancel(payload: TransitionPayload) {
-    // Handle Monsters CANCEL action
+  handleCreaturesCancel(payload: TransitionPayload) {
+    // Handle Creatures CANCEL action
     console.log(payload);
   }
 

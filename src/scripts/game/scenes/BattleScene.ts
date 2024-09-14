@@ -2,7 +2,7 @@ import { BaseScene } from "@game/scenes/BaseScene";
 import { SceneKeys } from "@scripts/game/scenes/sceneConstants";
 import {
   BattleBackgroundAssetKeys,
-  MonsterAssetKeys,
+  CreatureAssetKeys,
 } from "@scripts/game/assets/assetConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
@@ -27,11 +27,11 @@ export class BattleScene extends BaseScene {
     // create main background
     this.add.image(0, 0, BattleBackgroundAssetKeys.FOREST).setOrigin(0);
 
-    // render the enemy monsters
-    this.add.image(768, 144, MonsterAssetKeys.CARNODUSK, 0);
+    // render the enemy creatures
+    this.add.image(768, 144, CreatureAssetKeys.CARNODUSK, 0);
 
-    // render the player monsters
-    this.add.image(256, 316, MonsterAssetKeys.IGUANIGNITE, 0).setFlipX(true);
+    // render the player creatures
+    this.add.image(256, 316, CreatureAssetKeys.IGUANIGNITE, 0).setFlipX(true);
 
     // instantiate then render the player health status container
     this.#healthStatus = new HealthStatus(this);

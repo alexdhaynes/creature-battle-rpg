@@ -15,11 +15,9 @@ import {
 import { Directions, GameActions } from "@scripts/game/gameConstants";
 
 import {
-  battleMenuTriggerMap,
   BattleMenuStateMachine,
-  BattleMenuTriggers,
-  BattleMenuStates as BattleMenuStatesNew,
-} from "@game/battle/battleStateMachine";
+  BattleMenuStates,
+} from "@scripts/game/battle/BattleMenuStateMachine";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
@@ -34,12 +32,17 @@ export class BattleMenu {
   // stores the currently selected cell of a 2x2 menu matrix
   #currentMenuCell!: CursorPositions2x2;
   //state machine
-  #stateMachine!: BattleMenuStateMachine;
+  #stateMachine!: any;
 
   // Set initial states
   constructor(scene: Phaser.Scene) {
     this.#scene = scene;
     this.#currentMenuCell = CursorPositions2x2.TOP_LEFT;
+    // instantiate state machine
+    this.#stateMachine = new BattleMenuStateMachine(
+      BattleMenuStates.Main,
+      this
+    );
   }
 
   // Putting the class's initial states in an init method so I have more control over when to call these initial states
@@ -48,83 +51,51 @@ export class BattleMenu {
     this.#createMainInfoPane();
     this.#createMainMenu();
     this.#createAttackMenu();
-    // instantiate state machine
-    this.#stateMachine = new BattleMenuStateMachine(BattleMenuStatesNew.Main);
-  }
-
-  // render the current state
-  render() {
-    console.log("calling render()");
-    console.log(`current state: ${this.#stateMachine.currentState}`);
-
-    switch (this.#stateMachine.currentState) {
-      case BattleMenuStatesNew.Main:
-        console.log("render main menu");
-        this.hideAttackMenu();
-        this.showMainMenu();
-        break;
-      case BattleMenuStatesNew.Attacks:
-        console.log("render attack menu");
-        this.hideMainMenu();
-        this.showAttackMenu();
-        break;
-      default:
-        console.log("no state found");
-        break;
-    }
+    // initialize the state machine
+    this.#stateMachine.currentState = BattleMenuStates.Main;
   }
 
   // Respond to keyboard inputs
   handlePlayerInput(input: keyof typeof GameActions | keyof typeof Directions) {
-    if (input === GameActions.CANCEL) {
-      console.log("shift press - cancel");
+    const currentState = this.#stateMachine.currentState;
 
+    // Dispatch state actions
+    if (input === GameActions.CANCEL) {
+      this.#stateMachine.dispatch(GameActions.CANCEL, {
+        menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
+      });
       return;
     }
     if (input === GameActions.OK) {
-      // If we're on the main menu
-      if (this.#stateMachine.currentState === BattleMenuStatesNew.Main) {
-        // determine the current menu item
-        const currentMenuItem = battleMainMenu2x2Grid[this.#currentMenuCell];
-        // Construct the trigger from:
-        // the  current State, the current menu item selected, and the current game action
-        const trigger =
-          battleMenuTriggerMap[this.#stateMachine.currentState][
-            currentMenuItem
-          ][GameActions.OK];
-        this.#stateMachine.transition(trigger);
-        this.render();
+      let grid = battleMainMenu2x2Grid;
+      if (currentState === BattleMenuStates.Attacks) {
+        grid = battleAttackMenu2x2Grid;
       }
-      // If we're on the attack menu
-      else if (
-        this.#stateMachine.currentState === BattleMenuStatesNew.Attacks
-      ) {
-        //todo
-      }
-
-      // this.#stateMachine.transition(BattleMenuTriggers.Cancel);
+      this.#stateMachine.dispatch(GameActions.OK, {
+        menuItem: grid[this.#currentMenuCell],
+      });
       return;
     }
-    if (input === Directions.UP) {
-      this.#moveCursor(Directions.UP);
-      return;
-    }
-    if (input === Directions.DOWN) {
-      this.#moveCursor(Directions.DOWN);
-      return;
-    }
-    if (input === Directions.LEFT) {
-      this.#moveCursor(Directions.LEFT);
-      return;
-    }
-    if (input === Directions.RIGHT) {
-      this.#moveCursor(Directions.RIGHT);
+    // Move the cursor for directional input
+    if (
+      input === Directions.UP ||
+      input === Directions.DOWN ||
+      input === Directions.LEFT ||
+      input === Directions.RIGHT
+    ) {
+      this.#moveCursor(input as keyof typeof Directions);
       return;
     }
   }
 
   // Given a directional input, move the cursor to the appropriate cell
   #moveCursor(direction: keyof typeof Directions) {
+    let currentCursor = this.#battleMenuCursor;
+    if (this.#stateMachine.currentState === BattleMenuStates.Attacks) {
+      currentCursor = this.#attackMenuCursor;
+      ``;
+    }
+
     // pass the current 2x2 cell to the navigation map
     const currentCell = battleMenuNavigationMap[this.#currentMenuCell];
 
@@ -141,7 +112,7 @@ export class BattleMenu {
         battleMenu2x2CursorPositions[this.#currentMenuCell].cursorY;
 
       // set the cursor's position
-      this.#battleMenuCursor.setPosition(newCursorX, newCursorY);
+      currentCursor.setPosition(newCursorX, newCursorY);
     }
   }
 

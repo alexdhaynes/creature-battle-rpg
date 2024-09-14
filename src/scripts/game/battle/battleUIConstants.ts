@@ -19,14 +19,6 @@ export enum AttackMenuOptionLabels {
   MOVE_4 = "MOVE_4",
 }
 
-export enum BattleMenuStates {
-  BATTLE_MAIN = "BATTLE_MAIN",
-  BATTLE_SELECT_MOVE = "BATTLE_SELECT_MOVE",
-  BATTLE_ITEM = "BATTLE_ITEM",
-  BATTLE_SWITCH = "BATTLE_SWITCH",
-  BATTLE_FLEE = "BATTLE_FLEE",
-}
-
 export const battleMenuCursorInitialPosition = {
   x: 42,
   y: 38,

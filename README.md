@@ -1,15 +1,30 @@
 # Creature Battle
 
-- a Pokemon-like 2D RPG in which your character can battle wild magical creatures
+A **Pokemon-like 2D RPG** where your character can battle wild magical creatures. 🐉
 
-## Package manager
+_Demo coming soon._
 
-- yarn
+## ✨ Features
 
-## Commands
+- 🎮 2D RPG gameplay inspired by Pokémon.
+- 🧙🏿‍♀️ Wild magical creatures with battle mechanics.
 
-`yarn dev`
+## 🛠️ Tech Stack
 
-## TODOS
+### Package Manager
 
-- [x] add custom graphics
+- **Yarn**
+
+### 🎨 Frontend Stack
+
+- **[Phaser 3](https://github.com/photonstorm/phaser)**: A 2D game framework for handling game logic and rendering.
+- **TypeScript**
+- **Vite**: Build tool for fast development and bundling.
+- **React** _(upcoming)_: Will be used for the outer website surrounding the game.
+
+## 💻 Commands
+
+- **Start development server**:
+  ```bash
+  yarn dev
+  ```

@@ -27,7 +27,7 @@ export class HealthStatus {
     const _playerCreatureName = this.#scene.add.text(
       30,
       20,
-      CreatureAssetKeys.IGUANIGNITE,
+      CreatureAssetKeys.ORANGE_CAT,
       {
         color: "#7e3d3f",
         fontSize: "32px",
@@ -42,7 +42,7 @@ export class HealthStatus {
     const _enemyCreatureName = this.#scene.add.text(
       30,
       20,
-      CreatureAssetKeys.CARNODUSK,
+      CreatureAssetKeys.TUXEDO_CAT,
       {
         color: "#7e3d3f",
         fontSize: "32px",

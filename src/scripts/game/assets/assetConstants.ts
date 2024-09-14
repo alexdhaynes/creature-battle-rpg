@@ -3,15 +3,17 @@ import type { AssetList } from "@game/assets/types";
 import {
   KENNEYS_ASSET_PATH,
   TEMP_GRAPHICS_ASSET_PATH,
+  WORKING_GRAPHICS_ASSET_PATH,
 } from "@scripts/game/gameConstants";
 
 export enum BattleBackgroundAssetKeys {
   FOREST = "FOREST",
+  MEADOW = "MEADOW",
 }
 
 export enum CreatureAssetKeys {
-  IGUANIGNITE = "IGUANIGNITE",
-  CARNODUSK = "CARNODUSK",
+  TUXEDO_CAT = "TUXEDO_CAT",
+  ORANGE_CAT = "ORANGE_CAT",
 }
 
 export enum BattleAssetKeys {
@@ -32,8 +34,8 @@ export enum UIAssetKeys {
 export const assetList: AssetList = [
   // Backgrounds
   {
-    key: BattleBackgroundAssetKeys.FOREST,
-    imagePath: `${TEMP_GRAPHICS_ASSET_PATH}/battle-backgrounds/forest-background.png`,
+    key: BattleBackgroundAssetKeys.MEADOW,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/battle-backgrounds/meadow-background.png`,
   },
 
   // Health bar assets
@@ -56,12 +58,12 @@ export const assetList: AssetList = [
 
   // Creatures
   {
-    key: CreatureAssetKeys.IGUANIGNITE,
-    imagePath: `${TEMP_GRAPHICS_ASSET_PATH}/monsters/${CreatureAssetKeys.IGUANIGNITE.toLocaleLowerCase()}.png`,
+    key: CreatureAssetKeys.TUXEDO_CAT,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CreatureAssetKeys.TUXEDO_CAT.toLowerCase()}.png`,
   },
   {
-    key: CreatureAssetKeys.CARNODUSK,
-    imagePath: `${TEMP_GRAPHICS_ASSET_PATH}/monsters/${CreatureAssetKeys.CARNODUSK.toLocaleLowerCase()}.png`,
+    key: CreatureAssetKeys.ORANGE_CAT,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CreatureAssetKeys.ORANGE_CAT.toLowerCase()}.png`,
   },
   // UI: cursor
   {

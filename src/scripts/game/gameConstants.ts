@@ -1,6 +1,7 @@
-export const GAME_ASSET_PATH = "/temp-game-assets/images";
-export const TEMP_GRAPHICS_ASSET_PATH = `${GAME_ASSET_PATH}/monster-tamer`;
-export const KENNEYS_ASSET_PATH = `${GAME_ASSET_PATH}/kenneys-assets`;
+export const TEMP_GAME_ASSET_PATH = "/temp-game-assets/images";
+export const TEMP_GRAPHICS_ASSET_PATH = `${TEMP_GAME_ASSET_PATH}/monster-tamer`;
+export const WORKING_GRAPHICS_ASSET_PATH = `${TEMP_GAME_ASSET_PATH}/working-game-assets`;
+export const KENNEYS_ASSET_PATH = `${TEMP_GAME_ASSET_PATH}/kenneys-assets`;
 export const GAME_DIMENSIONS = {
   width: 1024,
   height: 576,

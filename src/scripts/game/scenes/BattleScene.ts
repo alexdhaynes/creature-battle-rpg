@@ -25,13 +25,13 @@ export class BattleScene extends BaseScene {
     this.log("create");
 
     // create main background
-    this.add.image(0, 0, BattleBackgroundAssetKeys.FOREST).setOrigin(0);
+    this.add.image(0, 0, BattleBackgroundAssetKeys.MEADOW).setOrigin(0);
 
     // render the enemy creatures
-    this.add.image(768, 144, CreatureAssetKeys.CARNODUSK, 0);
+    this.add.image(768, 144, CreatureAssetKeys.TUXEDO_CAT, 0);
 
     // render the player creatures
-    this.add.image(256, 316, CreatureAssetKeys.IGUANIGNITE, 0).setFlipX(true);
+    this.add.image(256, 316, CreatureAssetKeys.ORANGE_CAT, 0);
 
     // instantiate then render the player health status container
     this.#healthStatus = new HealthStatus(this);

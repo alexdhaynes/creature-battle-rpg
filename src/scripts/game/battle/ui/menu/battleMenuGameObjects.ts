@@ -23,7 +23,7 @@ export const createMainMenu = (scene: Phaser.Scene) => {
   const displayTextLine2 = scene.add.text(
     20,
     512,
-    `${CreatureAssetKeys.IGUANIGNITE} do next?`,
+    `${CreatureAssetKeys.ORANGE_CAT} do next?`,
     battleUITextStyle
   );
 
@@ -102,7 +102,7 @@ export const createMainInfoPane = (scene: Phaser.Scene) => {
       1
     )
     .setOrigin(0)
-    .setStrokeStyle(8, 0x382350, 1);
+    .setStrokeStyle(8, 0x203023, 1);
 };
 
 // The sub info pane
@@ -114,5 +114,5 @@ const _createMainInfoSubPane = (scene: Phaser.Scene) => {
   return scene.add
     .rectangle(0, 0, rectWidth, rectHeight, 0xede4f3, 1)
     .setOrigin(0)
-    .setStrokeStyle(8, 0x905ac2, 1);
+    .setStrokeStyle(8, 0x19943a, 1);
 };

@@ -102,6 +102,9 @@ export class BattleMenu {
 
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
+      // do nothing if a cancel action is triggered when the Battle Menu state is Closed
+      if (this.#stateMachine.currentState === BattleMenuStates.Closed) return;
+
       this.#stateMachine.dispatch(currentState, InputActions.CANCEL, {
         menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
       });

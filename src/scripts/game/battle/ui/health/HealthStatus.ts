@@ -1,18 +1,27 @@
 import {
   BattleAssetKeys,
-  HealthBarAssetKeys,
   CreatureAssetKeys,
 } from "@scripts/game/assets/assetConstants";
+import { HealthBar } from "@game/battle/ui/health/HealthBar";
+
+// This is the overall health container, including:
+// the creature name and their level,
+// the HealthBar,
+// and the HealthBar label (for the player only)
 
 export class HealthStatus {
   #scene;
   #enemyCreatureName;
   #playerCreatureName;
+  #playerHealthBar;
+  #enemyHealthBar;
 
   constructor(scene: Phaser.Scene) {
     this.#scene = scene;
     this.#enemyCreatureName = this.#createEnemyCreatureName();
     this.#playerCreatureName = this.#createPlayerCreatureName();
+    this.#playerHealthBar = new HealthBar(this.#scene, 34, 34).container;
+    this.#enemyHealthBar = new HealthBar(this.#scene, 34, 34).container;
   }
 
   // A render method
@@ -52,32 +61,6 @@ export class HealthStatus {
     return _enemyCreatureName;
   }
 
-  // Render the health bar
-  // @param x: x pos of the health bar
-  // @param y: y bar of hte health bar
-  // @returns Phaser.GameObject.Container
-  #createHealthBar(x: number, y: number) {
-    const scaleY = 0.7;
-    // add the left cap of the healthbar
-    const leftCap = this.#scene.add
-      .image(x, y, HealthBarAssetKeys.LEFT_CAP)
-      .setOrigin(0, 0.5)
-      .setScale(1, scaleY);
-    // add the middle of the healthbar
-    const middle = this.#scene.add
-      .image(leftCap.x + leftCap.width, y, HealthBarAssetKeys.MIDDLE)
-      .setOrigin(0, 0.5)
-      .setScale(1, scaleY);
-    // Stretch the health bar's middle
-    middle.displayWidth = 360;
-    const rightCap = this.#scene.add
-      .image(middle.x + middle.displayWidth, y, HealthBarAssetKeys.RIGHT_CAP)
-      .setOrigin(0, 0.5)
-      .setScale(1, scaleY);
-
-    return this.#scene.add.container(x, y, [leftCap, middle, rightCap]);
-  }
-
   // Render the player health status container
   #createPlayerHealthStatusContainer() {
     this.#scene.add.container(556, 318, [
@@ -88,7 +71,7 @@ export class HealthStatus {
       // Add Player Creature Name label to container
       this.#playerCreatureName,
       // Add the health bar to container
-      this.#createHealthBar(34, 34),
+      this.#playerHealthBar,
       // Add the Level label to container
       this.#scene.add.text(this.#playerCreatureName.width + 35, 23, "L5", {
         color: "#ED474b",
@@ -125,7 +108,7 @@ export class HealthStatus {
       // Add Enemy Creature Name label to container
       this.#enemyCreatureName,
       // Add the health bar to container
-      this.#createHealthBar(34, 34),
+      this.#enemyHealthBar,
       // Add the Level label to container
       this.#scene.add.text(this.#enemyCreatureName.width + 35, 23, "L5", {
         color: "#ED474b",

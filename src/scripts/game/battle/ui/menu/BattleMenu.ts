@@ -102,35 +102,40 @@ export class BattleMenu {
     this.hideAttackMenu();
 
     // initialize the state machine
-    this.stateMachine.battleStateManager.setState(BattleMenuStates.Main);
+    this.stateMachine.battleStateManager.setCurrentMenuState(
+      BattleMenuStates.Main
+    );
   }
 
   // Respond to keyboard inputs
   handlePlayerInput(
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
-    const currentState = this.stateMachine.battleStateManager.getState();
+    const { currentMenuState } =
+      this.stateMachine.battleStateManager.getState();
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed
       if (
-        this.stateMachine.battleStateManager.getState() ===
+        this.stateMachine.battleStateManager.getState().currentMenuState ===
         BattleMenuStates.Closed
       )
         return;
 
-      this.stateMachine.dispatch(currentState, InputActions.CANCEL, {
+      this.stateMachine.dispatch(currentMenuState, InputActions.CANCEL, {
         menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
       });
       return;
     }
     if (input === InputActions.OK) {
       const menuItem =
-        currentState === BattleMenuStates.Attacks
+        currentMenuState === BattleMenuStates.Attacks
           ? battleAttackMenu2x2Grid[this.#currentMenuCell]
           : battleMainMenu2x2Grid[this.#currentMenuCell];
 
-      this.stateMachine.dispatch(currentState, InputActions.OK, { menuItem });
+      this.stateMachine.dispatch(currentMenuState, InputActions.OK, {
+        menuItem,
+      });
       return;
     }
     // Move the cursor for directional input
@@ -150,7 +155,7 @@ export class BattleMenu {
   // Given a directional input, move the cursor to the appropriate cell
   #moveCursor(direction: keyof typeof Directions) {
     const currentCursor =
-      this.stateMachine.battleStateManager.getState() ===
+      this.stateMachine.battleStateManager.getState().currentMenuState ===
       BattleMenuStates.Attacks
         ? this.#attackMenuCursor
         : this.#battleMenuCursor;
@@ -175,7 +180,7 @@ export class BattleMenu {
   // reset cursor to the top left of the grid
   resetCursorPosition() {
     const currentCursor =
-      this.stateMachine.battleStateManager.getState() ===
+      this.stateMachine.battleStateManager.getState().currentMenuState ===
       BattleMenuStates.Attacks
         ? this.#attackMenuCursor
         : this.#battleMenuCursor;

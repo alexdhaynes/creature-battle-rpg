@@ -1,33 +1,47 @@
 import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
 
-export class BattleStateManager {
-  currentState: BattleMenuStates;
+type BattleState = {
+  currentMenuState: BattleMenuStates;
+  currentPlayerAttack: string | null;
+  currentEnemyAttack: string | null;
+  currentMessage: string[];
+};
 
-  playerAttack: string = "";
-  enemyAttack: string = "";
-  currentMessage: string[] = [""];
+export class BattleStateManager {
+  #state: BattleState;
 
   constructor() {
-    this.currentState = BattleMenuStates.Main;
+    this.#state = {
+      currentMenuState: BattleMenuStates.Main,
+      currentPlayerAttack: "",
+      currentEnemyAttack: "",
+      currentMessage: [""],
+    };
   }
 
+  setState(newState: Partial<BattleState>) {
+    this.#state = { ...this.#state, ...newState };
+  }
+
+  // Get the entire state
+  getState(): BattleState {
+    return this.#state;
+  }
+
+  // Specific setters for state fields
   setCurrentMessage(messageList: string[]) {
-    this.currentMessage = messageList;
+    this.setState({ currentMessage: messageList });
   }
 
-  setPlayerAttack(attack: string) {
-    this.playerAttack = attack;
+  setcurrentPlayerAttack(attack: string) {
+    this.setState({ currentPlayerAttack: attack });
   }
 
-  setEnemyAttack(attack: string) {
-    this.enemyAttack = attack;
+  setcurrentEnemyAttack(attack: string) {
+    this.setState({ currentEnemyAttack: attack });
   }
 
-  getState(): BattleMenuStates {
-    return this.currentState;
-  }
-
-  setState(newState: BattleMenuStates) {
-    this.currentState = newState;
+  setCurrentMenuState(newState: BattleMenuStates) {
+    this.setState({ currentMenuState: newState });
   }
 }

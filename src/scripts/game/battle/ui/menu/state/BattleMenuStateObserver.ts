@@ -47,18 +47,17 @@ export class BattleMenuObserver implements StateChangeObserver {
         break;
 
       case BattleMenuStates.DisplayPersistentMessage:
-        console.log("display persistent message");
         break;
 
       case BattleMenuStates.DisplayTimedMessage:
-        const currentAttack =
-          this.#battleMenu.stateMachine.battleStateManager.playerAttack;
+        const { currentPlayerAttack } =
+          this.#battleMenu.stateMachine.battleStateManager.getState();
 
         this.#battleMenu.showAttackMenuMessage([
-          `You selected ${currentAttack} attack!`,
+          `You selected ${currentPlayerAttack} attack!`,
         ]);
         setTimeout(() => {
-          this.#battleMenu.stateMachine.updateState(BattleMenuStates.Main);
+          this.#battleMenu.stateMachine.updateMenuState(BattleMenuStates.Main);
         }, 2000);
         break;
 
@@ -68,7 +67,7 @@ export class BattleMenuObserver implements StateChangeObserver {
         break;
 
       default:
-        console.log(`No actions defined for state: ${newState}`);
+        console.error(`No actions defined for state: ${newState}`);
         break;
     }
   }

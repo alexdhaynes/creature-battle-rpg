@@ -29,8 +29,6 @@ export class StateMachine<TState extends string, TAction extends string> {
   // Dispatch an action based on the current state
   dispatch(state: TState, actionName: TAction, payload: any): void {
     const action = this.transitions[state]?.[actionName];
-    console.log(`dispatch: ${actionName}; to state: ${state}`, payload);
-
     if (action) {
       action(payload);
     } else {

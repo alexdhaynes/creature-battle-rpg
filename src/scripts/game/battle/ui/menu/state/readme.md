@@ -35,7 +35,7 @@
 5. `BattleMenuStateMachine`
    - dispatches the appropriate `transition()` functon based on the `BattleMenuState` and the `InputAction`
    - the `transition()` function invokes `updateState()`
-     - `updateState()` triggers a state update in the `BattleStateManager`
-     - `updateState()` notfies observer of new state
+     - `updateMenuState()` triggers a state update in the `BattleStateManager`
+     - `updateMenuState()` notfies observer of new state
 6. `BattleMenuStateObserver > onStateChange()` is triggered by state change
    - updates UI

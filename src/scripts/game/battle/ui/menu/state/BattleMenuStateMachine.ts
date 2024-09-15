@@ -47,9 +47,10 @@ export class BattleMenuStateMachine extends StateMachine<
     this.#observers.forEach((observer) => observer.onStateChange(newState));
   }
 
-  updateState(newState: BattleMenuStates) {
-    // Update BattleStateManager's state
-    this.battleStateManager.setState(newState);
+  // Update menu state and notify observers when that has been done
+  updateMenuState(newState: BattleMenuStates) {
+    // Update BattleStateManager state
+    this.battleStateManager.setCurrentMenuState(newState);
     // Notify observers of the state change
     this.#notifyObservers(newState);
   }
@@ -95,23 +96,23 @@ export class BattleMenuStateMachine extends StateMachine<
     switch (payload.menuItem) {
       // If the Fight menu item is selected
       case BattleMenuOptionLabels.FIGHT:
-        this.updateState(BattleMenuStates.Attacks);
-        this.battleStateManager.setPlayerAttack(payload.menuItem);
+        this.updateMenuState(BattleMenuStates.Attacks);
+        this.battleStateManager.setcurrentPlayerAttack(payload.menuItem);
         break;
 
       // If the Item (Inventory) menu item is selected
       case BattleMenuOptionLabels.ITEM:
-        this.updateState(BattleMenuStates.Inventory);
+        this.updateMenuState(BattleMenuStates.Inventory);
         break;
 
       // If the Switch menu item is selected
       case BattleMenuOptionLabels.SWITCH:
-        this.updateState(BattleMenuStates.Creatures);
+        this.updateMenuState(BattleMenuStates.Creatures);
         break;
 
       // If the FLEE menu item is selected
       case BattleMenuOptionLabels.FLEE:
-        this.updateState(BattleMenuStates.Closed);
+        this.updateMenuState(BattleMenuStates.Closed);
         break;
     }
   }
@@ -123,44 +124,44 @@ export class BattleMenuStateMachine extends StateMachine<
   handleAttacksOk(payload: TransitionPayload) {
     console.log(`handleAttacksOk()`);
 
-    this.battleStateManager.setPlayerAttack(payload.menuItem);
+    this.battleStateManager.setcurrentPlayerAttack(payload.menuItem);
 
     // Update the state to display the message about the chosen attack
-    this.updateState(BattleMenuStates.DisplayTimedMessage);
+    this.updateMenuState(BattleMenuStates.DisplayTimedMessage);
   }
 
   handleAttacksCancel() {
     console.log("handleAttacksCancel()");
     console.log("backToMainMenu()");
-    this.updateState(BattleMenuStates.Main);
+    this.updateMenuState(BattleMenuStates.Main);
   }
 
   handleInventoryOk() {
     // go back to main menu
-    this.updateState(BattleMenuStates.Main);
+    this.updateMenuState(BattleMenuStates.Main);
   }
 
   handleInventoryCancel() {
     // go back to main menu
-    this.updateState(BattleMenuStates.Main);
+    this.updateMenuState(BattleMenuStates.Main);
   }
 
   handleCreaturesOk() {
     // go back to main menu
-    this.updateState(BattleMenuStates.Main);
+    this.updateMenuState(BattleMenuStates.Main);
   }
 
   handleCreaturesCancel() {
     // go back to main menu
-    this.updateState(BattleMenuStates.Main);
+    this.updateMenuState(BattleMenuStates.Main);
   }
 
   handleMessageTimeout() {
-    this.updateState(BattleMenuStates.DisplayTimedMessage);
+    this.updateMenuState(BattleMenuStates.DisplayTimedMessage);
   }
 
   handleMessageOk() {
-    this.updateState(BattleMenuStates.DisplayPersistentMessage);
+    this.updateMenuState(BattleMenuStates.DisplayPersistentMessage);
   }
 
   handleMessageCancel() {
@@ -168,7 +169,7 @@ export class BattleMenuStateMachine extends StateMachine<
   }
 
   handleBattleMenuClose() {
-    this.updateState(BattleMenuStates.Closed);
+    this.updateMenuState(BattleMenuStates.Closed);
     console.log("handleBattleMenuClose(). Closing battle menu.");
   }
 }

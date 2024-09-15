@@ -7,6 +7,7 @@ import {
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
 import { Directions, InputActions } from "@scripts/game/gameConstants";
+import { BackgroundImage } from "@game/battle/Background";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
@@ -18,14 +19,19 @@ export class BattleScene extends BaseScene {
       // the scene name, which we can reference throughout game code
       key: SceneKeys.BATTLE_SCENE,
     });
+    this.devMode = false; // turn off logging
   }
 
   // Scene lifecycle events
   create() {
     this.log("create");
 
-    // create main background
-    this.add.image(0, 0, BattleBackgroundAssetKeys.MEADOW).setOrigin(0);
+    // create background instance
+    const background = new BackgroundImage(
+      this,
+      BattleBackgroundAssetKeys.MEADOW
+    );
+    background.showBackground();
 
     // render the enemy creatures
     this.add.image(768, 144, CreatureAssetKeys.TUXEDO_CAT, 0);

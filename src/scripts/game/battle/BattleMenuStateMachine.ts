@@ -9,6 +9,7 @@ export enum BattleMenuStates {
   Creatures = "BATTLE_MENU_MONSTERS",
   Inventory = "BATTLE_MENU_INVENTORY",
   StatusDisplay = "BATTLE_MENU_STATUS_DISPLAY",
+  Closed = "BATTLE_MENU_CLOSED",
 }
 
 export class BattleMenuStateMachine extends StateMachine<
@@ -48,6 +49,10 @@ export class BattleMenuStateMachine extends StateMachine<
       [BattleMenuStates.StatusDisplay]: {
         [InputActions.OK]: this.handleStatusDisplayOk.bind(this),
         [InputActions.CANCEL]: this.handleStatusDisplayCancel.bind(this),
+      },
+      [BattleMenuStates.Closed]: {
+        [InputActions.OK]: this.handleStatusDisplayOk.bind(this),
+        [InputActions.CANCEL]: null,
       },
     };
   }
@@ -92,6 +97,16 @@ export class BattleMenuStateMachine extends StateMachine<
 
         this.battleMenu.showStatusDisplay("... No other creatures to battle!");
         break;
+
+      // If the FLEE menu item is selected
+      case BattleMenuOptionLabels.FLEE:
+        console.log("selected flee");
+
+        // Update the current state to the Inventory
+        this.updateState(BattleMenuStates.Closed);
+
+        this.battleMenu.showStatusDisplay("Leaving the battle now.");
+        break;
     }
   }
 
@@ -122,6 +137,7 @@ export class BattleMenuStateMachine extends StateMachine<
 
   handleInventoryCancel(payload: TransitionPayload) {
     // Handle Inventory CANCEL action
+    this.updateState(BattleMenuStates.Main);
     this.battleMenu.hideStatusDisplay();
     console.log(`handleInventoryCancel() payload: ${payload.menuItem}`);
   }
@@ -133,6 +149,8 @@ export class BattleMenuStateMachine extends StateMachine<
 
   handleCreaturesCancel(payload: TransitionPayload) {
     // Handle Creatures CANCEL action
+    this.updateState(BattleMenuStates.Main);
+    this.battleMenu.hideStatusDisplay();
     console.log(`handleCreaturesCancel() payload: ${payload.menuItem}`);
   }
 
@@ -144,5 +162,10 @@ export class BattleMenuStateMachine extends StateMachine<
   handleStatusDisplayCancel(payload: TransitionPayload) {
     // Handle Status Display CANCEL action
     console.log(`handleStatusDisplayCancel() payload: ${payload.menuItem}`);
+  }
+
+  handleBattleMenuClose() {
+    this.updateState(BattleMenuStates.Closed);
+    console.log("Closing battle menu.");
   }
 }

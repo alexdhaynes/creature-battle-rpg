@@ -3,7 +3,7 @@ export type TAction = string;
 
 export type TransitionsType<TState extends string, TAction extends string> = {
   [state in TState]: {
-    [action in TAction]: TransitionHandler;
+    [action in TAction]: TransitionHandler | null;
   };
 };
 

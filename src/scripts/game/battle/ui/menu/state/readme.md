@@ -1,20 +1,41 @@
-# Battle Menu State Management
+# Battle Menu State Management System
 
 ## Battle Menu
 
-- all the UI for the BattleMenu, including keyboard listeners
-- has references to: `BattleMenuStateMachine`, `BattleMenuObserver`
+- All the UI for the Battle Menu, including keyboard listeners.
+- Has references to:
+  - `BattleMenuStateMachine`
+  - `BattleMenuObserver`
 
 ## Battle Menu State Machine
 
-- handles transitions between states
-- has references: to `BattleMenu`, `BattleStateManager`
+- Handles transitions between states.
+- Has references to:
+  - `BattleMenu`
+  - `BattleStateManager`
 
 ## Battle Menu State Observer
 
-- reacts to state changes by changing UI
-- has a reference to the `BattleMenu`
+- Reacts to state changes by updating the UI.
+- Holds a reference to the `BattleMenu`.
 
 ## Battle Menu State Manager
 
-- holds and updates the current battle menu state / battle state
+- Holds and updates the current battle menu state and battle state.
+
+## Example Flow
+
+1. `BattleScene > update()` listens for keyboard presses every frame.
+2. Spacebar is pressed.
+3. `BattleScene > update() > handlePlayerInput(<OK Action>)` is called.
+4. `BattleMenu > handlePlayerInput()` dispatches:
+   - The current state (`BattleMenu.stateMachine.battleStateManager.getState()`)
+   - The input action
+   - A payload
+5. `BattleMenuStateMachine`
+   - dispatches the appropriate `transition()` functon based on the `BattleMenuState` and the `InputAction`
+   - the `transition()` function invokes `updateState()`
+     - `updateState()` triggers a state update in the `BattleStateManager`
+     - `updateState()` notfies observer of new state
+6. `BattleMenuStateObserver > onStateChange()` is triggered by state change
+   - updates UI

@@ -110,7 +110,6 @@ export class BattleMenu {
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
     const currentState = this.stateMachine.battleStateManager.getState();
-    console.log("Current state ", currentState);
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed

@@ -90,19 +90,19 @@ export const createAttackMenu = (scene: Phaser.Scene) => {
 // This is a wrapper for the sub info pane
 export const createMainInfoPane = (scene: Phaser.Scene) => {
   const rectHeight = 124;
-  const padding = 4;
+  const padding = 2;
 
   return scene.add
     .rectangle(
       padding, //x
       scene.scale.height - rectHeight - padding, // y
-      scene.scale.width - padding * 2, //width
+      scene.scale.width - padding, //width
       rectHeight, //height
-      0xede4f3, //fil
+      0xffffff, //fil
       1
     )
     .setOrigin(0)
-    .setStrokeStyle(8, 0x203023, 1);
+    .setStrokeStyle(4, 0x333, 1);
 };
 
 // The sub info pane
@@ -112,7 +112,36 @@ const _createMainInfoSubPane = (scene: Phaser.Scene) => {
   const rectHeight = 124;
 
   return scene.add
-    .rectangle(0, 0, rectWidth, rectHeight, 0xede4f3, 1)
+    .rectangle(0, 2, rectWidth, rectHeight, 0xffffff, 1)
     .setOrigin(0)
-    .setStrokeStyle(8, 0x19943a, 1);
+    .setStrokeStyle(4, 0x333, 1);
+};
+
+export const createStatusDisplayPane = (scene: Phaser.Scene, text: string) => {
+  const rectHeight = 124;
+  const padding = 2;
+
+  const rectangle = scene.add
+    .rectangle(
+      padding, //x
+      scene.scale.height - rectHeight - padding, // y
+      scene.scale.width - padding, //width
+      rectHeight, //height
+      0xffffff, //fill
+      1
+    )
+    .setOrigin(0)
+    .setStrokeStyle(4, 0x333, 1);
+
+  const statusDisplayText = scene.add.text(20, 468, text, battleUITextStyle);
+
+  const statusDisplayContainer = scene.add.container(0, 0, [
+    rectangle,
+    statusDisplayText,
+  ]);
+
+  return {
+    statusDisplayText,
+    statusDisplayContainer,
+  };
 };

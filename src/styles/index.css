@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Yoster";
-  src: url("/public/temp-game-assets/fonts/yoster-island.regular.ttf")
+  src: url("/temp-game-assets/fonts/yoster-island.regular.ttf")
     format("truetype");
   font-weight: normal;
   font-style: normal;
@@ -109,7 +109,7 @@ main {
 
   /* the Phaser canvas */
   canvas {
-    border-radius: 10px;
+    border-radius: 6px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
       rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     position: relative;

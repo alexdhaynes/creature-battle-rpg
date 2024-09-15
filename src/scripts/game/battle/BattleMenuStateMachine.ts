@@ -54,65 +54,95 @@ export class BattleMenuStateMachine extends StateMachine<
 
   // Handler methods for the transitions
   handleMainOk(payload: TransitionPayload) {
-    console.log(`MenuItem: ${payload.menuItem}`);
+    console.log(`handleMainOk payload(): ${payload.menuItem}`);
 
-    // If the Fight menu item is selected
-    if (payload.menuItem === BattleMenuOptionLabels.FIGHT) {
-      this.updateState(BattleMenuStates.Attacks);
-      // reset the cursor position
-      this.battleMenu.resetCursorPosition();
+    // Handle selections on the Main Menu
+    switch (payload.menuItem) {
+      // If the Fight menu item is selected
+      case BattleMenuOptionLabels.FIGHT:
+        console.log("selected fight");
 
-      // show the Attack Menu
-      this.battleMenu.hideMainMenu();
-      this.battleMenu.showAttackMenu();
+        // Update the current state to the Attacks menu
+        this.updateState(BattleMenuStates.Attacks);
+
+        // reset the cursor position
+        this.battleMenu.resetCursorPosition();
+
+        // show the Attack Menu
+        this.battleMenu.hideMainMenu();
+        this.battleMenu.showAttackMenu();
+        break;
+
+      // If the Item (Inventory) menu item is selected
+      case BattleMenuOptionLabels.ITEM:
+        console.log("selected item");
+
+        // Update the current state to the Inventory
+        this.updateState(BattleMenuStates.Inventory);
+
+        this.battleMenu.showStatusDisplay("... Nothing in the inventory!");
+        break;
+
+      // If the Switch menu item is selected
+      case BattleMenuOptionLabels.SWITCH:
+        console.log("selected switch");
+
+        // Update the current state to the Inventory
+        this.updateState(BattleMenuStates.Creatures);
+
+        this.battleMenu.showStatusDisplay("... No other creatures to battle!");
+        break;
     }
   }
 
   handleMainCancel(payload: TransitionPayload) {
-    console.log(`MenuItem: ${payload.menuItem}`);
+    console.log(`handleMainCancel() payload: ${payload.menuItem}`);
   }
 
   handleAttacksOk(payload: TransitionPayload) {
-    console.log(`MenuItem: ${payload.menuItem}`);
+    console.log(`handleAttacksOk() payload: ${payload.menuItem}`);
   }
 
   handleAttacksCancel() {
-    console.log("cancel attacks");
+    console.log("handleAttacksCancel()");
+    console.log("backToMainMenu()");
     this.updateState(BattleMenuStates.Main);
     // reset the cursor position
     this.battleMenu.resetCursorPosition();
-    // show the Main Menu
+    // hide whichever submenu is visible when this method is called
     this.battleMenu.hideAttackMenu();
+    // show the Main Menu
     this.battleMenu.showMainMenu();
+    //this.battleMenu.backtoMainMenu(;
   }
 
   handleInventoryOk(payload: TransitionPayload) {
-    // Handle Inventory OK action
-    console.log(payload);
+    console.log(`handleInventoryOk() payload: ${payload.menuItem}`);
   }
 
   handleInventoryCancel(payload: TransitionPayload) {
     // Handle Inventory CANCEL action
-    console.log(payload);
+    this.battleMenu.hideStatusDisplay();
+    console.log(`handleInventoryCancel() payload: ${payload.menuItem}`);
   }
 
   handleCreaturesOk(payload: TransitionPayload) {
     // Handle Creatures OK action
-    console.log(payload);
+    console.log(`handleCreaturesOk() payload: ${payload.menuItem}`);
   }
 
   handleCreaturesCancel(payload: TransitionPayload) {
     // Handle Creatures CANCEL action
-    console.log(payload);
+    console.log(`handleCreaturesCancel() payload: ${payload.menuItem}`);
   }
 
   handleStatusDisplayOk(payload: TransitionPayload) {
     // Handle Status Display OK action
-    console.log(payload);
+    console.log(`handleStatusDisplayOk() payload: ${payload.menuItem}`);
   }
 
   handleStatusDisplayCancel(payload: TransitionPayload) {
     // Handle Status Display CANCEL action
-    console.log(payload);
+    console.log(`handleStatusDisplayCancel() payload: ${payload.menuItem}`);
   }
 }

@@ -18,6 +18,7 @@ import {
   createMainMenu,
   createAttackMenu,
   createMainInfoPane,
+  createStatusDisplayPane,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
 
 export class BattleMenu {
@@ -29,7 +30,9 @@ export class BattleMenu {
   #displayTextLine2!: Phaser.GameObjects.Text;
   #battleMenuCursor!: Phaser.GameObjects.Image;
   #attackMenuCursor!: Phaser.GameObjects.Image; // TODO: do we need 2 cursor objects?
-
+  #statusDisplayText!: Phaser.GameObjects.Text;
+  #statusDisplayContainer!: Phaser.GameObjects.Container;
+  cursorIsDisabled: Boolean;
   #currentMenuCell!: CursorPositions2x2; // stores the currently selected cell of a 2x2 menu matrix
   #stateMachine!: BattleMenuStateMachine;
 
@@ -42,6 +45,8 @@ export class BattleMenu {
       BattleMenuStates.Main,
       this
     );
+
+    this.cursorIsDisabled = false;
   }
 
   // Putting the class's initial states in an init method
@@ -64,6 +69,10 @@ export class BattleMenu {
       this.#scene
     );
 
+    // create status display container and text
+    const { statusDisplayText, statusDisplayContainer } =
+      createStatusDisplayPane(this.#scene, "Status display!");
+
     this.#displayTextLine1 = displayTextLine1;
     this.#displayTextLine2 = displayTextLine2;
 
@@ -72,6 +81,10 @@ export class BattleMenu {
 
     this.#battleMenuCursor = battleMenuCursor;
     this.#attackMenuCursor = attackMenuCursor;
+
+    this.#statusDisplayText = statusDisplayText;
+    this.#statusDisplayContainer = statusDisplayContainer;
+    this.hideStatusDisplay(); // hide the status display container initially
 
     // Hide the main menu initially
     this.hideMainMenu();
@@ -89,7 +102,7 @@ export class BattleMenu {
 
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
-      this.#stateMachine.dispatch(InputActions.CANCEL, {
+      this.#stateMachine.dispatch(currentState, InputActions.CANCEL, {
         menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
       });
       return;
@@ -100,15 +113,17 @@ export class BattleMenu {
           ? battleAttackMenu2x2Grid[this.#currentMenuCell]
           : battleMainMenu2x2Grid[this.#currentMenuCell];
 
-      this.#stateMachine.dispatch(InputActions.OK, { menuItem });
+      this.#stateMachine.dispatch(currentState, InputActions.OK, { menuItem });
       return;
     }
     // Move the cursor for directional input
+    // only listen for directional input when cursor is not disabled
     if (
-      input === Directions.UP ||
-      input === Directions.DOWN ||
-      input === Directions.LEFT ||
-      input === Directions.RIGHT
+      !this.cursorIsDisabled &&
+      (input === Directions.UP ||
+        input === Directions.DOWN ||
+        input === Directions.LEFT ||
+        input === Directions.RIGHT)
     ) {
       this.#moveCursor(input as keyof typeof Directions);
       return;
@@ -180,13 +195,29 @@ export class BattleMenu {
     this.#displayTextLine1.setAlpha(0);
     this.#displayTextLine2.setAlpha(0);
   }
-  // Show the main battle menu
+  // Show the attack menu
   showAttackMenu() {
     this.#battleMenuAttack.setAlpha(1);
   }
 
-  // Hide the main battle menu
+  // Hide the attack menu
   hideAttackMenu() {
+    console.log("hide attack menu");
     this.#battleMenuAttack.setAlpha(0);
+  }
+
+  showStatusDisplay(text?: string) {
+    // Set the "disable the cursor" flag
+    this.cursorIsDisabled = true;
+    if (text) {
+      this.#statusDisplayText.setText(text);
+    }
+    this.#statusDisplayContainer.setAlpha(1).setDepth(10);
+  }
+
+  hideStatusDisplay() {
+    // Turn off the "disable the cursor" flag
+    this.cursorIsDisabled = false;
+    this.#statusDisplayContainer.setAlpha(0);
   }
 }

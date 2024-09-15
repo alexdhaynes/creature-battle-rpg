@@ -20,6 +20,7 @@ import {
   createInventoryPane,
   createSwitchPane,
   createFleePane,
+  createTextDisplayPane,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
 
 export class BattleMenu {
@@ -198,9 +199,10 @@ export class BattleMenu {
     this.#battleMenuAttack.setAlpha(1);
   }
 
+  showAttackMenuMessage() {}
+
   // Hide the attack menu
   hideAttackMenu() {
-    console.log("hide attack menu");
     this.#battleMenuAttack.setAlpha(0);
   }
 

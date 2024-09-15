@@ -276,3 +276,27 @@ export const createFleePane = (scene: Phaser.Scene) => {
     textObjects,
   };
 };
+
+// This is a text display pane that will display over the battle menu
+export const createTextDisplayPane = (
+  scene: Phaser.Scene,
+  messageList: string[]
+) => {
+  // Create a text container that will sit over
+  const { textContainer, textObjects } = createTextContainer(
+    scene,
+    messageList,
+    0,
+    0
+  );
+
+  const createTextDisplayPane = scene.add
+    .container(0, 448, [textContainer])
+    .setAlpha(0); // hide initially
+
+  return {
+    createTextDisplayPane,
+    textContainer,
+    textObjects,
+  };
+};

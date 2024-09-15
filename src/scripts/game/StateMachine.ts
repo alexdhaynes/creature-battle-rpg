@@ -2,9 +2,7 @@ export type TState = string; // TODO: be more specific about which string consta
 export type TAction = string;
 
 export type TransitionsType<TState extends string, TAction extends string> = {
-  [state in TState]: {
-    [action in TAction]: TransitionHandler | null;
-  };
+  [state in TState]: Partial<Record<TAction, TransitionHandler>>; // Use Partial to make actions optional
 };
 
 export type TransitionHandler = (payload: any) => void;

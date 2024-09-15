@@ -20,6 +20,7 @@ export enum Directions {
 export enum InputActions {
   OK = "OK",
   CANCEL = "CANCEL",
+  TIMEOUT = "TIMEOUT",
 }
 
 export interface KeyActionMap {

@@ -282,21 +282,23 @@ export const createTextDisplayPane = (
   scene: Phaser.Scene,
   messageList: string[]
 ) => {
-  // Create a text container that will sit over
-  const { textContainer, textObjects } = createTextContainer(
-    scene,
-    messageList,
-    0,
-    0
-  );
+  const containerBg = createMainBgPane(scene);
 
-  const createTextDisplayPane = scene.add
-    .container(0, 448, [textContainer])
+  // Create a text container that will sit over the battle manu
+  const _textContainer = createTextContainer(scene, messageList, 0, 0);
+
+  const _displayTextContainer = _textContainer.textContainer;
+
+  const displayTextObjects = _textContainer.textObjects;
+
+  const displayTextContainer = scene.add
+    .container(0, 448, [containerBg, _displayTextContainer])
     .setAlpha(0); // hide initially
 
+  // add the text container to the battle menu
+
   return {
-    createTextDisplayPane,
-    textContainer,
-    textObjects,
+    displayTextContainer,
+    displayTextObjects,
   };
 };

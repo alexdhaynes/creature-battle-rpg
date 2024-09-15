@@ -12,7 +12,7 @@ import { Directions, InputActions } from "@scripts/game/gameConstants";
 import {
   BattleMenuStateMachine,
   BattleMenuStates,
-} from "@game/battle/BattleMenuStateMachine";
+} from "@game/battle/ui/menu/state/BattleMenuStateMachine";
 
 import {
   createMainMenu,
@@ -21,7 +21,9 @@ import {
   createSwitchPane,
   createFleePane,
   createTextDisplayPane,
+  updateTextContainer,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
+import { BattleMenuObserver } from "@game/battle/ui/menu/state/BattleMenuStateObserver";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
@@ -38,6 +40,9 @@ export class BattleMenu {
   #inventoryContainer!: Phaser.GameObjects.Container;
   #creaturesContainer!: Phaser.GameObjects.Container;
   #fleeContainer!: Phaser.GameObjects.Container;
+  // the container for status messages
+  #statusMessageContainer!: Phaser.GameObjects.Container;
+  #statusMessageTextObjects!: Phaser.GameObjects.Text[];
 
   // Set initial states
   constructor(scene: Phaser.Scene) {
@@ -48,6 +53,9 @@ export class BattleMenu {
       BattleMenuStates.Main,
       this
     );
+    // create battlemenuObserver
+    const attackMenuObserver = new BattleMenuObserver(this);
+    this.#stateMachine.addObserver(attackMenuObserver);
 
     this.cursorIsDisabled = false;
   }
@@ -75,6 +83,14 @@ export class BattleMenu {
     const { fleeContainer } = createFleePane(this.#scene);
     this.#fleeContainer = fleeContainer;
 
+    const { displayTextContainer, displayTextObjects } = createTextDisplayPane(
+      this.#scene,
+      [""]
+    );
+
+    this.#statusMessageContainer = displayTextContainer;
+    this.#statusMessageTextObjects = displayTextObjects;
+
     // create the attack menu
     const { attackMenuNav, attackMenuCursor } = createAttackMenuNav(
       this.#scene
@@ -89,19 +105,23 @@ export class BattleMenu {
     this.hideAttackMenu();
 
     // initialize the state machine
-    this.#stateMachine.currentState = BattleMenuStates.Main;
+    this.#stateMachine.battleStateManager.setState(BattleMenuStates.Main);
   }
 
   // Respond to keyboard inputs
   handlePlayerInput(
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
-    const currentState = this.#stateMachine.currentState;
-
+    const currentState = this.#stateMachine.battleStateManager.getState();
+    console.log("Current state ", currentState);
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed
-      if (this.#stateMachine.currentState === BattleMenuStates.Closed) return;
+      if (
+        this.#stateMachine.battleStateManager.getState() ===
+        BattleMenuStates.Closed
+      )
+        return;
 
       this.#stateMachine.dispatch(currentState, InputActions.CANCEL, {
         menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
@@ -133,8 +153,11 @@ export class BattleMenu {
 
   // Given a directional input, move the cursor to the appropriate cell
   #moveCursor(direction: keyof typeof Directions) {
+    console.log("move cursor ", direction);
+
     const currentCursor =
-      this.#stateMachine.currentState === BattleMenuStates.Attacks
+      this.#stateMachine.battleStateManager.getState() ===
+      BattleMenuStates.Attacks
         ? this.#attackMenuCursor
         : this.#battleMenuCursor;
 
@@ -158,7 +181,8 @@ export class BattleMenu {
   // reset cursor to the top left of the grid
   resetCursorPosition() {
     const currentCursor =
-      this.#stateMachine.currentState === BattleMenuStates.Attacks
+      this.#stateMachine.battleStateManager.getState() ===
+      BattleMenuStates.Attacks
         ? this.#attackMenuCursor
         : this.#battleMenuCursor;
     // set the cursor's position
@@ -199,7 +223,16 @@ export class BattleMenu {
     this.#battleMenuAttack.setAlpha(1);
   }
 
-  showAttackMenuMessage() {}
+  showAttackMenuMessage(newMessage: string[]) {
+    this.hideAttackMenu();
+    updateTextContainer(this.#statusMessageTextObjects, newMessage);
+    this.#statusMessageContainer.setAlpha(1);
+  }
+
+  hideStatusMessage() {
+    updateTextContainer(this.#statusMessageTextObjects, [""]);
+    this.#statusMessageContainer.setAlpha(0);
+  }
 
   // Hide the attack menu
   hideAttackMenu() {

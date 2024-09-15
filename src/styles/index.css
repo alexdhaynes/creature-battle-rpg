@@ -41,17 +41,15 @@ html {
 }
 
 body {
-  width: calc(100% - 40px); /* account for decorative ridge border */
+  width: 100%;
   height: 100%;
   margin: 0;
   overscroll-behavior: none;
-  opacity: 0.8;
   padding-bottom: 80px;
-  background-color: #c5f5f9;
-  opacity: 0.8;
-  background-image: radial-gradient(#5aa5bf 0.5px, #c5f5f9 0.5px);
-  background-size: 10px 10px;
-  border: 20px ridge #ffaf50;
+  background-color: #061e1f;
+  opacity: 1;
+  background-image: radial-gradient(#2d9ac1 0.8px, #061e1f 0.8px);
+  background-size: 16px 16px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,29 +61,49 @@ body {
 
 header {
   position: relative;
-  top: 0;
-  margin: 0 0 0 0;
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  align-items: center;
-  transform: translateX(-30px); /* optically center header */
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+
+  .header-items {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    padding: 20px;
+    padding-right: 40px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    border: solid #7e5211 10px;
+  }
 
   h1 {
     display: inline-block;
     font-family: "Yoster", sans-serif;
     font-size: 52px;
     color: #7e5211;
-    align-items: center;
   }
 }
 
 #cat-icon {
-  position: sticky;
   width: 150px;
-  padding: 10px 20px;
-  top: 0;
-  left: 0;
+  display: inline-block;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the circle */
+    width: 150px; /* Adjust to fit your image */
+    height: 150px; /* Adjust to fit your image */
+    background-color: white;
+    border-radius: 50%; /* Make it a circle */
+    z-index: -1; /* Place it behind the image */
+  }
 }
 
 main {
@@ -109,6 +127,7 @@ main {
 
   /* the Phaser canvas */
   canvas {
+    border: 20px ridge #ffaf50;
     border-radius: 6px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
       rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;

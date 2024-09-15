@@ -8,7 +8,6 @@ export enum BattleMenuStates {
   Attacks = "BATTLE_MENU_ATTACKS",
   Creatures = "BATTLE_MENU_MONSTERS",
   Inventory = "BATTLE_MENU_INVENTORY",
-  StatusDisplay = "BATTLE_MENU_STATUS_DISPLAY",
   Closed = "BATTLE_MENU_CLOSED",
 }
 
@@ -46,12 +45,8 @@ export class BattleMenuStateMachine extends StateMachine<
         [InputActions.OK]: this.handleCreaturesOk.bind(this),
         [InputActions.CANCEL]: this.handleCreaturesCancel.bind(this),
       },
-      [BattleMenuStates.StatusDisplay]: {
-        [InputActions.OK]: this.handleStatusDisplayOk.bind(this),
-        [InputActions.CANCEL]: this.handleStatusDisplayCancel.bind(this),
-      },
       [BattleMenuStates.Closed]: {
-        [InputActions.OK]: this.handleStatusDisplayOk.bind(this),
+        [InputActions.OK]: this.handleBattleMenuClose.bind(this),
         [InputActions.CANCEL]: null,
       },
     };
@@ -61,51 +56,43 @@ export class BattleMenuStateMachine extends StateMachine<
   handleMainOk(payload: TransitionPayload) {
     console.log(`handleMainOk payload(): ${payload.menuItem}`);
 
+    // hide the Main menu in all cases
+    this.battleMenu.hideMainMenu();
+
     // Handle selections on the Main Menu
     switch (payload.menuItem) {
       // If the Fight menu item is selected
       case BattleMenuOptionLabels.FIGHT:
-        console.log("selected fight");
-
         // Update the current state to the Attacks menu
         this.updateState(BattleMenuStates.Attacks);
-
         // reset the cursor position
         this.battleMenu.resetCursorPosition();
-
-        // show the Attack Menu
-        this.battleMenu.hideMainMenu();
         this.battleMenu.showAttackMenu();
+
         break;
 
       // If the Item (Inventory) menu item is selected
       case BattleMenuOptionLabels.ITEM:
-        console.log("selected item");
-
         // Update the current state to the Inventory
         this.updateState(BattleMenuStates.Inventory);
 
-        this.battleMenu.showStatusDisplay("... Nothing in the inventory!");
+        this.battleMenu.showInventoryPane();
         break;
 
       // If the Switch menu item is selected
       case BattleMenuOptionLabels.SWITCH:
-        console.log("selected switch");
-
         // Update the current state to the Inventory
         this.updateState(BattleMenuStates.Creatures);
+        this.battleMenu.showCreaturesPane();
 
-        this.battleMenu.showStatusDisplay("... No other creatures to battle!");
         break;
 
       // If the FLEE menu item is selected
       case BattleMenuOptionLabels.FLEE:
-        console.log("selected flee");
-
         // Update the current state to the Inventory
         this.updateState(BattleMenuStates.Closed);
+        this.battleMenu.showFleePane();
 
-        this.battleMenu.showStatusDisplay("Leaving the battle now.");
         break;
     }
   }
@@ -138,7 +125,9 @@ export class BattleMenuStateMachine extends StateMachine<
   handleInventoryCancel(payload: TransitionPayload) {
     // Handle Inventory CANCEL action
     this.updateState(BattleMenuStates.Main);
-    this.battleMenu.hideStatusDisplay();
+    this.battleMenu.hideInventoryPane();
+    // show the Main Menu
+    this.battleMenu.showMainMenu();
     console.log(`handleInventoryCancel() payload: ${payload.menuItem}`);
   }
 
@@ -150,22 +139,14 @@ export class BattleMenuStateMachine extends StateMachine<
   handleCreaturesCancel(payload: TransitionPayload) {
     // Handle Creatures CANCEL action
     this.updateState(BattleMenuStates.Main);
-    this.battleMenu.hideStatusDisplay();
+    this.battleMenu.hideCreaturesPane();
+    // show the Main Menu
+    this.battleMenu.showMainMenu();
     console.log(`handleCreaturesCancel() payload: ${payload.menuItem}`);
-  }
-
-  handleStatusDisplayOk(payload: TransitionPayload) {
-    // Handle Status Display OK action
-    console.log(`handleStatusDisplayOk() payload: ${payload.menuItem}`);
-  }
-
-  handleStatusDisplayCancel(payload: TransitionPayload) {
-    // Handle Status Display CANCEL action
-    console.log(`handleStatusDisplayCancel() payload: ${payload.menuItem}`);
   }
 
   handleBattleMenuClose() {
     this.updateState(BattleMenuStates.Closed);
-    console.log("Closing battle menu.");
+    console.log("handleBattleMenuClose(). Closing battle menu.");
   }
 }

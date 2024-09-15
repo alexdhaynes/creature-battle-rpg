@@ -16,25 +16,27 @@ import {
 
 import {
   createMainMenu,
-  createAttackMenu,
-  createMainInfoPane,
-  createStatusDisplayPane,
+  createAttackMenuNav,
+  createInventoryPane,
+  createSwitchPane,
+  createFleePane,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
   // game objects
-  #battleMenuMain!: Phaser.GameObjects.Container;
   #battleMenuAttack!: Phaser.GameObjects.Container;
-  #displayTextLine1!: Phaser.GameObjects.Text;
-  #displayTextLine2!: Phaser.GameObjects.Text;
   #battleMenuCursor!: Phaser.GameObjects.Image;
   #attackMenuCursor!: Phaser.GameObjects.Image; // TODO: do we need 2 cursor objects?
-  #statusDisplayText!: Phaser.GameObjects.Text;
-  #statusDisplayContainer!: Phaser.GameObjects.Container;
   cursorIsDisabled: Boolean;
   #currentMenuCell!: CursorPositions2x2; // stores the currently selected cell of a 2x2 menu matrix
   #stateMachine!: BattleMenuStateMachine;
+  #battleMenuTextObjects!: Phaser.GameObjects.Text[];
+  #battleMenuNav!: Phaser.GameObjects.Container;
+  // the containers for the menu items
+  #inventoryContainer!: Phaser.GameObjects.Container;
+  #creaturesContainer!: Phaser.GameObjects.Container;
+  #fleeContainer!: Phaser.GameObjects.Container;
 
   // Set initial states
   constructor(scene: Phaser.Scene) {
@@ -53,38 +55,33 @@ export class BattleMenu {
   //so I have more control over when to call these initial states
   // Here, create the game objects and instantiate state machine
   init() {
-    // create the info pane
-    createMainInfoPane(this.#scene);
-
     // create the main menu
-    const {
-      displayTextLine1,
-      displayTextLine2,
-      battleMenuCursor,
-      battleMenuMain,
-    } = createMainMenu(this.#scene);
-
-    // create the attack menu
-    const { attackMenuCursor, battleMenuAttack } = createAttackMenu(
+    // the cursor, menu container, text container, and text objects are returned
+    const { battleMenuCursor, textObjects, battleMenuNav } = createMainMenu(
       this.#scene
     );
 
-    // create status display container and text
-    const { statusDisplayText, statusDisplayContainer } =
-      createStatusDisplayPane(this.#scene, "Status display!");
-
-    this.#displayTextLine1 = displayTextLine1;
-    this.#displayTextLine2 = displayTextLine2;
-
-    this.#battleMenuMain = battleMenuMain;
-    this.#battleMenuAttack = battleMenuAttack;
-
     this.#battleMenuCursor = battleMenuCursor;
-    this.#attackMenuCursor = attackMenuCursor;
+    this.#battleMenuTextObjects = textObjects;
+    this.#battleMenuNav = battleMenuNav;
 
-    this.#statusDisplayText = statusDisplayText;
-    this.#statusDisplayContainer = statusDisplayContainer;
-    this.hideStatusDisplay(); // hide the status display container initially
+    const { inventoryContainer } = createInventoryPane(this.#scene);
+    this.#inventoryContainer = inventoryContainer;
+
+    const { creaturesContainer } = createSwitchPane(this.#scene);
+    this.#creaturesContainer = creaturesContainer;
+
+    const { fleeContainer } = createFleePane(this.#scene);
+    this.#fleeContainer = fleeContainer;
+
+    // create the attack menu
+    const { attackMenuNav, attackMenuCursor } = createAttackMenuNav(
+      this.#scene
+    );
+
+    this.#battleMenuAttack = attackMenuNav;
+
+    this.#attackMenuCursor = attackMenuCursor;
 
     // Hide the main menu initially
     this.hideMainMenu();
@@ -177,12 +174,10 @@ export class BattleMenu {
 
   // Show the main battle menu
   showMainMenu() {
-    // update the battle text before showing the main battle menu
-    this.#displayTextLine1.setText("What should");
-    this.#battleMenuMain.setAlpha(1);
-    // show the battle text
-    this.#displayTextLine1.setAlpha(1);
-    this.#displayTextLine2.setAlpha(1);
+    // show the main menu text
+    this.#battleMenuTextObjects.map((text) => text.setAlpha(1));
+    // show the main menu nav
+    this.#battleMenuNav.setAlpha(1);
 
     // reset initial position of cursor
     this.#battleMenuCursor.setPosition(
@@ -193,10 +188,10 @@ export class BattleMenu {
 
   // Hide the main battle menu
   hideMainMenu() {
-    this.#battleMenuMain.setAlpha(0);
-    // hide the battle text
-    this.#displayTextLine1.setAlpha(0);
-    this.#displayTextLine2.setAlpha(0);
+    // hide the main menu text
+    this.#battleMenuTextObjects.map((text) => text.setAlpha(0));
+    // hide the main menu nav
+    this.#battleMenuNav.setAlpha(0);
   }
   // Show the attack menu
   showAttackMenu() {
@@ -209,18 +204,27 @@ export class BattleMenu {
     this.#battleMenuAttack.setAlpha(0);
   }
 
-  showStatusDisplay(text?: string) {
-    // Set the "disable the cursor" flag
-    this.cursorIsDisabled = true;
-    if (text) {
-      this.#statusDisplayText.setText(text);
-    }
-    this.#statusDisplayContainer.setAlpha(1).setDepth(10);
+  showInventoryPane() {
+    this.#inventoryContainer.setAlpha(1);
   }
 
-  hideStatusDisplay() {
-    // Turn off the "disable the cursor" flag
-    this.cursorIsDisabled = false;
-    this.#statusDisplayContainer.setAlpha(0);
+  hideInventoryPane() {
+    this.#inventoryContainer.setAlpha(0);
+  }
+
+  showCreaturesPane() {
+    this.#creaturesContainer.setAlpha(1);
+  }
+
+  hideCreaturesPane() {
+    this.#creaturesContainer.setAlpha(0);
+  }
+
+  showFleePane() {
+    this.#fleeContainer.setAlpha(1);
+  }
+
+  hideFleePane() {
+    this.#fleeContainer.setAlpha(0);
   }
 }

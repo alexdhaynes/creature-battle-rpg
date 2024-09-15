@@ -13,11 +13,9 @@ export type TransitionPayload = {
 };
 
 export class StateMachine<TState extends string, TAction extends string> {
-  currentState: TState;
   transitions: TransitionsType<TState, TAction>;
 
-  constructor(initialState: TState) {
-    this.currentState = initialState;
+  constructor() {
     this.transitions = {} as TransitionsType<TState, TAction>;
   }
 
@@ -38,11 +36,5 @@ export class StateMachine<TState extends string, TAction extends string> {
     } else {
       console.error(`${actionName} is not valid for ${state}`);
     }
-  }
-
-  // Update the current state
-  updateState(newState: TState): void {
-    this.currentState = newState;
-    console.log(`called updateState(); new state: ${newState}`);
   }
 }

@@ -10,7 +10,8 @@ export enum BattleMenuStates {
   Attacks = "BATTLE_MENU_ATTACKS",
   Creatures = "BATTLE_MENU_MONSTERS",
   Inventory = "BATTLE_MENU_INVENTORY",
-  DisplayMessage = "BATTLE_MENU_DISPLAY_MESSAGE",
+  DisplayPersistentMessage = "BATTLE_MENU_PERSISTENT_MESSAGE",
+  DisplayTimedMessage = "BATTLE_MENU_TIMED_MESSAGE",
   Closed = "BATTLE_MENU_CLOSED",
 }
 
@@ -20,17 +21,14 @@ export class BattleMenuStateMachine extends StateMachine<
 > {
   battleMenu; //reference to the BattleMenu class for updating its UI
   battleStateManager: BattleStateManager;
-  // currentState, transitions{}, dispatch(), updateState() are in the superclass
+  // dispatch() is in the superclass
   #observers: StateChangeObserver[] = []; // List of observers
 
-  constructor(currentState: BattleMenuStates, battleMenu: BattleMenu) {
-    super(currentState);
+  constructor(battleMenu: BattleMenu) {
+    super();
     this.battleMenu = battleMenu;
     this.battleStateManager = new BattleStateManager();
     this.initializeTransitions();
-
-    this.battleStateManager.setState(currentState);
-    console.log("battle state manager ", this.battleStateManager);
   }
 
   // Add an observer
@@ -38,6 +36,7 @@ export class BattleMenuStateMachine extends StateMachine<
     this.#observers.push(observer);
   }
 
+  // TODO: add observer logic to the StateMachine superclass
   // Remove an observer
   removeObserver(observer: StateChangeObserver) {
     this.#observers = this.#observers.filter((obs) => obs !== observer);
@@ -48,8 +47,6 @@ export class BattleMenuStateMachine extends StateMachine<
     this.#observers.forEach((observer) => observer.onStateChange(newState));
   }
 
-  // Override the updateState method to include observers
-  // TODO: add observer logic to the StateMachine superclass
   updateState(newState: BattleMenuStates) {
     // Update BattleStateManager's state
     this.battleStateManager.setState(newState);
@@ -77,9 +74,10 @@ export class BattleMenuStateMachine extends StateMachine<
         [InputActions.OK]: this.handleCreaturesOk.bind(this),
         [InputActions.CANCEL]: this.handleCreaturesCancel.bind(this),
       },
-      [BattleMenuStates.DisplayMessage]: {
+      [BattleMenuStates.DisplayPersistentMessage]: {
         [InputActions.OK]: this.handleMessageOk.bind(this),
-        [InputActions.CANCEL]: this.handleMessageCancel.bind(this),
+      },
+      [BattleMenuStates.DisplayTimedMessage]: {
         [InputActions.TIMEOUT]: this.handleMessageTimeout.bind(this),
       },
       [BattleMenuStates.Closed]: {
@@ -128,12 +126,7 @@ export class BattleMenuStateMachine extends StateMachine<
     this.battleStateManager.setPlayerAttack(payload.menuItem);
 
     // Update the state to display the message about the chosen attack
-    this.updateState(BattleMenuStates.DisplayMessage);
-
-    // Show a message about the chosen attack in the UI
-    this.battleMenu.showAttackMenuMessage([
-      `You selected ${payload.menuItem} attack!`,
-    ]);
+    this.updateState(BattleMenuStates.DisplayTimedMessage);
   }
 
   handleAttacksCancel() {
@@ -142,34 +135,32 @@ export class BattleMenuStateMachine extends StateMachine<
     this.updateState(BattleMenuStates.Main);
   }
 
-  handleInventoryOk(payload: TransitionPayload) {
-    console.log(`handleInventoryOk() payload: ${payload.menuItem}`);
-  }
-
-  handleInventoryCancel() {
-    // Handle Inventory CANCEL action
+  handleInventoryOk() {
+    // go back to main menu
     this.updateState(BattleMenuStates.Main);
   }
 
-  handleCreaturesOk(payload: TransitionPayload) {
-    // Handle Creatures OK action
-    console.log(`handleCreaturesOk() payload: ${payload.menuItem}`);
+  handleInventoryCancel() {
+    // go back to main menu
+    this.updateState(BattleMenuStates.Main);
+  }
+
+  handleCreaturesOk() {
+    // go back to main menu
+    this.updateState(BattleMenuStates.Main);
   }
 
   handleCreaturesCancel() {
-    // Handle Creatures CANCEL action
+    // go back to main menu
     this.updateState(BattleMenuStates.Main);
   }
 
   handleMessageTimeout() {
-    setTimeout(() => {
-      // Transition back to the Main menu after the timeout
-      this.updateState(BattleMenuStates.Main);
-    }, 1500);
+    this.updateState(BattleMenuStates.DisplayTimedMessage);
   }
 
   handleMessageOk() {
-    console.log("handle message ok");
+    this.updateState(BattleMenuStates.DisplayPersistentMessage);
   }
 
   handleMessageCancel() {

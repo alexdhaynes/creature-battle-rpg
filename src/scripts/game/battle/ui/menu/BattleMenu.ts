@@ -33,7 +33,7 @@ export class BattleMenu {
   #attackMenuCursor!: Phaser.GameObjects.Image; // TODO: do we need 2 cursor objects?
   cursorIsDisabled: Boolean;
   #currentMenuCell!: CursorPositions2x2; // stores the currently selected cell of a 2x2 menu matrix
-  #stateMachine!: BattleMenuStateMachine;
+  stateMachine!: BattleMenuStateMachine;
   #battleMenuTextObjects!: Phaser.GameObjects.Text[];
   #battleMenuNav!: Phaser.GameObjects.Container;
   // the containers for the menu items
@@ -49,13 +49,10 @@ export class BattleMenu {
     this.#scene = scene;
     this.#currentMenuCell = CursorPositions2x2.TOP_LEFT;
     // instantiate state machine
-    this.#stateMachine = new BattleMenuStateMachine(
-      BattleMenuStates.Main,
-      this
-    );
+    this.stateMachine = new BattleMenuStateMachine(this);
     // create battlemenuObserver
     const attackMenuObserver = new BattleMenuObserver(this);
-    this.#stateMachine.addObserver(attackMenuObserver);
+    this.stateMachine.addObserver(attackMenuObserver);
 
     this.cursorIsDisabled = false;
   }
@@ -105,25 +102,25 @@ export class BattleMenu {
     this.hideAttackMenu();
 
     // initialize the state machine
-    this.#stateMachine.battleStateManager.setState(BattleMenuStates.Main);
+    this.stateMachine.battleStateManager.setState(BattleMenuStates.Main);
   }
 
   // Respond to keyboard inputs
   handlePlayerInput(
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
-    const currentState = this.#stateMachine.battleStateManager.getState();
+    const currentState = this.stateMachine.battleStateManager.getState();
     console.log("Current state ", currentState);
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed
       if (
-        this.#stateMachine.battleStateManager.getState() ===
+        this.stateMachine.battleStateManager.getState() ===
         BattleMenuStates.Closed
       )
         return;
 
-      this.#stateMachine.dispatch(currentState, InputActions.CANCEL, {
+      this.stateMachine.dispatch(currentState, InputActions.CANCEL, {
         menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
       });
       return;
@@ -134,7 +131,7 @@ export class BattleMenu {
           ? battleAttackMenu2x2Grid[this.#currentMenuCell]
           : battleMainMenu2x2Grid[this.#currentMenuCell];
 
-      this.#stateMachine.dispatch(currentState, InputActions.OK, { menuItem });
+      this.stateMachine.dispatch(currentState, InputActions.OK, { menuItem });
       return;
     }
     // Move the cursor for directional input
@@ -153,10 +150,8 @@ export class BattleMenu {
 
   // Given a directional input, move the cursor to the appropriate cell
   #moveCursor(direction: keyof typeof Directions) {
-    console.log("move cursor ", direction);
-
     const currentCursor =
-      this.#stateMachine.battleStateManager.getState() ===
+      this.stateMachine.battleStateManager.getState() ===
       BattleMenuStates.Attacks
         ? this.#attackMenuCursor
         : this.#battleMenuCursor;
@@ -181,7 +176,7 @@ export class BattleMenu {
   // reset cursor to the top left of the grid
   resetCursorPosition() {
     const currentCursor =
-      this.#stateMachine.battleStateManager.getState() ===
+      this.stateMachine.battleStateManager.getState() ===
       BattleMenuStates.Attacks
         ? this.#attackMenuCursor
         : this.#battleMenuCursor;

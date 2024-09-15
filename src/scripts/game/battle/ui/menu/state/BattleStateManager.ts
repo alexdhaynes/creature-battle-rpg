@@ -5,12 +5,16 @@ export class BattleStateManager {
 
   playerAttack: string = "";
   enemyAttack: string = "";
+  currentMessage: string[] = [""];
 
   constructor() {
-    this.currentState = BattleMenuStates.Main; // or whatever initial state you want
+    this.currentState = BattleMenuStates.Main;
   }
 
-  // Store the chosen attack
+  setCurrentMessage(messageList: string[]) {
+    this.currentMessage = messageList;
+  }
+
   setPlayerAttack(attack: string) {
     this.playerAttack = attack;
   }

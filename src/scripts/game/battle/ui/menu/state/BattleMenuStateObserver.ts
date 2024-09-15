@@ -46,11 +46,20 @@ export class BattleMenuObserver implements StateChangeObserver {
         this.#battleMenu.showCreaturesPane();
         break;
 
-      case BattleMenuStates.DisplayMessage:
-        this.#battleMenu.hideMainMenu();
-        //TODO:
-        // - Initiate a timeout to transition back to the main menu after 2 seconds
-        console.log("OBSERVER ");
+      case BattleMenuStates.DisplayPersistentMessage:
+        console.log("display persistent message");
+        break;
+
+      case BattleMenuStates.DisplayTimedMessage:
+        const currentAttack =
+          this.#battleMenu.stateMachine.battleStateManager.playerAttack;
+
+        this.#battleMenu.showAttackMenuMessage([
+          `You selected ${currentAttack} attack!`,
+        ]);
+        setTimeout(() => {
+          this.#battleMenu.stateMachine.updateState(BattleMenuStates.Main);
+        }, 2000);
         break;
 
       case BattleMenuStates.Closed:

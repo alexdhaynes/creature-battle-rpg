@@ -92,7 +92,7 @@ export const createMainBgPane = (scene: Phaser.Scene) => {
       1
     )
     .setOrigin(0)
-    .setStrokeStyle(padding * 2, 0xff0000, 1);
+    .setStrokeStyle(padding * 2, 0x000, 1);
 
   return backgroundRect;
 };
@@ -107,7 +107,7 @@ const createSubBgPane = (scene: Phaser.Scene) => {
   const backgroundRect = scene.add
     .rectangle(padding, padding, rectWidth, rectHeight, 0xffffff, 1)
     .setOrigin(0)
-    .setStrokeStyle(padding * 2, 0x00ff00, 1);
+    .setStrokeStyle(padding * 2, 0x000, 1);
 
   return backgroundRect;
 };

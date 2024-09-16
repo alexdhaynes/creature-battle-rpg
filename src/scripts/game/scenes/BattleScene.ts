@@ -39,7 +39,7 @@ export class BattleScene extends BaseScene {
     // render the player creatures
     this.add.image(256, 316, CreatureAssetKeys.ORANGE_CAT, 0);
 
-    // instantiate then render the player health status container
+    // instantiate then render the player health status container (includes health bar and health data)
     this.#healthStatus = new HealthStatus(this);
     this.#healthStatus.init();
 

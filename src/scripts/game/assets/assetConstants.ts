@@ -24,6 +24,9 @@ export enum HealthBarAssetKeys {
   LEFT_CAP = "LEFT_CAP",
   RIGHT_CAP = "RIGHT_CAP",
   MIDDLE = "MIDDLE",
+  LEFT_CAP_SHADOW = "LEFT_CAP_SHADOW",
+  MIDDLE_SHADOW = "MIDDLE_SHADOW",
+  RIGHT_CAP_SHADOW = "RIGHT_CAP_SHADOW",
 }
 
 export enum UIAssetKeys {
@@ -37,7 +40,6 @@ export const assetList: AssetList = [
     key: BattleBackgroundAssetKeys.MEADOW,
     imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/battle-backgrounds/meadow-background.png`,
   },
-
   // Health bar assets
   {
     key: BattleAssetKeys.HEALTH_BAR_BACKGROUND,
@@ -54,6 +56,18 @@ export const assetList: AssetList = [
   {
     key: HealthBarAssetKeys.MIDDLE,
     imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_green_mid.png`,
+  },
+  {
+    key: HealthBarAssetKeys.LEFT_CAP_SHADOW,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_left.png`,
+  },
+  {
+    key: HealthBarAssetKeys.RIGHT_CAP_SHADOW,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_right.png`,
+  },
+  {
+    key: HealthBarAssetKeys.MIDDLE_SHADOW,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_mid.png`,
   },
 
   // Creatures

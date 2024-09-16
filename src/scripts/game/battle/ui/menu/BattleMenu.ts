@@ -125,7 +125,8 @@ export class BattleMenu {
   handlePlayerInput(
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
-    const { currentMenuState } = this.stateManager.getState();
+    const { currentMenuState, currentMenuCell } = this.stateManager.getState();
+
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed
@@ -136,15 +137,17 @@ export class BattleMenu {
         return;
 
       this.stateMachine.dispatch(currentMenuState, InputActions.CANCEL, {
-        menuItem: battleMainMenu2x2Grid[this.#currentMenuCell],
+        menuItem: battleMainMenu2x2Grid[currentMenuCell],
       });
       return;
     }
     if (input === InputActions.OK) {
       const menuItem =
         currentMenuState === BattleMenuStates.Attacks
-          ? battleAttackMenu2x2Grid[this.#currentMenuCell]
-          : battleMainMenu2x2Grid[this.#currentMenuCell];
+          ? battleAttackMenu2x2Grid[currentMenuCell]
+          : battleMainMenu2x2Grid[currentMenuCell];
+      console.log("current menu cell from state manager ", currentMenuCell);
+      console.log("private prop current menu cell ", this.#currentMenuCell);
 
       this.stateMachine.dispatch(currentMenuState, InputActions.OK, {
         menuItem,
@@ -158,6 +161,7 @@ export class BattleMenu {
       input === Directions.LEFT ||
       input === Directions.RIGHT
     ) {
+      // need to update currentMenuCell with new position
       this.menuCursor.moveCursor(input as keyof typeof Directions);
       return;
     }

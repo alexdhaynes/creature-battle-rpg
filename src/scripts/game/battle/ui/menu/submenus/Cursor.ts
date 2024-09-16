@@ -64,7 +64,6 @@ export class Cursor {
 
   // Given a directional input, move the cursor to the appropriate cell
   moveCursor(direction: keyof typeof Directions) {
-    console.log("Cursor > moveCursor(): moving cursor ", direction);
     // pass the current 2x2 cell to the navigation map
     const { currentMenuCell } = this.#stateManager.getState();
 

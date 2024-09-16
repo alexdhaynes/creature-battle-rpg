@@ -1,6 +1,9 @@
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
-import { battleMenuCursorInitialPosition } from "@scripts/game/battle/battleUIConstants";
+import {
+  CursorPositions2x2,
+  battleMenuCursorInitialPosition,
+} from "@scripts/game/battle/battleUIConstants";
 
 export interface StateChangeObserver {
   onStateChange(newState: BattleMenuStates): void;
@@ -21,6 +24,7 @@ export class BattleMenuObserver implements StateChangeObserver {
       case BattleMenuStates.Main:
         // hide whichever submenu is visible when this method is called
         // TODO: for now, just hide all submnus when state changes to Main menu
+        // TODO: move the repetitve logic to helper function
         this.#battleMenu.hideCreaturesPane();
         this.#battleMenu.hideInventoryPane();
         this.#battleMenu.hideStatusMessage();
@@ -33,6 +37,10 @@ export class BattleMenuObserver implements StateChangeObserver {
         this.#battleMenu.menuCursorGameObject.setPosition(
           battleMenuCursorInitialPosition.x,
           battleMenuCursorInitialPosition.y
+        );
+        // reset the current cell
+        this.#battleMenu.stateManager.setCurrentMenuCell(
+          CursorPositions2x2.TOP_LEFT
         );
 
         // show the Main Menu
@@ -49,6 +57,10 @@ export class BattleMenuObserver implements StateChangeObserver {
         this.#battleMenu.menuCursorGameObject.setPosition(
           battleMenuCursorInitialPosition.x,
           battleMenuCursorInitialPosition.y
+        );
+        // reset the current cell
+        this.#battleMenu.stateManager.setCurrentMenuCell(
+          CursorPositions2x2.TOP_LEFT
         );
 
         this.#battleMenu.attackMenu.show();
@@ -76,7 +88,7 @@ export class BattleMenuObserver implements StateChangeObserver {
         ]);
         setTimeout(() => {
           this.#battleMenu.stateMachine.updateMenuState(BattleMenuStates.Main);
-        }, 2000);
+        }, 1500);
         break;
 
       case BattleMenuStates.Closed:

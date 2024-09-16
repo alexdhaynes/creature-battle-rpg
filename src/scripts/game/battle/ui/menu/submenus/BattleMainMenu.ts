@@ -6,24 +6,27 @@ import {
 } from "@game/battle/battleUIConstants";
 
 import {
-  createMainBgPane,
-  createSubBgPane,
+  createFullWidthBgRect,
+  createHalfBgRect,
   createTextContainer,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
 
 export class BattleMainMenu {
   //#scene: Phaser.Scene;
   #mainMenuTextObjects!: Phaser.GameObjects.Text[];
+  #mainMenuTextContainer: Phaser.GameObjects.Container;
   #mainMenuNav!: Phaser.GameObjects.Container;
 
   constructor(scene: Phaser.Scene) {
     //this.#scene = scene;
 
     // create the main menu game objects
-    const { mainMenuNav, textObjects } = this.#createMainMenuGameObject(scene);
+    const { mainMenuNav, textObjects, textContainer } =
+      this.#createMainMenuGameObject(scene);
 
     this.#mainMenuTextObjects = textObjects;
     this.#mainMenuNav = mainMenuNav;
+    this.#mainMenuTextContainer = textContainer;
 
     // hide main menu initially
     this.hide();
@@ -50,7 +53,7 @@ export class BattleMainMenu {
   // Create Main Menu game object and all of its children
   // <mainMenuContainer>
   #createMainMenuGameObject(scene: Phaser.Scene) {
-    const _containerBg = createMainBgPane(scene);
+    const _containerBg = createFullWidthBgRect(scene);
     const { textContainer, textObjects } =
       this.#createBattleMenuInfoPane(scene);
     const mainMenuNav = this.#createMainNav(scene);
@@ -70,6 +73,7 @@ export class BattleMainMenu {
   }
 
   // Create text container for info pane text
+  // TODO: this container should be shared by all submenus!
   #createBattleMenuInfoPane(scene: Phaser.Scene) {
     const { textContainer, textObjects } = createTextContainer(
       scene,
@@ -97,7 +101,7 @@ export class BattleMainMenu {
     // Create a container for main manu nav;
     // position it to the right
     return scene.add.container(520, 0, [
-      createSubBgPane(scene).setDepth(1), // container background
+      createHalfBgRect(scene).setDepth(1), // container background
       _navItems.setDepth(2), // nav items
     ]);
   }

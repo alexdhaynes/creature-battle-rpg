@@ -15,10 +15,8 @@ import {
 } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
 
 import {
-  createInventoryPane,
-  createSwitchPane,
   createFleePane,
-  createTextDisplayPane,
+  createFullWidthTextDisplayPane,
   updateTextContainer,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
 
@@ -27,6 +25,8 @@ import { BattleMainMenu } from "@game/battle/ui/menu/submenus/BattleMainMenu";
 import { Cursor } from "@game/battle/ui/menu/submenus/Cursor";
 import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
 import { AttackMenu } from "./submenus/AttackMenu";
+import { InventoryMenu } from "./submenus/InventoryMenu";
+import { CreaturesMenu } from "./submenus/CreaturesMenu";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
@@ -103,19 +103,15 @@ export class BattleMenu {
   //so I have more control over when to call these initial states
   // Here, create the game objects and instantiate state machine
   init() {
-    const { inventoryContainer } = createInventoryPane(this.#scene);
-    this.#inventoryContainer = inventoryContainer;
+    this.#inventoryContainer = new InventoryMenu(this.#scene).getGameObject();
 
-    const { creaturesContainer } = createSwitchPane(this.#scene);
-    this.#creaturesContainer = creaturesContainer;
+    this.#creaturesContainer = new CreaturesMenu(this.#scene).getGameObject();
 
     const { fleeContainer } = createFleePane(this.#scene);
     this.#fleeContainer = fleeContainer;
 
-    const { displayTextContainer, displayTextObjects } = createTextDisplayPane(
-      this.#scene,
-      [""]
-    );
+    const { displayTextContainer, displayTextObjects } =
+      createFullWidthTextDisplayPane(this.#scene, [""]);
 
     this.#statusMessageContainer = displayTextContainer;
     this.#statusMessageTextObjects = displayTextObjects;

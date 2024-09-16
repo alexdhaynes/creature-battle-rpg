@@ -1,7 +1,4 @@
-import {
-  battleUITextStyle,
-  AttackMenuOptionLabels,
-} from "@game/battle/battleUIConstants";
+import { battleUITextStyle } from "@game/battle/battleUIConstants";
 
 // Define the custom return type
 interface TextContainerResult {
@@ -10,19 +7,6 @@ interface TextContainerResult {
 }
 
 /* ============ Helper Components ============ */
-
-/* MainMenu structure:
-    <battleMenuContainer>
-
-      <battleMenuInfoPane>
-        <TextObjects>
-      </battleMenuInfoPane>
-
-      <battleMenuNav>
-        <battleMenuNavItems />
-      </battleMenuNav>
-    </battleMenuContainer>
-*/
 
 // Create a text container
 // Supports an array of text lines
@@ -69,9 +53,9 @@ export const updateTextContainer = (
   });
 };
 
-// The main info bg pane
+// The main bg rectangle
 // Note: positioning is set on its parent
-export const createMainBgPane = (scene: Phaser.Scene) => {
+export const createFullWidthBgRect = (scene: Phaser.Scene) => {
   const rectHeight = 124;
   const padding = 2;
 
@@ -81,7 +65,7 @@ export const createMainBgPane = (scene: Phaser.Scene) => {
       padding, // y
       scene.scale.width - padding, //width
       rectHeight, //height
-      0xffffff, //fil
+      0xfff000, //fil
       1
     )
     .setOrigin(0)
@@ -90,15 +74,15 @@ export const createMainBgPane = (scene: Phaser.Scene) => {
   return backgroundRect;
 };
 
-// A sub info bg pane (half the width of the main pane)
+// A sub info bg rect (half the width of the main pane)
 // Note: positioning is set on its parent
-export const createSubBgPane = (scene: Phaser.Scene) => {
+export const createHalfBgRect = (scene: Phaser.Scene) => {
   const rectWidth = 500; // TODO: create a dynamic constant for this based on main bg pain size
   const rectHeight = 124;
   const padding = 2;
 
   const backgroundRect = scene.add
-    .rectangle(padding, padding, rectWidth, rectHeight, 0xffffff, 1)
+    .rectangle(padding, padding, rectWidth, rectHeight, 0x00ff00, 1)
     .setOrigin(0)
     .setStrokeStyle(padding * 2, 0x000, 1);
 
@@ -106,46 +90,6 @@ export const createSubBgPane = (scene: Phaser.Scene) => {
 };
 
 /* ========================  Components ======================== */
-
-export const createInventoryPane = (scene: Phaser.Scene) => {
-  // Create text container for inventory pane text
-  const { textContainer, textObjects } = createTextContainer(
-    scene,
-    ["There are no items", "in the inventory..."],
-    0,
-    0
-  );
-
-  const inventoryContainer = scene.add
-    .container(0, 448, [textContainer])
-    .setAlpha(0); // hide initially
-
-  return {
-    inventoryContainer,
-    textContainer,
-    textObjects,
-  };
-};
-
-export const createSwitchPane = (scene: Phaser.Scene) => {
-  // Create text container for switch pane text
-  const { textContainer, textObjects } = createTextContainer(
-    scene,
-    ["There are no creatures", "in your party..."],
-    0,
-    0
-  );
-
-  const creaturesContainer = scene.add
-    .container(0, 448, [textContainer])
-    .setAlpha(0); // hide initially
-
-  return {
-    creaturesContainer,
-    textContainer,
-    textObjects,
-  };
-};
 
 export const createFleePane = (scene: Phaser.Scene) => {
   // Create text container for switch pane text
@@ -168,11 +112,11 @@ export const createFleePane = (scene: Phaser.Scene) => {
 };
 
 // This is a text display pane that will display over the battle menu
-export const createTextDisplayPane = (
+export const createFullWidthTextDisplayPane = (
   scene: Phaser.Scene,
   messageList: string[]
 ) => {
-  const containerBg = createMainBgPane(scene);
+  const containerBg = createFullWidthBgRect(scene);
 
   // Create a text container that will sit over the battle manu
   const _textContainer = createTextContainer(scene, messageList, 0, 0);

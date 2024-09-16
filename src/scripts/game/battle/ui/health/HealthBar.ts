@@ -5,9 +5,9 @@ export class HealthBar {
   #healthBarContainer: Phaser.GameObjects.Container;
   #fullWidth: number;
   #scaleY: number;
-  #leftCap: Phaser.GameObjects.Image;
-  #middle: Phaser.GameObjects.Image;
-  #rightCap: Phaser.GameObjects.Image;
+  #leftCap!: Phaser.GameObjects.Image;
+  #middle!: Phaser.GameObjects.Image;
+  #rightCap!: Phaser.GameObjects.Image;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.#scene = scene;

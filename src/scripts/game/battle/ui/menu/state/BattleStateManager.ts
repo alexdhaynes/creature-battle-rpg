@@ -1,10 +1,12 @@
 import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
+import { CursorPositions2x2 } from "@game/battle/battleUIConstants";
 
 type BattleState = {
   currentMenuState: BattleMenuStates;
   currentPlayerAttack: string | null;
   currentEnemyAttack: string | null;
   currentMessage: string[];
+  currentMenuCell: CursorPositions2x2;
 };
 
 export class BattleStateManager {
@@ -16,6 +18,7 @@ export class BattleStateManager {
       currentPlayerAttack: "",
       currentEnemyAttack: "",
       currentMessage: [""],
+      currentMenuCell: CursorPositions2x2.TOP_LEFT,
     };
   }
 
@@ -41,7 +44,13 @@ export class BattleStateManager {
     this.setState({ currentEnemyAttack: attack });
   }
 
+  // Store the currently visible Battle Menu
   setCurrentMenuState(newState: BattleMenuStates) {
     this.setState({ currentMenuState: newState });
+  }
+
+  // Store the current position of the cursor
+  setCurrentMenuCell(newCell: CursorPositions2x2) {
+    this.setState({ currentMenuCell: newCell });
   }
 }

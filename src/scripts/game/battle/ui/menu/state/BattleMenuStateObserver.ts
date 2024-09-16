@@ -25,24 +25,24 @@ export class BattleMenuObserver implements StateChangeObserver {
         this.#battleMenu.hideStatusMessage();
         this.#battleMenu.hideAttackMenu();
         // reset cursor pos
-        this.#battleMenu.resetCursorPosition();
+        this.#battleMenu.mainMenu.getCursor().resetCursorPosition();
         // show the Main Menu
-        this.#battleMenu.showMainMenu();
+        this.#battleMenu.mainMenu.show();
         break;
 
       case BattleMenuStates.Attacks:
-        this.#battleMenu.hideMainMenu();
-        this.#battleMenu.resetCursorPosition();
+        this.#battleMenu.mainMenu.hide();
+        this.#battleMenu.mainMenu.getCursor().resetCursorPosition();
         this.#battleMenu.showAttackMenu();
         break;
 
       case BattleMenuStates.Inventory:
-        this.#battleMenu.hideMainMenu();
+        this.#battleMenu.mainMenu.hide();
         this.#battleMenu.showInventoryPane();
         break;
 
       case BattleMenuStates.Creatures:
-        this.#battleMenu.hideMainMenu();
+        this.#battleMenu.mainMenu.hide();
         this.#battleMenu.showCreaturesPane();
         break;
 
@@ -62,7 +62,7 @@ export class BattleMenuObserver implements StateChangeObserver {
         break;
 
       case BattleMenuStates.Closed:
-        this.#battleMenu.hideMainMenu();
+        this.#battleMenu.mainMenu.hide();
         this.#battleMenu.showFleePane();
         break;
 

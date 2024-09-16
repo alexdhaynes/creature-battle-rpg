@@ -1,0 +1,6 @@
+# TODO:
+
+- [] Move MainMenu from BattleMenu and into BattleMainMenu
+- [] Move AttackMenu from BattleMenu into own Class
+- [] InventoryPane from BattleMenu into own Class
+- [] CreaturesPane from BattleMenu into own Class

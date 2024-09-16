@@ -25,9 +25,9 @@
 
 ## Example Flow
 
-1. `BattleScene > update()` listens for keyboard presses every frame.
-2. Spacebar is pressed.
-3. `BattleScene > update() > handlePlayerInput(<OK Action>)` is called.
+1. `BattleScene > update()` listens for keyboard presses every frame of the game loop.
+2. A key is pressed.
+3. `BattleScene > update() > this.#battleMenu.handlePlayerInput(InputAction)` is called.
 4. `BattleMenu > handlePlayerInput()` dispatches:
    - The current state (`BattleMenu.stateMachine.battleStateManager.getState()`)
    - The input action

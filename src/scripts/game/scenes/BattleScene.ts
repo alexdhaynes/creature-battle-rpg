@@ -47,7 +47,7 @@ export class BattleScene extends BaseScene {
     this.#battleMenu = new BattleMenu(this);
     this.#battleMenu.init();
     // Show the main battle menu
-    this.#battleMenu.showMainMenu();
+    this.#battleMenu.mainMenu.show();
 
     // Create hotkeys for keyboard input
     this.#cursorKeys = this.input.keyboard?.createCursorKeys();
@@ -76,22 +76,5 @@ export class BattleScene extends BaseScene {
         return;
       }
     }
-
-    /*
-    // These listeners run as long as the key is pressed, rather than just once
-    // Set direction based on the arrow key
-    let selectedDirection: keyof typeof Directions = Directions.NONE;
-
-    if (this.#cursorKeys?.left.isDown) {
-      selectedDirection = Directions.LEFT;
-    } else if (this.#cursorKeys?.right.isDown) {
-      selectedDirection = Directions.RIGHT;
-    } else if (this.#cursorKeys?.up.isDown) {
-      selectedDirection = Directions.UP;
-    }
-    if (selectedDirection != Directions.NONE) {
-      this.#battleMenu.handlePlayerInput(selectedDirection);
-    }
-    */
   } //end update()
 }

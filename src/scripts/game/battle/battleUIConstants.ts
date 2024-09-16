@@ -49,8 +49,31 @@ export const battleAttackMenu2x2Grid = {
   [CursorPositions2x2.BOTTOM_RIGHT]: AttackMenuOptionLabels.MOVE_4,
 };
 
-// Where the cursor should end up when it is moved
-export const battleMenu2x2CursorPositions = {
+export type CursorCoordinates = {
+  cursorX: number;
+  cursorY: number;
+};
+
+export type CursorPositions2x2Map = Record<
+  CursorPositions2x2,
+  CursorCoordinates
+>;
+
+// the type that stores the (direction, cell) mapping
+export type TBattleMenuNavigationOptionsByDirection = Partial<
+  Record<Directions, CursorPositions2x2>
+>;
+
+// the type that stores the (cell, navPaths) mapping
+// between a cell of the 2x2 matrix and the object of possible navigation paths
+export type TBattleMenuOptionNavigationMap = Record<
+  CursorPositions2x2,
+  TBattleMenuNavigationOptionsByDirection
+>;
+
+// Map's the cursor's position in a 2x2 grid to a set of coordinates
+// (position, {coords}) mapping
+export const menu2x2CursorPositions: CursorPositions2x2Map = {
   [CursorPositions2x2.TOP_LEFT]: {
     cursorX: battleMenuCursorInitialPosition.x,
     cursorY: battleMenuCursorInitialPosition.y,
@@ -69,21 +92,10 @@ export const battleMenu2x2CursorPositions = {
   },
 };
 
-// the type that stores the (direction, cell) mapping
-export type TBattleMenuNavigationOptionsByDirection = Partial<
-  Record<Directions, CursorPositions2x2>
->;
-
-// the type that stores the (cell, navPaths) mapping
-// between a cell of the 2x2 matrix and the object of possible navigation paths
-export type TBattleMenuOptionNavigationPath = Record<
-  CursorPositions2x2,
-  TBattleMenuNavigationOptionsByDirection
->;
-
-// The action to which the cursor can move on the Battle Menu
-export const battleMenuNavigationMap: TBattleMenuOptionNavigationPath = {
-  // the action to which the cursor can move from "Fight"
+// Maps the cursor's current position in a 2x2 grid to its next position,
+// based on directional input
+// (position, {possibleNewPositions}) mapping
+export const menu2x2NavigationMap: TBattleMenuOptionNavigationMap = {
   [CursorPositions2x2.TOP_LEFT]: {
     [Directions.RIGHT]: CursorPositions2x2.TOP_RIGHT,
     [Directions.DOWN]: CursorPositions2x2.BOTTOM_LEFT,
@@ -102,47 +114,5 @@ export const battleMenuNavigationMap: TBattleMenuOptionNavigationPath = {
   [CursorPositions2x2.BOTTOM_RIGHT]: {
     [Directions.LEFT]: CursorPositions2x2.BOTTOM_LEFT,
     [Directions.UP]: CursorPositions2x2.TOP_RIGHT,
-  },
-};
-
-// the type that stores the mapping between a direction
-// and the corresponding menu option
-export type NavigationPath<
-  TOption extends string,
-  TDirection extends string
-> = {
-  [key in TOption]?: {
-    [dir in TDirection]?: TOption;
-  };
-};
-
-// the type that stores the mapping between a menu option
-// and the navigation paths available to it
-export type TAttackMenuOptionNavigationPath = NavigationPath<
-  AttackMenuOptionLabels,
-  Directions
->;
-
-// The action to which the cursor can move on the Attack Menu
-export const attackMenuItemNavigationPath: TAttackMenuOptionNavigationPath = {
-  // the action to which the cursor can move from "Fight"
-  [AttackMenuOptionLabels.MOVE_1]: {
-    [Directions.RIGHT]: AttackMenuOptionLabels.MOVE_2,
-    [Directions.DOWN]: AttackMenuOptionLabels.MOVE_3,
-  },
-  // the action to which the cursor can move from "Switch"
-  [AttackMenuOptionLabels.MOVE_2]: {
-    [Directions.LEFT]: AttackMenuOptionLabels.MOVE_1,
-    [Directions.DOWN]: AttackMenuOptionLabels.MOVE_4,
-  },
-  // the action to which the cursor can move from "Item"
-  [AttackMenuOptionLabels.MOVE_3]: {
-    [Directions.RIGHT]: AttackMenuOptionLabels.MOVE_4,
-    [Directions.UP]: AttackMenuOptionLabels.MOVE_1,
-  },
-  //the directions and actions the cursor can move from "Flee"
-  [AttackMenuOptionLabels.MOVE_4]: {
-    [Directions.LEFT]: AttackMenuOptionLabels.MOVE_3,
-    [Directions.UP]: AttackMenuOptionLabels.MOVE_2,
   },
 };

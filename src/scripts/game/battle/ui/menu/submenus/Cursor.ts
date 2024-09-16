@@ -5,27 +5,46 @@ import {
   CursorPositions2x2Map,
   TBattleMenuOptionNavigationMap,
 } from "@game/battle/battleUIConstants";
+
+import { UIAssetKeys } from "@scripts/game/assets/assetConstants";
+
 import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
 
 // A Cursor class which takes in a cursor Game Object and other properties
 export class Cursor {
+  #cursor!: Phaser.GameObjects.Image;
   //#cursorIsDisabled: boolean; // keep track of whether the cursor is disabled or not
   #navigationMap!: TBattleMenuOptionNavigationMap; // store the navigation path for this cursor
-  #cursor!: Phaser.GameObjects.Image; // a reference to the image object for the cursor
   #cursorPositionsGrid!: CursorPositions2x2Map;
   #stateManager!: BattleStateManager;
+  #initialPosition: { x: number; y: number };
 
   constructor(
     navigationMap: TBattleMenuOptionNavigationMap, // map's a cursor's current cardinal position to its next (eg: Top Left to Bottom Left)
     cursorPositionsGrid: CursorPositions2x2Map, // maps a cursor's current (x,y) pos to its next (x,y) pos
-    cursorGameObject: Phaser.GameObjects.Image,
+    intialPosition: { x: number; y: number },
     stateManager: BattleStateManager
   ) {
     //this.#cursorIsDisabled = true;
     this.#navigationMap = navigationMap;
     this.#cursorPositionsGrid = cursorPositionsGrid;
-    this.#cursor = cursorGameObject;
     this.#stateManager = stateManager;
+    this.#initialPosition = intialPosition;
+  }
+
+  createGameObject(scene: Phaser.Scene) {
+    this.#cursor = scene.add
+      .image(
+        this.#initialPosition.x,
+        this.#initialPosition.y,
+        UIAssetKeys.CURSOR,
+        0
+      )
+      .setOrigin(0.5)
+      .setScale(2.5);
+
+    this.#cursor.name = "Battle Menu Cursor";
+    return this.#cursor;
   }
 
   // get the Phaser game object
@@ -54,14 +73,11 @@ export class Cursor {
       : undefined;
 
     if (newCell) {
-      console.log("new cell ", newCell);
-
       // update the current cursor location in state
       this.#stateManager.setCurrentMenuCell(newCell);
 
       // Use navigation mapping to determine new cursor coords
       const { cursorX, cursorY } = this.#cursorPositionsGrid[newCell];
-      console.log(`new cursorX ${cursorX}; new cursorY ${cursorY}`);
 
       // set the cursor's position
       this.#cursor.setPosition(cursorX, cursorY);

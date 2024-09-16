@@ -1,14 +1,7 @@
 import {
   battleUITextStyle,
-  BattleMenuOptionLabels,
-  battleMenuCursorInitialPosition,
   AttackMenuOptionLabels,
 } from "@game/battle/battleUIConstants";
-
-import {
-  CreatureAssetKeys,
-  UIAssetKeys,
-} from "@scripts/game/assets/assetConstants";
 
 // Define the custom return type
 interface TextContainerResult {
@@ -99,7 +92,7 @@ export const createMainBgPane = (scene: Phaser.Scene) => {
 
 // A sub info bg pane (half the width of the main pane)
 // Note: positioning is set on its parent
-const createSubBgPane = (scene: Phaser.Scene) => {
+export const createSubBgPane = (scene: Phaser.Scene) => {
   const rectWidth = 500; // TODO: create a dynamic constant for this based on main bg pain size
   const rectHeight = 124;
   const padding = 2;
@@ -113,109 +106,6 @@ const createSubBgPane = (scene: Phaser.Scene) => {
 };
 
 /* ========================  Components ======================== */
-
-// <battleMenuInfoPane>
-export const createBattleMenuInfoPane = (scene: Phaser.Scene) => {
-  // Create text container for info pane text
-  const { textContainer, textObjects } = createTextContainer(
-    scene,
-    ["What should", `${CreatureAssetKeys.ORANGE_CAT} do next?`],
-    0,
-    0
-  );
-
-  return {
-    textContainer,
-    textObjects,
-  };
-};
-
-// Create cursor
-export const _createCursor = (scene: Phaser.Scene) => {
-  const battleMenuCursor = scene.add
-    .image(
-      battleMenuCursorInitialPosition.x,
-      battleMenuCursorInitialPosition.y,
-      UIAssetKeys.CURSOR,
-      0
-    )
-    .setOrigin(0.5)
-    .setScale(2.5);
-
-  return {
-    battleMenuCursor,
-  };
-};
-
-// <battleMenuNav>
-export const createBattleMenuNav = (scene: Phaser.Scene) => {
-  // Create container for battleMenuNavItems
-  const _battleMenuNavItems = scene.add.container(0, 0, [
-    scene.add.text(55, 22, BattleMenuOptionLabels.FIGHT, battleUITextStyle),
-    scene.add.text(240, 22, BattleMenuOptionLabels.SWITCH, battleUITextStyle),
-    scene.add.text(55, 70, BattleMenuOptionLabels.ITEM, battleUITextStyle),
-    scene.add.text(240, 70, BattleMenuOptionLabels.FLEE, battleUITextStyle),
-  ]);
-
-  // create cursor
-  const { battleMenuCursor } = _createCursor(scene);
-
-  // Create a container for main manu nav;
-  // position it to the right
-  const _battleMenuNavContainer = scene.add.container(520, 0, [
-    createSubBgPane(scene).setDepth(9), // container background
-    _battleMenuNavItems.setDepth(10), // nav items
-    battleMenuCursor.setDepth(11), // cursor
-  ]);
-
-  const battleMenuNav = scene.add.container(0, 0, [
-    _battleMenuNavContainer, // add the nav container
-  ]);
-
-  return {
-    battleMenuCursor,
-    battleMenuNav,
-  };
-};
-/* ============= */
-
-// Create Main Menu and all of its children
-// <battleMenuContainer>
-export const createMainMenu = (scene: Phaser.Scene) => {
-  const containerBg = createMainBgPane(scene);
-  const battleMenuContainer = scene.add.container(0, 448);
-  const { textContainer, textObjects } = createBattleMenuInfoPane(scene);
-  const { battleMenuCursor, battleMenuNav } = createBattleMenuNav(scene);
-
-  battleMenuContainer.add([containerBg, textContainer, battleMenuNav]);
-
-  return {
-    textContainer,
-    textObjects,
-    battleMenuContainer,
-    battleMenuCursor,
-    battleMenuNav,
-  };
-};
-
-// Create Attack Menu
-export const createAttackMenuNav = (scene: Phaser.Scene) => {
-  // create cursor for attack menu
-  const attackMenuCursor = _createCursor(scene).battleMenuCursor;
-
-  const attackMenuNav = scene.add.container(0, 448, [
-    scene.add.text(55, 22, AttackMenuOptionLabels.MOVE_1, battleUITextStyle),
-    scene.add.text(240, 22, AttackMenuOptionLabels.MOVE_2, battleUITextStyle),
-    scene.add.text(55, 70, AttackMenuOptionLabels.NO_MOVE, battleUITextStyle),
-    scene.add.text(240, 70, AttackMenuOptionLabels.NO_MOVE, battleUITextStyle),
-    attackMenuCursor,
-  ]);
-
-  return {
-    attackMenuNav,
-    attackMenuCursor,
-  };
-};
 
 export const createInventoryPane = (scene: Phaser.Scene) => {
   // Create text container for inventory pane text

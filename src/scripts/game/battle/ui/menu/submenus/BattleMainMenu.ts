@@ -1,35 +1,29 @@
-import { createMainMenu } from "@game/battle/ui/menu/battleMenuGameObjects";
+import { CreatureAssetKeys } from "@scripts/game/assets/assetConstants";
 
-import { Cursor } from "@game/battle/ui/menu/submenus/Cursor";
 import {
-  menu2x2NavigationMap,
-  menu2x2CursorPositions,
+  battleUITextStyle,
+  BattleMenuOptionLabels,
 } from "@game/battle/battleUIConstants";
-import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
+
+import {
+  createMainBgPane,
+  createSubBgPane,
+  createTextContainer,
+} from "@game/battle/ui/menu/battleMenuGameObjects";
 
 export class BattleMainMenu {
-  #scene: Phaser.Scene;
-  #mainMenuCursor!: Cursor;
+  //#scene: Phaser.Scene;
   #mainMenuTextObjects!: Phaser.GameObjects.Text[];
   #mainMenuNav!: Phaser.GameObjects.Container;
 
-  constructor(scene: Phaser.Scene, stateManager: BattleStateManager) {
-    this.#scene = scene;
+  constructor(scene: Phaser.Scene) {
+    //this.#scene = scene;
 
     // create the main menu game objects
-    const { textObjects, battleMenuNav, battleMenuCursor } = createMainMenu(
-      this.#scene
-    );
-
-    this.#mainMenuCursor = new Cursor(
-      menu2x2NavigationMap,
-      menu2x2CursorPositions,
-      battleMenuCursor,
-      stateManager
-    );
+    const { mainMenuNav, textObjects } = this.#createMainMenuGameObject(scene);
 
     this.#mainMenuTextObjects = textObjects;
-    this.#mainMenuNav = battleMenuNav;
+    this.#mainMenuNav = mainMenuNav;
 
     // hide main menu initially
     this.hide();
@@ -45,11 +39,66 @@ export class BattleMainMenu {
   hide() {
     this.#mainMenuTextObjects.map((text) => text.setAlpha(0));
     this.#mainMenuNav.setAlpha(0);
-    this.#mainMenuCursor.resetCursorPosition();
   }
 
-  // get instance of Cursor
-  getCursor() {
-    return this.#mainMenuCursor;
+  getContainer() {
+    return this.#mainMenuNav;
+  }
+
+  /* ============ UI methods ============ */
+
+  // Create Main Menu game object and all of its children
+  // <mainMenuContainer>
+  #createMainMenuGameObject(scene: Phaser.Scene) {
+    const _containerBg = createMainBgPane(scene);
+    const { textContainer, textObjects } =
+      this.#createBattleMenuInfoPane(scene);
+    const mainMenuNav = this.#createMainNav(scene);
+
+    const mainMenuContainer = scene.add.container(0, 448, [
+      _containerBg,
+      textContainer,
+      mainMenuNav,
+    ]);
+
+    return {
+      textContainer,
+      textObjects,
+      mainMenuContainer,
+      mainMenuNav,
+    };
+  }
+
+  // Create text container for info pane text
+  #createBattleMenuInfoPane(scene: Phaser.Scene) {
+    const { textContainer, textObjects } = createTextContainer(
+      scene,
+      ["What should", `${CreatureAssetKeys.ORANGE_CAT} do next?`],
+      0,
+      0
+    );
+
+    return {
+      textContainer,
+      textObjects,
+    };
+  }
+
+  // Create the Nav items on the main menu
+  #createMainNav(scene: Phaser.Scene) {
+    // Create container for mainMenuNavItems
+    const _navItems = scene.add.container(0, 0, [
+      scene.add.text(55, 22, BattleMenuOptionLabels.FIGHT, battleUITextStyle),
+      scene.add.text(240, 22, BattleMenuOptionLabels.SWITCH, battleUITextStyle),
+      scene.add.text(55, 70, BattleMenuOptionLabels.ITEM, battleUITextStyle),
+      scene.add.text(240, 70, BattleMenuOptionLabels.FLEE, battleUITextStyle),
+    ]);
+
+    // Create a container for main manu nav;
+    // position it to the right
+    return scene.add.container(520, 0, [
+      createSubBgPane(scene).setDepth(1), // container background
+      _navItems.setDepth(2), // nav items
+    ]);
   }
 }

@@ -1,5 +1,6 @@
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
+import { battleMenuCursorInitialPosition } from "@scripts/game/battle/battleUIConstants";
 
 export interface StateChangeObserver {
   onStateChange(newState: BattleMenuStates): void;
@@ -23,17 +24,34 @@ export class BattleMenuObserver implements StateChangeObserver {
         this.#battleMenu.hideCreaturesPane();
         this.#battleMenu.hideInventoryPane();
         this.#battleMenu.hideStatusMessage();
-        this.#battleMenu.hideAttackMenu();
+        this.#battleMenu.attackMenu.hide();
+        // add the cursor to the main menu
+        this.#battleMenu.mainMenu
+          .getContainer()
+          .add(this.#battleMenu.menuCursorGameObject);
         // reset cursor pos
-        this.#battleMenu.mainMenu.getCursor().resetCursorPosition();
+        this.#battleMenu.menuCursorGameObject.setPosition(
+          battleMenuCursorInitialPosition.x,
+          battleMenuCursorInitialPosition.y
+        );
+
         // show the Main Menu
         this.#battleMenu.mainMenu.show();
         break;
 
       case BattleMenuStates.Attacks:
         this.#battleMenu.mainMenu.hide();
-        this.#battleMenu.mainMenu.getCursor().resetCursorPosition();
-        this.#battleMenu.showAttackMenu();
+        // add cursor to the attacks menu
+        this.#battleMenu.attackMenu
+          .getContainer()
+          .add(this.#battleMenu.menuCursorGameObject);
+        // reset cursor pos
+        this.#battleMenu.menuCursorGameObject.setPosition(
+          battleMenuCursorInitialPosition.x,
+          battleMenuCursorInitialPosition.y
+        );
+
+        this.#battleMenu.attackMenu.show();
         break;
 
       case BattleMenuStates.Inventory:
@@ -53,7 +71,7 @@ export class BattleMenuObserver implements StateChangeObserver {
         const { currentPlayerAttack } =
           this.#battleMenu.stateMachine.battleStateManager.getState();
 
-        this.#battleMenu.showAttackMenuMessage([
+        this.#battleMenu.showStatusMessage([
           `You selected ${currentPlayerAttack} attack!`,
         ]);
         setTimeout(() => {

@@ -1,6 +1,9 @@
 import {
   battleMainMenu2x2Grid,
   battleAttackMenu2x2Grid,
+  battleMenuCursorInitialPosition,
+  menu2x2NavigationMap,
+  menu2x2CursorPositions,
   CursorPositions2x2,
 } from "@game/battle/battleUIConstants";
 
@@ -12,7 +15,6 @@ import {
 } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
 
 import {
-  createAttackMenuNav,
   createInventoryPane,
   createSwitchPane,
   createFleePane,
@@ -24,11 +26,11 @@ import { BattleMenuObserver } from "@game/battle/ui/menu/state/BattleMenuStateOb
 import { BattleMainMenu } from "@game/battle/ui/menu/submenus/BattleMainMenu";
 import { Cursor } from "@game/battle/ui/menu/submenus/Cursor";
 import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
+import { AttackMenu } from "./submenus/AttackMenu";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
   // game objects
-  #battleMenuAttack!: Phaser.GameObjects.Container; // todo: move to Attack Menu Class
 
   // State management
   stateMachine!: BattleMenuStateMachine;
@@ -46,9 +48,12 @@ export class BattleMenu {
 
   // main menu
   mainMenu!: BattleMainMenu;
+  // attackMenu
+  attackMenu!: AttackMenu;
 
-  // store a reference to the currently active cursor
-  #currentCursor!: Cursor;
+  // store a reference to the current cursor
+  menuCursor!: Cursor;
+  menuCursorGameObject!: Phaser.GameObjects.Image;
 
   // Set initial states
   constructor(scene: Phaser.Scene) {
@@ -61,28 +66,37 @@ export class BattleMenu {
     this.stateManager = this.stateMachine.battleStateManager;
 
     // create Main Menu
-    this.mainMenu = new BattleMainMenu(scene, this.stateManager);
+    this.mainMenu = new BattleMainMenu(scene);
 
     // Set the current menu state to the mian menu
     this.stateManager.setCurrentMenuState(BattleMenuStates.Main);
 
-    // store a reference to the main menu cursor
-    // TODO: add the appropriate cursor depending on which submenu is visible
-    this.#currentCursor =
-      this.stateManager.getState().currentMenuState === BattleMenuStates.Main
-        ? this.mainMenu.getCursor()
-        : this.mainMenu.getCursor();
+    // Create a cursor, which will be shared by all menus
+    this.menuCursor = new Cursor(
+      menu2x2NavigationMap,
+      menu2x2CursorPositions,
+      battleMenuCursorInitialPosition,
+      this.stateManager
+    );
+
+    // create the cursor game object
+    this.menuCursor.createGameObject(scene);
+    // store the cursor game object
+    this.menuCursorGameObject = this.menuCursor.getGameObject();
+
+    // create Attack submenu
+    this.attackMenu = new AttackMenu(scene);
+
+    // add the cursor to the main menu nav contaienr
+    this.mainMenu.getContainer().add(this.menuCursorGameObject);
 
     // store a reference to the current menu cell (stored by state manager)
     this.#currentMenuCell = this.stateManager.getState().currentMenuCell;
 
-    // TODO: do i need observers for main menu?
-
     // create battlemenuObserver
-    const attackMenuObserver = new BattleMenuObserver(this);
-
-    // observe the attack menu
-    this.stateMachine.addObserver(attackMenuObserver);
+    // TODO: what is this actually doing?
+    const menuObserver = new BattleMenuObserver(this);
+    this.stateMachine.addObserver(menuObserver);
   }
 
   // Putting the class's initial states in an init method
@@ -105,18 +119,6 @@ export class BattleMenu {
 
     this.#statusMessageContainer = displayTextContainer;
     this.#statusMessageTextObjects = displayTextObjects;
-
-    // create the attack menu
-    const { attackMenuNav, attackMenuCursor } = createAttackMenuNav(
-      this.#scene
-    );
-
-    this.#battleMenuAttack = attackMenuNav;
-
-    //this.#attackMenuCursor = attackMenuCursor;
-
-    // Hide attack menu intiially
-    this.hideAttackMenu();
   }
 
   // Respond to keyboard inputs
@@ -156,21 +158,17 @@ export class BattleMenu {
       input === Directions.LEFT ||
       input === Directions.RIGHT
     ) {
-      console.log(input, this.#currentCursor);
-      this.#currentCursor.moveCursor(input as keyof typeof Directions);
+      this.menuCursor.moveCursor(input as keyof typeof Directions);
       return;
     }
   }
 
   // ========= All methods below either create or toggle game objects =========
 
-  // Show the attack menu
-  showAttackMenu() {
-    this.#battleMenuAttack.setAlpha(1);
-  }
-
-  showAttackMenuMessage(newMessage: string[]) {
-    this.hideAttackMenu();
+  showStatusMessage(newMessage: string[]) {
+    // hide submenus
+    this.attackMenu.hide();
+    // show text container
     updateTextContainer(this.#statusMessageTextObjects, newMessage);
     this.#statusMessageContainer.setAlpha(1);
   }
@@ -178,11 +176,6 @@ export class BattleMenu {
   hideStatusMessage() {
     updateTextContainer(this.#statusMessageTextObjects, [""]);
     this.#statusMessageContainer.setAlpha(0);
-  }
-
-  // Hide the attack menu
-  hideAttackMenu() {
-    this.#battleMenuAttack.setAlpha(0);
   }
 
   showInventoryPane() {

@@ -34,7 +34,7 @@ export class BattleMenuStateMachine extends StateMachine<
     // Update BattleStateManager state
     this.battleStateManager.setCurrentMenuState(newState);
     // Notify observers of the state change
-    this.notifyObservers(newState);
+    this._notifyObservers(newState);
   }
 
   // initialize transitions

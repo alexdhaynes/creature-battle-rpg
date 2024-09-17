@@ -7,17 +7,18 @@ import {
   Directions,
   InputActions,
   CREATURES,
-  PLAYER_POSITION,
 } from "@scripts/game/gameConstants";
 import { BackgroundImage } from "@game/battle/Background";
-import { EnemyBattleCreature } from "@game/battle/creatures/EnemyBattleCreature";
-import { BattleCreature } from "@game/battle/creatures/BattleCreature";
+import {
+  PlayerBattleCreature,
+  EnemyBattleCreature,
+} from "@game/battle/creatures";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
   #cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
   #activeEnemyCreature!: EnemyBattleCreature;
-  #playerCreature!: BattleCreature;
+  #playerCreature!: PlayerBattleCreature;
 
   constructor() {
     super({
@@ -53,21 +54,17 @@ export class BattleScene extends BaseScene {
     });
 
     // add the player creature
-    this.#playerCreature = new BattleCreature(
-      this,
-      {
-        name: CREATURES.ORANGE_CAT.name,
-        assetKey: CREATURES.ORANGE_CAT.key,
-        creatureType: CreatureTypes.PLAYER,
-        assetFrame: 0,
-        currentHp: 15,
-        maxHp: 15,
-        baseAttackValue: 7,
-        attackIds: [],
-        currentLevel: 7,
-      },
-      PLAYER_POSITION
-    );
+    this.#playerCreature = new PlayerBattleCreature(this, {
+      name: CREATURES.ORANGE_CAT.name,
+      assetKey: CREATURES.ORANGE_CAT.key,
+      creatureType: CreatureTypes.PLAYER,
+      assetFrame: 0,
+      currentHp: 15,
+      maxHp: 15,
+      baseAttackValue: 7,
+      attackIds: [],
+      currentLevel: 7,
+    });
 
     // instantiate then render the main info and sub info pane
     this.#battleMenu = new BattleMenu(this);

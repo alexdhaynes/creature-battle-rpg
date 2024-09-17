@@ -12,7 +12,9 @@ import { Directions, InputActions } from "@scripts/game/gameConstants";
 import {
   BattleMenuStateMachine,
   BattleMenuStates,
-} from "@game/battle/ui/menu/state/BattleMenuStateMachine";
+  BattleStateManager,
+  BattleMenuObserver,
+} from "@game/battle/ui/menu/state";
 
 import {
   createFleePane,
@@ -20,13 +22,13 @@ import {
   updateTextContainer,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
 
-import { BattleMenuObserver } from "@game/battle/ui/menu/state/BattleMenuStateObserver";
-import { BattleMainMenu } from "@game/battle/ui/menu/submenus/BattleMainMenu";
-import { Cursor } from "@game/battle/ui/menu/submenus/Cursor";
-import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
-import { AttackMenu } from "./submenus/AttackMenu";
-import { InventoryMenu } from "./submenus/InventoryMenu";
-import { CreaturesMenu } from "./submenus/CreaturesMenu";
+import {
+  AttackMenu,
+  BattleMainMenu,
+  CreaturesMenu,
+  Cursor,
+  InventoryMenu,
+} from "@game/battle/ui/menu/submenus/";
 
 export class BattleMenu {
   #scene: Phaser.Scene;

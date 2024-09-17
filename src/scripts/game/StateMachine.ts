@@ -1,5 +1,7 @@
-import { StateChangeObserver } from "@game/battle/ui/menu/state/BattleMenuStateObserver";
-import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
+import {
+  StateChangeObserver,
+  BattleMenuStates,
+} from "@game/battle/ui/menu/state/";
 
 export type TState = string; // TYPE TODO: be more specific about which string constants are allowed here
 export type TAction = string;
@@ -41,7 +43,7 @@ export class StateMachine<TState extends string, TAction extends string> {
 
   // Notify all observers of a state change
   // TYPE TODO: add more allowable state types
-  notifyObservers(newState: BattleMenuStates) {
+  protected _notifyObservers(newState: BattleMenuStates) {
     this.observers.forEach((observer) => observer.onStateChange(newState));
   }
 

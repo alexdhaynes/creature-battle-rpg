@@ -14,6 +14,8 @@ interface HealthStatusConfig {
   creatureName: string;
   creatureType: CreatureTypes;
   creatureLevel: number;
+  currentHp: number;
+  maxHp: number;
   scaleFactor?: number; // optionally scale the bg image for the health status container, defaults to 1
   coordinates?: Coordinate; // optionally set the coords for the health status container
 }
@@ -24,8 +26,11 @@ export class HealthStatus {
   #creatureName;
   #creatureType;
   #creatureLevel;
+  #currentHp: number;
+  #maxHp: number;
   #coordinates;
-  #gameObject: Phaser.GameObjects.Container; // a ref to the phaser game object
+  #gameObjectContainer: Phaser.GameObjects.Container; // a ref to the phaser game object
+  #textObject!: Phaser.GameObjects.Text; // a ref to the text object
 
   constructor(scene: Phaser.Scene, config: HealthStatusConfig) {
     this.#scene = scene;
@@ -39,10 +44,26 @@ export class HealthStatus {
       config.coordinates || config.creatureType === CreatureTypes.PLAYER
         ? playerHealthStatusCoordinates
         : enemyHealthStatusCoordinates;
-    // create the health status container game object
-    this.#gameObject = this.#createHealthStatusContainer(
+    // create the health status container game object and scale it if necessary
+    this.#currentHp = config.currentHp; // Todo: currentHp should be in state
+    this.#maxHp = config.maxHp;
+
+    const { container, hpTextObject } = this.#createHealthStatusContainer(
       config.scaleFactor || 1
     );
+
+    this.#gameObjectContainer = container;
+    if (hpTextObject) {
+      this.#textObject = hpTextObject;
+      // add the text object to the container
+      this.#gameObjectContainer.add(hpTextObject);
+      this.#setHealthStatusText();
+    }
+  }
+
+  setCurrentHp(newHp: number) {
+    this.#currentHp = newHp;
+    this.#setHealthStatusText();
   }
 
   // Create the Player's name text object
@@ -53,24 +74,27 @@ export class HealthStatus {
     });
   }
 
+  #setHealthStatusText() {
+    this.#textObject.setText(`${this.#currentHp}/${this.#maxHp}`);
+  }
+
   // Render the health status container
   #createHealthStatusContainer(scaleFactor: number) {
     // create the creature name label text object
     const nameTextObject = this.#createCreatureName(this.#creatureName);
-
+    let hpTextObject = undefined;
     // Add the HP score to container
     // set origin to right-bottom of of its local bounds
     // this is so the right edge of the HP score always aligns with right edge of the health bar,
     // aka: the string will grow on the -x axis; it will never exceed the right edge of the parent container
-    const hpTextObject: Phaser.GameObjects.Text | undefined =
-      this.#creatureType === CreatureTypes.PLAYER
-        ? this.#scene.add
-            .text(443, 80, "25/25", {
-              color: "#7e3d3f",
-              fontSize: "16px",
-            })
-            .setOrigin(1, 0)
-        : undefined;
+    if (this.#creatureType === CreatureTypes.PLAYER) {
+      hpTextObject = this.#scene.add
+        .text(443, 80, "25/25", {
+          color: "#7e3d3f",
+          fontSize: "16px",
+        })
+        .setOrigin(1, 0);
+    }
 
     const containerObjects = [
       // Add a bgimage object to container
@@ -101,15 +125,18 @@ export class HealthStatus {
       }),
     ];
 
-    // Conditionally add the HP score to container if the object exists (if the creature is the player)
-    if (hpTextObject) {
-      containerObjects.push(hpTextObject);
+    if (this.#creatureType === CreatureTypes.PLAYER) {
     }
 
-    return this.#scene.add.container(
+    const container = this.#scene.add.container(
       this.#coordinates.x,
       this.#coordinates.y,
       containerObjects
     );
+
+    return {
+      container,
+      hpTextObject,
+    };
   }
 }

@@ -100,6 +100,8 @@ export class BattleCreature {
       creatureType: this._creatureType,
       creatureLevel: this._creatureLevel,
       scaleFactor: this._creatureDetails.healthStatusScaleFactor || 1,
+      currentHp: this._currentHp,
+      maxHp: this._maxHp,
     };
 
     return new HealthStatus(this._scene, config);

@@ -19,8 +19,7 @@ export class HealthBar {
     this.#fullWidth = 360;
     this.#createHealthBarImages(x, y);
     this.#createHealthBarShadowImages(x, y);
-    this.#setHealthBarPercentage(1);
-    this.#setHealthBarPercentageAnimated(0.25);
+    this.setHealthBarPercentage(1);
   }
 
   get container() {
@@ -102,7 +101,7 @@ export class HealthBar {
   }
 
   // set the health bar percentage between 0 and 1 (no animation)
-  #setHealthBarPercentage(percent: number = 1) {
+  setHealthBarPercentage(percent: number = 1) {
     const width = this.#fullWidth * percent;
     this.#middle.displayWidth = width;
     this.#rightCap.x = this.#middle.x + this.#middle.displayWidth;
@@ -110,7 +109,7 @@ export class HealthBar {
 
   // set the health bar percentage (with animation)
   // TODO: add type to options param
-  #setHealthBarPercentageAnimated(percent: number, options?: any) {
+  setHealthBarPercentageAnimated(percent: number, options?: any) {
     const width = this.#fullWidth * percent;
     this.#scene.tweens.add({
       targets: this.#middle,

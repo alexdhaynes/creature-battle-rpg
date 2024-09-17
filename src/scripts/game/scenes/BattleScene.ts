@@ -9,13 +9,13 @@ import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
 import { Directions, InputActions } from "@scripts/game/gameConstants";
 import { BackgroundImage } from "@game/battle/Background";
-import { BattleCreature } from "@game/battle/creatures/BattleCreature";
+import { EnemeyBattleCreature } from "@game/battle/creatures/EnemyBattleCreature";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
   #healthStatus!: HealthStatus;
   #cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
-  #activeEnemyCreature: BattleCreature;
+  #activeEnemyCreature: EnemeyBattleCreature;
 
   constructor() {
     super({
@@ -48,19 +48,15 @@ export class BattleScene extends BaseScene {
 
     // this.#enemyHealthBar = this.#activeEnemyCreature._healthBar;
     // test
-    this.#activeEnemyCreature = new BattleCreature(
-      this,
-      {
-        name: creatureNames[CreatureAssetKeys.TUXEDO_CAT],
-        assetKey: CreatureAssetKeys.TUXEDO_CAT,
-        assetFrame: 0,
-        currentHp: 25,
-        maxHp: 25,
-        baseAttackValue: 5,
-        attackIds: [""],
-      },
-      { x: 768, y: 144 }
-    );
+    this.#activeEnemyCreature = new EnemeyBattleCreature(this, {
+      name: creatureNames[CreatureAssetKeys.TUXEDO_CAT],
+      assetKey: CreatureAssetKeys.TUXEDO_CAT,
+      assetFrame: 0,
+      currentHp: 25,
+      maxHp: 25,
+      baseAttackValue: 5,
+      attackIds: [""],
+    });
 
     // instantiate then render the main info and sub info pane
     this.#battleMenu = new BattleMenu(this);
@@ -70,6 +66,9 @@ export class BattleScene extends BaseScene {
 
     // Create hotkeys for keyboard input
     this.#cursorKeys = this.input.keyboard?.createCursorKeys();
+
+    this.#activeEnemyCreature.takeDamage(50);
+    console.log(this.#activeEnemyCreature.isFainted);
   } //end create()
 
   // Update lifecycle method (called every frame of the game)

@@ -6,7 +6,7 @@ import { Coordinate } from "@game/gameConstants";
 
 export const ENEMY_POSITION: Coordinate = { x: 768, y: 144 };
 
-export class EnemeyBattleCreature extends BattleCreature {
+export class EnemyBattleCreature extends BattleCreature {
   constructor(
     scene: Phaser.Scene,
     config: CreatureDetails,

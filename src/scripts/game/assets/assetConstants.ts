@@ -1,6 +1,7 @@
 import type { AssetList } from "@game/assets/types";
 
 import {
+  CREATURES,
   KENNEYS_ASSET_PATH,
   TEMP_GRAPHICS_ASSET_PATH,
   WORKING_GRAPHICS_ASSET_PATH,
@@ -10,21 +11,6 @@ export enum BattleBackgroundAssetKeys {
   FOREST = "FOREST",
   MEADOW = "MEADOW",
 }
-
-export enum CreatureAssetKeys {
-  TUXEDO_CAT = "TUXEDO_CAT",
-  ORANGE_CAT = "ORANGE_CAT",
-}
-
-// Todo: move these types elsewhere
-export type CreatureNameKeys = {
-  [key in CreatureAssetKeys]: string;
-};
-
-export const creatureNames: CreatureNameKeys = {
-  [CreatureAssetKeys.TUXEDO_CAT]: "Mr. Tux",
-  [CreatureAssetKeys.ORANGE_CAT]: "Wali",
-};
 
 export enum BattleAssetKeys {
   HEALTH_BAR_BACKGROUND = "HEALTH_BAR_BACKGROUND",
@@ -82,12 +68,12 @@ export const assetList: AssetList = [
 
   // Creatures
   {
-    key: CreatureAssetKeys.TUXEDO_CAT,
-    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CreatureAssetKeys.TUXEDO_CAT.toLowerCase()}.png`,
+    key: CREATURES.TUXEDO_CAT.key,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CREATURES.TUXEDO_CAT.key.toLowerCase()}.png`,
   },
   {
-    key: CreatureAssetKeys.ORANGE_CAT,
-    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CreatureAssetKeys.ORANGE_CAT.toLowerCase()}.png`,
+    key: CREATURES.ORANGE_CAT.key,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CREATURES.ORANGE_CAT.key.toLowerCase()}.png`,
   },
   // UI: cursor
   {

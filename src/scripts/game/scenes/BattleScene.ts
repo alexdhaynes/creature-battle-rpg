@@ -1,21 +1,22 @@
 import { BaseScene } from "@game/scenes/BaseScene";
 import { SceneKeys } from "@scripts/game/scenes/sceneConstants";
-import {
-  BattleBackgroundAssetKeys,
-  CreatureAssetKeys,
-  creatureNames,
-} from "@scripts/game/assets/assetConstants";
+import { BattleBackgroundAssetKeys } from "@scripts/game/assets/assetConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
-import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
-import { Directions, InputActions } from "@scripts/game/gameConstants";
+import {
+  CreatureTypes,
+  Directions,
+  InputActions,
+  CREATURES,
+} from "@scripts/game/gameConstants";
 import { BackgroundImage } from "@game/battle/Background";
-import { EnemeyBattleCreature } from "@game/battle/creatures/EnemyBattleCreature";
+import { EnemyBattleCreature } from "@game/battle/creatures/EnemyBattleCreature";
+import { BattleCreature } from "@game/battle/creatures/BattleCreature";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
-  #healthStatus!: HealthStatus;
   #cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
-  #activeEnemyCreature: EnemeyBattleCreature;
+  #activeEnemyCreature!: EnemyBattleCreature;
+  #playerCreature!: BattleCreature;
 
   constructor() {
     super({
@@ -36,27 +37,33 @@ export class BattleScene extends BaseScene {
     );
     background.showBackground();
 
-    // render the enemy creatures
-    //this.add.image(768, 144, CreatureAssetKeys.TUXEDO_CAT, 0);
-
-    // render the player creatures
-    this.add.image(256, 316, CreatureAssetKeys.ORANGE_CAT, 0);
-
-    // instantiate then render the  health status containers for both the player and the enemy
-    this.#healthStatus = new HealthStatus(this);
-    this.#healthStatus.init();
-
-    // this.#enemyHealthBar = this.#activeEnemyCreature._healthBar;
-    // test
-    this.#activeEnemyCreature = new EnemeyBattleCreature(this, {
-      name: creatureNames[CreatureAssetKeys.TUXEDO_CAT],
-      assetKey: CreatureAssetKeys.TUXEDO_CAT,
+    // add the enemy creature
+    this.#activeEnemyCreature = new EnemyBattleCreature(this, {
+      name: CREATURES.TUXEDO_CAT.name,
+      assetKey: CREATURES.TUXEDO_CAT.key,
+      creatureType: CreatureTypes.ENEMY,
       assetFrame: 0,
       currentHp: 25,
       maxHp: 25,
       baseAttackValue: 5,
-      attackIds: [""],
+      attackIds: [],
     });
+
+    // add the player creature
+    this.#playerCreature = new BattleCreature(
+      this,
+      {
+        name: CREATURES.ORANGE_CAT.name,
+        assetKey: CREATURES.ORANGE_CAT.key,
+        creatureType: CreatureTypes.PLAYER,
+        assetFrame: 0,
+        currentHp: 15,
+        maxHp: 15,
+        baseAttackValue: 7,
+        attackIds: [],
+      },
+      { x: 256, y: 318 }
+    );
 
     // instantiate then render the main info and sub info pane
     this.#battleMenu = new BattleMenu(this);
@@ -66,9 +73,6 @@ export class BattleScene extends BaseScene {
 
     // Create hotkeys for keyboard input
     this.#cursorKeys = this.input.keyboard?.createCursorKeys();
-
-    this.#activeEnemyCreature.takeDamage(50);
-    console.log(this.#activeEnemyCreature.isFainted);
   } //end create()
 
   // Update lifecycle method (called every frame of the game)

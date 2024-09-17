@@ -2,7 +2,7 @@ import { HealthBarAssetKeys } from "@scripts/game/assets/assetConstants";
 
 export class HealthBar {
   #scene: Phaser.Scene;
-  #healthBarContainer: Phaser.GameObjects.Container;
+  #gameObject: Phaser.GameObjects.Container; // store a ref to the game object
   #fullWidth: number;
   #scaleY: number;
   #leftCap!: Phaser.GameObjects.Image;
@@ -14,7 +14,7 @@ export class HealthBar {
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.#scene = scene;
-    this.#healthBarContainer = this.#scene.add.container(x, y, []);
+    this.#gameObject = this.#scene.add.container(x, y, []);
     this.#scaleY = 0.7;
     this.#fullWidth = 360;
     this.#createHealthBarImages(x, y);
@@ -22,8 +22,8 @@ export class HealthBar {
     this.setHealthBarPercentage(1);
   }
 
-  get container() {
-    return this.#healthBarContainer;
+  get gameObject() {
+    return this.#gameObject;
   }
 
   // create the track for health bar
@@ -58,7 +58,7 @@ export class HealthBar {
       .setOrigin(0, 0.5)
       .setScale(1, this.#scaleY);
 
-    this.#healthBarContainer.add([
+    this.#gameObject.add([
       this.#leftCapShadow,
       this.#middleShadow,
       this.#rightCapShadow,
@@ -97,7 +97,7 @@ export class HealthBar {
       .setOrigin(0, 0.5)
       .setScale(1, this.#scaleY);
 
-    this.#healthBarContainer.add([this.#leftCap, this.#middle, this.#rightCap]);
+    this.#gameObject.add([this.#leftCap, this.#middle, this.#rightCap]);
   }
 
   // set the health bar percentage between 0 and 1 (no animation)

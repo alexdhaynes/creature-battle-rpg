@@ -1,4 +1,4 @@
-import { Directions } from "@game/gameConstants";
+import { Coordinate, Directions } from "@game/gameConstants";
 
 export const battleUITextStyle = {
   color: "black",

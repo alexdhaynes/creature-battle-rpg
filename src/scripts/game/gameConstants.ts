@@ -32,3 +32,19 @@ export type Coordinate = {
   x: number;
   y: number;
 };
+
+export enum CreatureTypes {
+  PLAYER = "PLAYER",
+  ENEMY = "ENEMY",
+}
+
+export const CREATURES = {
+  TUXEDO_CAT: {
+    key: "TUXEDO_CAT",
+    name: "Mr. Tux",
+  },
+  ORANGE_CAT: {
+    key: "ORANGE_CAT",
+    name: "Wali",
+  },
+} as const;

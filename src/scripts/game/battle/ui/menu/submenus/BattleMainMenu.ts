@@ -1,4 +1,4 @@
-import { CreatureAssetKeys } from "@scripts/game/assets/assetConstants";
+import { CREATURES } from "@game/gameConstants";
 
 import {
   battleUITextStyle,
@@ -77,7 +77,7 @@ export class BattleMainMenu {
   #createBattleMenuInfoPane(scene: Phaser.Scene) {
     const { textContainer, textObjects } = createTextContainer(
       scene,
-      ["What should", `${CreatureAssetKeys.ORANGE_CAT} do next?`],
+      ["What should", `${CREATURES.ORANGE_CAT.name} do next?`],
       0,
       0
     );

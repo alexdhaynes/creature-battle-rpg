@@ -108,7 +108,7 @@ export class HealthBar {
   }
 
   // set the health bar percentage (with animation)
-  // TODO: add type to options param
+  // TYPE TODO: be more specific about the options type
   setHealthBarPercentageAnimated(percent: number, options?: any) {
     const width = this.#fullWidth * percent;
     this.#scene.tweens.add({

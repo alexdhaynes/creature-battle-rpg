@@ -94,7 +94,7 @@ export class BattleMenu {
     this.#currentMenuCell = this.stateManager.getState().currentMenuCell;
 
     // create battlemenuObserver
-    // TODO: what is this actually doing?
+    // this observer will listen for state changes and update the menu accordingly
     const menuObserver = new BattleMenuObserver(this);
     this.stateMachine.addObserver(menuObserver);
   }

@@ -1,4 +1,7 @@
-export type TState = string; // TODO: be more specific about which string constants are allowed here
+import { StateChangeObserver } from "@game/battle/ui/menu/state/BattleMenuStateObserver";
+import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
+
+export type TState = string; // TYPE TODO: be more specific about which string constants are allowed here
 export type TAction = string;
 
 export type TransitionsType<TState extends string, TAction extends string> = {
@@ -7,13 +10,13 @@ export type TransitionsType<TState extends string, TAction extends string> = {
 
 export type TransitionHandler = (payload: any) => void;
 
-// TODO: refine this dispatch payload type
 export type TransitionPayload = {
-  [key: string]: any;
+  [key: string]: any; // TYPE TODO: be more specific about the payload shape
 };
 
 export class StateMachine<TState extends string, TAction extends string> {
   transitions: TransitionsType<TState, TAction>;
+  observers: StateChangeObserver[] = []; // List of observers
 
   constructor() {
     this.transitions = {} as TransitionsType<TState, TAction>;
@@ -24,6 +27,22 @@ export class StateMachine<TState extends string, TAction extends string> {
     throw new Error(
       "initialiinitTransitionszeTransitions should be implemented by subclass"
     );
+  }
+
+  // Add an observer
+  addObserver(observer: StateChangeObserver) {
+    this.observers.push(observer);
+  }
+
+  // Remove an observer
+  removeObserver(observer: StateChangeObserver) {
+    this.observers = this.observers.filter((obs) => obs !== observer);
+  }
+
+  // Notify all observers of a state change
+  // TYPE TODO: add more allowable state types
+  notifyObservers(newState: BattleMenuStates) {
+    this.observers.forEach((observer) => observer.onStateChange(newState));
   }
 
   // Dispatch an action based on the current state

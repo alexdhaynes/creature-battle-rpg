@@ -2,9 +2,8 @@ import {
   BattleCreature,
   CreatureDetails,
 } from "@game/battle/creatures/BattleCreature";
-import { Coordinate } from "@game/gameConstants";
 
-export const ENEMY_POSITION: Coordinate = { x: 768, y: 144 };
+import { Coordinate, ENEMY_POSITION } from "@game/gameConstants";
 
 export class EnemyBattleCreature extends BattleCreature {
   constructor(

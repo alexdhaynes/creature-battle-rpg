@@ -23,7 +23,3 @@
 - The `Container` manages the `GameObject`'s position and rendering.
 - The `GameObject` is a child of the `Scene` in terms of Phaser’s internal management
 - But the `GameObject` is a child `Container` in terms of its display and positioning
-
-## TODOS:
-
-- when your game is done (and when it has AI hand-pose inputs), send demo to support@phaser.io

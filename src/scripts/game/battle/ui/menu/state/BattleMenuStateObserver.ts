@@ -23,8 +23,7 @@ export class BattleMenuObserver implements StateChangeObserver {
     switch (newState) {
       case BattleMenuStates.Main:
         // hide whichever submenu is visible when this method is called
-        // TODO: for now, just hide all submnus when state changes to Main menu
-        // TODO: move the repetitve logic to helper function
+        // TODO: move this repetitve logic to helper function
         this.#battleMenu.hideCreaturesPane();
         this.#battleMenu.hideInventoryPane();
         this.#battleMenu.hideStatusMessage();

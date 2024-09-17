@@ -7,35 +7,42 @@ import { Coordinate, CreatureTypes } from "@game/gameConstants";
 // the HealthBar,
 // and the HealthBar label (for the player only)
 
-// todo: move
 export const enemyHealthStatusCoordinates: Coordinate = { x: 0, y: 0 };
 export const playerHealthStatusCoordinates: Coordinate = { x: 556, y: 318 };
+
+interface HealthStatusConfig {
+  creatureName: string;
+  creatureType: CreatureTypes;
+  creatureLevel: number;
+  scaleFactor?: number; // optionally scale the bg image for the health status container, defaults to 1
+  coordinates?: Coordinate; // optionally set the coords for the health status container
+}
 
 export class HealthStatus {
   #scene;
   healthBar: HealthBar;
   #creatureName;
   #creatureType;
+  #creatureLevel;
   #coordinates;
+  #gameObject: Phaser.GameObjects.Container; // a ref to the phaser game object
 
-  constructor(
-    scene: Phaser.Scene,
-    creatureName: string,
-    creatureType: CreatureTypes,
-    coordinates?: Coordinate // coordinates to position the health status container
-  ) {
+  constructor(scene: Phaser.Scene, config: HealthStatusConfig) {
     this.#scene = scene;
     // create the health bar
     this.healthBar = new HealthBar(this.#scene, 34, 34);
-    this.#creatureName = creatureName;
-    this.#creatureType = creatureType;
+    this.#creatureName = config.creatureName;
+    this.#creatureType = config.creatureType;
     // store the coordinates of the health status container
+    this.#creatureLevel = config.creatureLevel;
     this.#coordinates =
-      coordinates || creatureType === CreatureTypes.PLAYER
+      config.coordinates || config.creatureType === CreatureTypes.PLAYER
         ? playerHealthStatusCoordinates
         : enemyHealthStatusCoordinates;
     // create the health status container game object
-    this.#createHealthStatusContainer();
+    this.#gameObject = this.#createHealthStatusContainer(
+      config.scaleFactor || 1
+    );
   }
 
   // Create the Player's name text object
@@ -47,7 +54,7 @@ export class HealthStatus {
   }
 
   // Render the health status container
-  #createHealthStatusContainer() {
+  #createHealthStatusContainer(scaleFactor: number) {
     // create the creature name label text object
     const nameTextObject = this.#createCreatureName(this.#creatureName);
 
@@ -69,17 +76,23 @@ export class HealthStatus {
       // Add a bgimage object to container
       this.#scene.add
         .image(0, 0, BattleAssetKeys.HEALTH_BAR_BACKGROUND)
-        .setOrigin(0),
+        .setOrigin(0)
+        .setScale(1, scaleFactor), // scale the background image
       // Add Player Creature Name text object to container
       nameTextObject,
       // Add the health bar to container
       this.healthBar.gameObject,
       // Add the Level text object to container
-      // TODO: add the actual level to the creature details
-      this.#scene.add.text(nameTextObject.width + 35, 23, "L5", {
-        color: "#ED474b",
-        fontSize: "28px",
-      }),
+      // TODO: add a dynamic level for the creature here
+      this.#scene.add.text(
+        nameTextObject.width + 35,
+        23,
+        `L${this.#creatureLevel}`,
+        {
+          color: "#ED474b",
+          fontSize: "28px",
+        }
+      ),
       // Add the HP label to container
       this.#scene.add.text(30, 55, "HP", {
         color: "#FF6505",
@@ -93,7 +106,7 @@ export class HealthStatus {
       containerObjects.push(hpTextObject);
     }
 
-    this.#scene.add.container(
+    return this.#scene.add.container(
       this.#coordinates.x,
       this.#coordinates.y,
       containerObjects

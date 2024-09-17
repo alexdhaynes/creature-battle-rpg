@@ -7,6 +7,7 @@ import {
   Directions,
   InputActions,
   CREATURES,
+  PLAYER_POSITION,
 } from "@scripts/game/gameConstants";
 import { BackgroundImage } from "@game/battle/Background";
 import { EnemyBattleCreature } from "@game/battle/creatures/EnemyBattleCreature";
@@ -47,6 +48,8 @@ export class BattleScene extends BaseScene {
       maxHp: 25,
       baseAttackValue: 5,
       attackIds: [],
+      currentLevel: 9,
+      healthStatusScaleFactor: 0.8,
     });
 
     // add the player creature
@@ -61,8 +64,9 @@ export class BattleScene extends BaseScene {
         maxHp: 15,
         baseAttackValue: 7,
         attackIds: [],
+        currentLevel: 7,
       },
-      { x: 256, y: 318 }
+      PLAYER_POSITION
     );
 
     // instantiate then render the main info and sub info pane

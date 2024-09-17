@@ -3,7 +3,6 @@ import { StateMachine, TransitionPayload } from "@game/StateMachine";
 import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
 import { BattleMenuOptionLabels } from "@game/battle/battleUIConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
-import { StateChangeObserver } from "@game/battle/ui/menu/state/BattleMenuStateObserver";
 
 export enum BattleMenuStates {
   Main = "BATTLE_MENU_MAIN",
@@ -22,7 +21,6 @@ export class BattleMenuStateMachine extends StateMachine<
   battleMenu; //reference to the BattleMenu class for updating its UI
   battleStateManager: BattleStateManager;
   // dispatch() is in the superclass
-  #observers: StateChangeObserver[] = []; // List of observers
 
   constructor(battleMenu: BattleMenu) {
     super();
@@ -31,28 +29,12 @@ export class BattleMenuStateMachine extends StateMachine<
     this.initializeTransitions();
   }
 
-  // Add an observer
-  addObserver(observer: StateChangeObserver) {
-    this.#observers.push(observer);
-  }
-
-  // TODO: add observer logic to the StateMachine superclass
-  // Remove an observer
-  removeObserver(observer: StateChangeObserver) {
-    this.#observers = this.#observers.filter((obs) => obs !== observer);
-  }
-
-  // Notify all observers of a state change
-  #notifyObservers(newState: BattleMenuStates) {
-    this.#observers.forEach((observer) => observer.onStateChange(newState));
-  }
-
   // Update menu state and notify observers when that has been done
   updateMenuState(newState: BattleMenuStates) {
     // Update BattleStateManager state
     this.battleStateManager.setCurrentMenuState(newState);
     // Notify observers of the state change
-    this.#notifyObservers(newState);
+    this.notifyObservers(newState);
   }
 
   // initialize transitions

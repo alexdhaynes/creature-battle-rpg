@@ -1,8 +1,0 @@
-# TODO:
-
-- [x] Move MainMenu from BattleMenu and into BattleMainMenu
-- [] Move MainMenu game object creation from gameObjects class into MainMenu
-- [] Move Cursor game object create from gameObjects class into Cursor
-- [] Move AttackMenu from BattleMenu into own Class
-- [] InventoryPane from BattleMenu into own Class
-- [] CreaturesPane from BattleMenu into own Class

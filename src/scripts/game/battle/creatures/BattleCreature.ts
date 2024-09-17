@@ -10,6 +10,8 @@ export type CreatureDetails = {
   currentHp: number;
   baseAttackValue: number; // the base damage value for a creature's attack
   attackIds: number[];
+  healthStatusScaleFactor?: number; // optionally scale the health status background image (eg: to de-emphasize)
+  currentLevel?: number;
 };
 
 export type CreatureAttack = {
@@ -27,6 +29,7 @@ export class BattleCreature {
   protected _currentHp: number;
   protected _maxHp: number;
   protected _creatureAttackList: CreatureAttack[];
+  protected _creatureLevel: number;
 
   constructor(
     scene: Phaser.Scene,
@@ -39,7 +42,9 @@ export class BattleCreature {
     this._maxHp = this._creatureDetails.maxHp;
     this._creatureAttackList = [];
     this._creatureType = this._creatureDetails.creatureType;
+    this._creatureLevel = this._creatureDetails.currentLevel || 1;
 
+    // create the creature's game object
     this._gameObject = this._scene.add.image(
       position.x,
       position.y,
@@ -47,6 +52,7 @@ export class BattleCreature {
       this._creatureDetails.assetFrame || 0
     );
 
+    // Create the health status component for the creature
     this._healthStatus = this.#createHealthStatus();
   }
 
@@ -71,6 +77,10 @@ export class BattleCreature {
     return this._currentHp;
   }
 
+  get level(): number {
+    return this._creatureLevel;
+  }
+
   // update current creature hp and animated the health bar
   takeDamage(damage: number, callback?: () => void) {
     this._currentHp -= damage;
@@ -85,10 +95,13 @@ export class BattleCreature {
 
   // create the health status object for the creature
   #createHealthStatus() {
-    return new HealthStatus(
-      this._scene,
-      this._creatureDetails.name,
-      this._creatureType
-    );
+    const config = {
+      creatureName: this._creatureDetails.name,
+      creatureType: this._creatureType,
+      creatureLevel: this._creatureLevel,
+      scaleFactor: this._creatureDetails.healthStatusScaleFactor || 1,
+    };
+
+    return new HealthStatus(this._scene, config);
   }
 }

@@ -77,7 +77,7 @@ export const createFullWidthBgRect = (scene: Phaser.Scene) => {
 // A sub info bg rect (half the width of the main pane)
 // Note: positioning is set on its parent
 export const createHalfBgRect = (scene: Phaser.Scene) => {
-  const rectWidth = 500; // TODO: create a dynamic constant for this based on main bg pain size
+  const rectWidth = 500;
   const rectHeight = 124;
   const padding = 2;
 

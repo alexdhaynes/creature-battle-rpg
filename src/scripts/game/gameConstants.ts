@@ -38,6 +38,9 @@ export enum CreatureTypes {
   ENEMY = "ENEMY",
 }
 
+export const ENEMY_POSITION: Coordinate = { x: 768, y: 144 };
+export const PLAYER_POSITION: Coordinate = { x: 256, y: 318 };
+
 export const CREATURES = {
   TUXEDO_CAT: {
     key: "TUXEDO_CAT",
@@ -47,4 +50,4 @@ export const CREATURES = {
     key: "ORANGE_CAT",
     name: "Wali",
   },
-} as const;
+};

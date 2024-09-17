@@ -27,3 +27,8 @@ export interface KeyActionMap {
   keyboardKey: string;
   action: InputActions | Directions;
 }
+
+export type Coordinate = {
+  x: number;
+  y: number;
+};

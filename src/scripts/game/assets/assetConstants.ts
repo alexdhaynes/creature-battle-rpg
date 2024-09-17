@@ -16,6 +16,16 @@ export enum CreatureAssetKeys {
   ORANGE_CAT = "ORANGE_CAT",
 }
 
+// Todo: move these types elsewhere
+export type CreatureNameKeys = {
+  [key in CreatureAssetKeys]: string;
+};
+
+export const creatureNames: CreatureNameKeys = {
+  [CreatureAssetKeys.TUXEDO_CAT]: "Mr. Tux",
+  [CreatureAssetKeys.ORANGE_CAT]: "Wali",
+};
+
 export enum BattleAssetKeys {
   HEALTH_BAR_BACKGROUND = "HEALTH_BAR_BACKGROUND",
 }

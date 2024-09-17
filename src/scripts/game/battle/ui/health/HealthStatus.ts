@@ -1,7 +1,8 @@
 import {
   BattleAssetKeys,
   CreatureAssetKeys,
-} from "@scripts/game/assets/assetConstants";
+  creatureNames,
+} from "@game/assets/assetConstants";
 import { HealthBar } from "@game/battle/ui/health/HealthBar";
 
 // This is the overall health container, including:
@@ -36,7 +37,7 @@ export class HealthStatus {
     const _playerCreatureName = this.#scene.add.text(
       30,
       20,
-      CreatureAssetKeys.ORANGE_CAT,
+      creatureNames[CreatureAssetKeys.ORANGE_CAT],
       {
         color: "#7e3d3f",
         fontSize: "32px",
@@ -51,7 +52,7 @@ export class HealthStatus {
     const _enemyCreatureName = this.#scene.add.text(
       30,
       20,
-      CreatureAssetKeys.TUXEDO_CAT,
+      creatureNames[CreatureAssetKeys.TUXEDO_CAT],
       {
         color: "#7e3d3f",
         fontSize: "32px",

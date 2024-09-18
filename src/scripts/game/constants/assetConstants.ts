@@ -1,8 +1,7 @@
-import type { AssetList } from "@game/constants/types";
+import { AssetList } from "@";
 
 import {
   CREATURES,
-  DATA_PATH,
   KENNEYS_ASSET_PATH,
   TEMP_GRAPHICS_ASSET_PATH,
   WORKING_GRAPHICS_ASSET_PATH,
@@ -30,64 +29,55 @@ export enum UIAssetKeys {
   CURSOR = "CURSOR",
 }
 
-export enum DataAssetKeys {
-  ATTACKS = "ATTACKS",
-}
 // The grand list of game assets
 export const assetList: AssetList = [
   // Backgrounds
   {
     key: BattleBackgroundAssetKeys.MEADOW,
-    path: `${WORKING_GRAPHICS_ASSET_PATH}/battle-backgrounds/meadow-background.png`,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/battle-backgrounds/meadow-background.png`,
   },
   // Health bar assets
   {
     key: BattleAssetKeys.HEALTH_BAR_BACKGROUND,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/custom-ui.png`,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/custom-ui.png`,
   },
   {
     key: HealthBarAssetKeys.LEFT_CAP,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_green_left.png`,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_green_left.png`,
   },
   {
     key: HealthBarAssetKeys.RIGHT_CAP,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_green_right.png`,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_green_right.png`,
   },
   {
     key: HealthBarAssetKeys.MIDDLE,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_green_mid.png`,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_green_mid.png`,
   },
   {
     key: HealthBarAssetKeys.LEFT_CAP_SHADOW,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_left.png`,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_left.png`,
   },
   {
     key: HealthBarAssetKeys.RIGHT_CAP_SHADOW,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_right.png`,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_right.png`,
   },
   {
     key: HealthBarAssetKeys.MIDDLE_SHADOW,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_mid.png`,
+    imagePath: `${KENNEYS_ASSET_PATH}/ui-space-expansion/barHorizontal_shadow_mid.png`,
   },
 
   // Creatures
   {
     key: CREATURES.TUXEDO_CAT.key,
-    path: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CREATURES.TUXEDO_CAT.key.toLowerCase()}.png`,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CREATURES.TUXEDO_CAT.key.toLowerCase()}.png`,
   },
   {
     key: CREATURES.ORANGE_CAT.key,
-    path: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CREATURES.ORANGE_CAT.key.toLowerCase()}.png`,
+    imagePath: `${WORKING_GRAPHICS_ASSET_PATH}/creatures/${CREATURES.ORANGE_CAT.key.toLowerCase()}.png`,
   },
   // UI: cursor
   {
     key: UIAssetKeys.CURSOR,
-    path: `${TEMP_GRAPHICS_ASSET_PATH}/ui/cursor.png`,
-  },
-  // Data
-  {
-    key: DataAssetKeys.ATTACKS,
-    type: "DATA",
-    path: `${DATA_PATH}/attacks.json`,
+    imagePath: `${TEMP_GRAPHICS_ASSET_PATH}/ui/cursor.png`,
   },
 ];

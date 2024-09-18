@@ -11,10 +11,11 @@ import { Directions, InputActions } from "@game/constants/gameConstants";
 
 import {
   BattleMenuStateMachine,
-  BattleMenuStates,
   BattleStateManager,
   BattleMenuObserver,
 } from "@game/battle/ui/menu/state";
+
+import { BattleMenuStates } from "@game/constants/gameConstants";
 
 import {
   createFleePane,
@@ -36,7 +37,6 @@ export class BattleMenu {
 
   // State management
   stateMachine!: BattleMenuStateMachine;
-  stateManager!: BattleStateManager;
 
   // the containers for the menu items
   #inventoryContainer!: Phaser.GameObjects.Container;
@@ -64,21 +64,18 @@ export class BattleMenu {
     // instantiate state machine
     this.stateMachine = new BattleMenuStateMachine(this);
 
-    // store reference to the state manager
-    this.stateManager = this.stateMachine.battleStateManager;
-
     // create Main Menu
     this.mainMenu = new BattleMainMenu(scene);
 
     // Set the current menu state to the mian menu
-    this.stateManager.setCurrentMenuState(BattleMenuStates.Main);
+    BattleStateManager.setCurrentMenuState(BattleMenuStates.Main);
 
     // Create a cursor, which will be shared by all menus
     this.menuCursor = new Cursor(
       menu2x2NavigationMap,
       menu2x2CursorPositions,
       battleMenuCursorInitialPosition,
-      this.stateManager
+      BattleStateManager
     );
 
     // create the cursor game object
@@ -93,7 +90,7 @@ export class BattleMenu {
     this.mainMenu.getContainer().add(this.menuCursorGameObject);
 
     // store a reference to the current menu cell (stored by state manager)
-    this.#currentMenuCell = this.stateManager.getState().currentMenuCell;
+    this.#currentMenuCell = BattleStateManager.getState().currentMenuCell;
 
     // create battlemenuObserver
     // this observer will listen for state changes and update the menu accordingly
@@ -123,13 +120,13 @@ export class BattleMenu {
   handlePlayerInput(
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
-    const { currentMenuState, currentMenuCell } = this.stateManager.getState();
+    const { currentMenuState, currentMenuCell } = BattleStateManager.getState();
 
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed
       if (
-        this.stateManager.getState().currentMenuState ===
+        BattleStateManager.getState().currentMenuState ===
         BattleMenuStates.Closed
       )
         return;

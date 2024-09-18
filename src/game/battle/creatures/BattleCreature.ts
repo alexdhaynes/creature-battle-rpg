@@ -1,8 +1,10 @@
 import { Coordinate, CreatureTypes } from "@game/constants/gameConstants";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
 import { CreatureDetails, CreatureAttack } from "@game/constants/gameConstants";
+import { DataAssetKeys } from "@game/constants/assetConstants";
 
 export class BattleCreature {
+  private static _attackData: CreatureAttack[]; // static property to hold the attack data
   protected _scene: Phaser.Scene; // can't make private since this is a base class; but use _ notation to indicate "protected"
   protected _creatureDetails: CreatureDetails;
   protected _gameObject: Phaser.GameObjects.Image;
@@ -36,6 +38,24 @@ export class BattleCreature {
 
     // Create the health status component for the creature
     this._healthStatus = this.#createHealthStatus();
+
+    // Load attack data only if it is not already loaded
+    if (!BattleCreature._attackData) {
+      BattleCreature._attackData = this._scene.cache.json.get(
+        DataAssetKeys.ATTACKS
+      );
+    }
+
+    // Load the creature's attack list
+    this._creatureDetails.attackIds.forEach((attackId) => {
+      const attackData = BattleCreature._attackData.find(
+        (attack: CreatureAttack) => attack.id === attackId
+      );
+
+      if (attackData) {
+        this._creatureAttackList.push(attackData);
+      }
+    });
   }
 
   get isFainted(): boolean {

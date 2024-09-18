@@ -1,7 +1,6 @@
-import {
-  StateChangeObserver,
-  BattleMenuStates,
-} from "@game/battle/ui/menu/state/";
+import { StateChangeObserver } from "@game/battle/ui/menu/state/";
+
+import { BattleMenuStates } from "@game/constants/gameConstants";
 
 export type TState = string; // TYPE TODO: be more specific about which string constants are allowed here
 export type TAction = string;

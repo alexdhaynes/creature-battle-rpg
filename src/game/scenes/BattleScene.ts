@@ -8,11 +8,15 @@ import {
   InputActions,
   CREATURES,
 } from "@game/constants/gameConstants";
+
 import { BackgroundImage } from "@game/battle/Background";
+
 import {
   PlayerBattleCreature,
   EnemyBattleCreature,
 } from "@game/battle/creatures";
+
+import { BattleStateManager } from "@game/battle/ui/menu/state";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
@@ -39,6 +43,10 @@ export class BattleScene extends BaseScene {
     );
     background.showBackground();
 
+    // instantiate then render the main menu (the main menu creates the submenus)
+    this.#battleMenu = new BattleMenu(this);
+    this.#battleMenu.init();
+
     // add the enemy creature
     this.#activeEnemyCreature = new EnemyBattleCreature(this, {
       name: CREATURES.TUXEDO_CAT.name,
@@ -48,7 +56,7 @@ export class BattleScene extends BaseScene {
       currentHp: 25,
       maxHp: 25,
       baseAttackValue: 5,
-      attackIds: [],
+      attackIds: [1, 7, 4, 5],
       currentLevel: 9,
       healthStatusScaleFactor: 0.8,
     });
@@ -62,13 +70,15 @@ export class BattleScene extends BaseScene {
       currentHp: 15,
       maxHp: 15,
       baseAttackValue: 7,
-      attackIds: [],
+      attackIds: [6, 3, 2, 8],
       currentLevel: 7,
     });
 
-    // instantiate then render the main info and sub info pane
-    this.#battleMenu = new BattleMenu(this);
-    this.#battleMenu.init();
+    // add a reference to the player creature to the state manager
+    // this is so we don't have to prop drill the current player ref
+    // down into AttackMenu
+    BattleStateManager.setCurrentPlayer(this.#playerCreature);
+
     // Show the main battle menu
     this.#battleMenu.mainMenu.show();
 

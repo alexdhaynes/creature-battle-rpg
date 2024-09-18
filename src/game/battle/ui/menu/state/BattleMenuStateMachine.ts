@@ -3,36 +3,25 @@ import { StateMachine, TransitionPayload } from "@game/StateMachine";
 import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
 import { BattleMenuOptionLabels } from "@game/battle/battleUIConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
-
-export enum BattleMenuStates {
-  Main = "BATTLE_MENU_MAIN",
-  Attacks = "BATTLE_MENU_ATTACKS",
-  Creatures = "BATTLE_MENU_MONSTERS",
-  Inventory = "BATTLE_MENU_INVENTORY",
-  DisplayPersistentMessage = "BATTLE_MENU_PERSISTENT_MESSAGE",
-  DisplayTimedMessage = "BATTLE_MENU_TIMED_MESSAGE",
-  Closed = "BATTLE_MENU_CLOSED",
-}
+import { BattleMenuStates } from "@game/constants/gameConstants";
 
 export class BattleMenuStateMachine extends StateMachine<
   BattleMenuStates,
   InputActions
 > {
   battleMenu; //reference to the BattleMenu class for updating its UI
-  battleStateManager: BattleStateManager;
   // dispatch() is in the superclass
 
   constructor(battleMenu: BattleMenu) {
     super();
     this.battleMenu = battleMenu;
-    this.battleStateManager = new BattleStateManager();
     this.initializeTransitions();
   }
 
   // Update menu state and notify observers when that has been done
   updateMenuState(newState: BattleMenuStates) {
     // Update BattleStateManager state
-    this.battleStateManager.setCurrentMenuState(newState);
+    BattleStateManager.setCurrentMenuState(newState);
     // Notify observers of the state change
     this._notifyObservers(newState);
   }
@@ -79,7 +68,7 @@ export class BattleMenuStateMachine extends StateMachine<
       // If the Fight menu item is selected
       case BattleMenuOptionLabels.FIGHT:
         this.updateMenuState(BattleMenuStates.Attacks);
-        this.battleStateManager.setcurrentPlayerAttack(payload.menuItem);
+        BattleStateManager.setCurrentPlayerAttack(payload.menuItem);
         break;
 
       // If the Item (Inventory) menu item is selected
@@ -106,7 +95,7 @@ export class BattleMenuStateMachine extends StateMachine<
   handleAttacksOk(payload: TransitionPayload) {
     console.log(`handleAttacksOk()`);
 
-    this.battleStateManager.setcurrentPlayerAttack(payload.menuItem);
+    BattleStateManager.setCurrentPlayerAttack(payload.menuItem);
 
     // Update the state to display the message about the chosen attack
     this.updateMenuState(BattleMenuStates.DisplayTimedMessage);

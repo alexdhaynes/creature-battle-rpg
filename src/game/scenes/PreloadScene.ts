@@ -17,7 +17,15 @@ export class PreloadScene extends BaseScene {
 
     // Iterate through assets and preload images
     assetList.map((assetListItem) => {
-      this.load.image(assetListItem.key, assetListItem.imagePath);
+      const { key, path } = assetListItem;
+      if (
+        assetListItem.hasOwnProperty("type") &&
+        assetListItem.type === "DATA"
+      ) {
+        this.load.json(key, path); // load json data
+      } else {
+        this.load.image(key, path); // load images
+      }
     });
   }
 

@@ -31,14 +31,15 @@
     "id": 5,
     "name": "Pounce",
     "animationKey": "POUNCE",
-    "damage": 10,
+    "damage": 6,
     "cooldown": 1
   },
   {
     "id": 6,
     "name": "Claw",
     "animationKey": "CLAW",
-    "damage": 8
+    "damage": 7,
+    "cooldown": 1
   },
   {
     "id": 7,

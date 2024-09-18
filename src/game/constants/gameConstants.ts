@@ -2,6 +2,8 @@ export const TEMP_GAME_ASSET_PATH = "/temp-game-assets";
 export const TEMP_GRAPHICS_ASSET_PATH = `${TEMP_GAME_ASSET_PATH}/images/monster-tamer`;
 export const WORKING_GRAPHICS_ASSET_PATH = `${TEMP_GAME_ASSET_PATH}/working-game-assets`;
 export const KENNEYS_ASSET_PATH = `${TEMP_GAME_ASSET_PATH}/images/kenneys-assets`;
+export const DATA_PATH = `/src/game/data`;
+
 export const GAME_DIMENSIONS = {
   width: 1024,
   height: 576,
@@ -75,4 +77,14 @@ export interface CreatureAttack {
   disableDuration?: number; // the number of turns the attack deprives the other player of
   creature?: string; // the creature this attack belongs to; if empty, any creature can have this atatck
   description?: string;
+}
+
+export enum BattleMenuStates {
+  Main = "BATTLE_MENU_MAIN",
+  Attacks = "BATTLE_MENU_ATTACKS",
+  Creatures = "BATTLE_MENU_MONSTERS",
+  Inventory = "BATTLE_MENU_INVENTORY",
+  DisplayPersistentMessage = "BATTLE_MENU_PERSISTENT_MESSAGE",
+  DisplayTimedMessage = "BATTLE_MENU_TIMED_MESSAGE",
+  Closed = "BATTLE_MENU_CLOSED",
 }

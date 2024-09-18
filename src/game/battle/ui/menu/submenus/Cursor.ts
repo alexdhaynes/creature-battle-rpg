@@ -8,7 +8,7 @@ import {
 
 import { UIAssetKeys } from "@game/constants/assetConstants";
 
-import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
+import { BattleStateManager } from "@game/battle/BattleStateManager";
 
 // A Cursor class which takes in a cursor Game Object and other properties
 export class Cursor {

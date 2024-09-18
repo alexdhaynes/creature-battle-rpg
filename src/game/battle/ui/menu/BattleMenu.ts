@@ -11,9 +11,10 @@ import { Directions, InputActions } from "@game/constants/gameConstants";
 
 import {
   BattleMenuStateMachine,
-  BattleStateManager,
   BattleMenuObserver,
 } from "@game/battle/ui/menu/state";
+
+import { BattleStateManager } from "@game/battle/BattleStateManager";
 
 import { BattleMenuStates } from "@game/constants/gameConstants";
 

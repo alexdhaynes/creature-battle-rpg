@@ -3,6 +3,8 @@ import {
   AttackMenuOptionLabels,
 } from "@game/battle/battleUIConstants";
 
+import { BattleStateManager } from "@game/battle/BattleStateManager";
+
 export class AttackMenu {
   // #scene: Phaser.Scene;
   #attackMenu!: Phaser.GameObjects.Container;
@@ -14,6 +16,10 @@ export class AttackMenu {
     this.#attackMenu = attackMenuContainer;
     // hide initially
     this.hide();
+
+    BattleStateManager;
+
+    console.log("current player: ");
   }
 
   getGameObject() {

@@ -16,7 +16,7 @@ import {
   EnemyBattleCreature,
 } from "@game/battle/creatures";
 
-import { BattleStateManager } from "@game/battle/ui/menu/state";
+import { BattleStateManager } from "@game/battle/BattleStateManager";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined

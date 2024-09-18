@@ -1,4 +1,4 @@
-import { CREATURES } from "@game/gameConstants";
+import { CREATURES } from "@game/constants/gameConstants";
 
 import {
   battleUITextStyle,

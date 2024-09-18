@@ -2,9 +2,9 @@
 
 import "@styles/index.css"; //import root css
 import Phaser, { Types as PhaserTypes } from "phaser"; // Import Phaser and types
-import { SceneKeys } from "@scripts/game/scenes/sceneConstants";
-import { sceneList } from "@scripts/game/scenes/sceneConstants";
-import { GAME_DIMENSIONS } from "@scripts/game/gameConstants";
+import { SceneKeys } from "@game/constants/sceneConstants";
+import { sceneList } from "@game/constants/sceneConstants";
+import { GAME_DIMENSIONS } from "@game/constants/gameConstants";
 
 const config: PhaserTypes.Core.GameConfig = {
   width: "100%",

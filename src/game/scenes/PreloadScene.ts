@@ -1,6 +1,6 @@
 import { BaseScene } from "@game/scenes/BaseScene";
-import { SceneKeys } from "@scripts/game/scenes/sceneConstants";
-import { assetList } from "@scripts/game/assets/assetConstants";
+import { SceneKeys } from "@game/constants/sceneConstants";
+import { assetList } from "@game/constants/assetConstants";
 
 export class PreloadScene extends BaseScene {
   constructor() {

@@ -1,24 +1,6 @@
-import { Coordinate, CreatureTypes } from "@game/gameConstants";
+import { Coordinate, CreatureTypes } from "@game/constants/gameConstants";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
-
-export type CreatureDetails = {
-  name: string;
-  assetKey: string;
-  creatureType: CreatureTypes;
-  assetFrame?: number;
-  maxHp: number;
-  currentHp: number;
-  baseAttackValue: number; // the base damage value for a creature's attack
-  attackIds: number[];
-  healthStatusScaleFactor?: number; // optionally scale the health status background image (eg: to de-emphasize)
-  currentLevel?: number;
-};
-
-export type CreatureAttack = {
-  id: number;
-  name: string;
-  animationKey: string;
-};
+import { CreatureDetails, CreatureAttack } from "@game/constants/gameConstants";
 
 export class BattleCreature {
   protected _scene: Phaser.Scene; // can't make private since this is a base class; but use _ notation to indicate "protected"

@@ -1,11 +1,11 @@
-import type { AssetList } from "@game/assets/types";
+import type { AssetList } from "@game/constants/types";
 
 import {
   CREATURES,
   KENNEYS_ASSET_PATH,
   TEMP_GRAPHICS_ASSET_PATH,
   WORKING_GRAPHICS_ASSET_PATH,
-} from "@scripts/game/gameConstants";
+} from "@game/constants/gameConstants";
 
 export enum BattleBackgroundAssetKeys {
   FOREST = "FOREST",

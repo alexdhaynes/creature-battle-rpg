@@ -1,4 +1,4 @@
-import { HealthBarAssetKeys } from "@scripts/game/assets/assetConstants";
+import { HealthBarAssetKeys } from "@game/constants/assetConstants";
 
 export class HealthBar {
   #scene: Phaser.Scene;

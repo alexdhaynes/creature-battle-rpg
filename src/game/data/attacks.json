@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "name": "Tuxedo Slap",
+    "animationKey": "TUX_SLAP",
+    "damage": 10,
+    "cooldown": 3,
+    "creature": "TUXEDO_CAT"
+  },
+  {
+    "id": 2,
+    "name": "Purr",
+    "animationKey": "PURR",
+    "damage": 0,
+    "healing": 5,
+    "cooldown": 3
+  },
+  {
+    "id": 3,
+    "name": "Scratch",
+    "animationKey": "SCRATCH",
+    "damage": 4
+  },
+  {
+    "id": 4,
+    "name": "Bite",
+    "animationKey": "BITE",
+    "damage": 3
+  },
+  {
+    "id": 5,
+    "name": "Pounce",
+    "animationKey": "POUNCE",
+    "damage": 10,
+    "cooldown": 1
+  },
+  {
+    "id": 6,
+    "name": "Claw",
+    "animationKey": "CLAW",
+    "damage": 8
+  },
+  {
+    "id": 7,
+    "name": "Hiss",
+    "animationKey": "HISS",
+    "damage": 0,
+    "disableDuration": 1,
+    "cooldown": 4
+  },
+  {
+    "id": 8,
+    "name": "Orange Yowl",
+    "animationKey": "OG_YOWL",
+    "damage": 10,
+    "cooldown": 3,
+    "creature": "ORANGE_CAT"
+  }
+]

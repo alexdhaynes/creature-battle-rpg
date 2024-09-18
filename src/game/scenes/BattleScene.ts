@@ -1,13 +1,13 @@
 import { BaseScene } from "@game/scenes/BaseScene";
-import { SceneKeys } from "@scripts/game/scenes/sceneConstants";
-import { BattleBackgroundAssetKeys } from "@scripts/game/assets/assetConstants";
+import { SceneKeys } from "@game/constants/sceneConstants";
+import { BattleBackgroundAssetKeys } from "@game/constants/assetConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import {
   CreatureTypes,
   Directions,
   InputActions,
   CREATURES,
-} from "@scripts/game/gameConstants";
+} from "@game/constants/gameConstants";
 import { BackgroundImage } from "@game/battle/Background";
 import {
   PlayerBattleCreature,

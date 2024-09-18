@@ -7,7 +7,7 @@ import {
   CursorPositions2x2,
 } from "@game/battle/battleUIConstants";
 
-import { Directions, InputActions } from "@scripts/game/gameConstants";
+import { Directions, InputActions } from "@game/constants/gameConstants";
 
 import {
   BattleMenuStateMachine,

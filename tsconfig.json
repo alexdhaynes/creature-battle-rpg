@@ -22,9 +22,8 @@
     /* aliased imports */
     "baseUrl": ".",
     "paths": {
-      "@scripts/*": ["src/scripts/*"],
       "@styles/*": ["src/styles/*"],
-      "@game/*": ["src/scripts/game/*"],
+      "@game/*": ["src/game/*"]
     }
   },
   "include": ["src/**/*"]

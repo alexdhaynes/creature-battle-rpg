@@ -3,7 +3,7 @@ import {
   CreatureDetails,
 } from "@game/battle/creatures/BattleCreature";
 
-import { Coordinate, PLAYER_POSITION } from "@game/gameConstants";
+import { Coordinate, PLAYER_POSITION } from "@game/constants/gameConstants";
 
 export class PlayerBattleCreature extends BattleCreature {
   constructor(

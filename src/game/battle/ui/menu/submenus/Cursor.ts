@@ -1,4 +1,4 @@
-import { Directions } from "@scripts/game/gameConstants";
+import { Directions } from "@game/constants/gameConstants";
 
 import {
   CursorPositions2x2,
@@ -6,7 +6,7 @@ import {
   TBattleMenuOptionNavigationMap,
 } from "@game/battle/battleUIConstants";
 
-import { UIAssetKeys } from "@scripts/game/assets/assetConstants";
+import { UIAssetKeys } from "@game/constants/assetConstants";
 
 import { BattleStateManager } from "@game/battle/ui/menu/state/BattleStateManager";
 

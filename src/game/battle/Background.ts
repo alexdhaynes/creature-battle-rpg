@@ -1,4 +1,4 @@
-import { BattleBackgroundAssetKeys } from "@scripts/game/assets/assetConstants";
+import { BattleBackgroundAssetKeys } from "@game/constants/assetConstants";
 
 export class BackgroundImage {
   #scene: Phaser.Scene;

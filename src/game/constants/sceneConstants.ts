@@ -1,6 +1,5 @@
-import { PreloadScene } from "@game/scenes/PreloadScene";
-import { BattleScene } from "@game/scenes/BattleScene";
-import { SceneList } from "@game/scenes/types";
+import { PreloadScene, BattleScene } from "@game/scenes";
+import { SceneList } from "@game/constants/types";
 
 // the names of all of our scenes
 export enum SceneKeys {

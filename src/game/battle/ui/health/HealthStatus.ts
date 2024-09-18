@@ -1,6 +1,6 @@
-import { BattleAssetKeys } from "@game/assets/assetConstants";
+import { BattleAssetKeys } from "@game/constants/assetConstants";
 import { HealthBar } from "@game/battle/ui/health/HealthBar";
-import { Coordinate, CreatureTypes } from "@game/gameConstants";
+import { Coordinate, CreatureTypes } from "@game/constants/gameConstants";
 
 // This is the overall health container, including:
 // the creature name and their level,

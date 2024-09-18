@@ -3,7 +3,7 @@ import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMach
 import {
   CursorPositions2x2,
   battleMenuCursorInitialPosition,
-} from "@scripts/game/battle/battleUIConstants";
+} from "@game/battle/battleUIConstants";
 
 export interface StateChangeObserver {
   onStateChange(newState: BattleMenuStates): void;

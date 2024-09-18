@@ -51,3 +51,28 @@ export const CREATURES = {
     name: "Wali",
   },
 };
+
+export type CreatureDetails = {
+  name: string;
+  assetKey: string;
+  creatureType: CreatureTypes;
+  assetFrame?: number;
+  maxHp: number;
+  currentHp: number;
+  baseAttackValue: number; // the base damage value for a creature's attack
+  attackIds: number[];
+  healthStatusScaleFactor?: number; // optionally scale the health status background image (eg: to de-emphasize)
+  currentLevel?: number;
+};
+
+export interface CreatureAttack {
+  id: number;
+  name: string;
+  animationKey: string;
+  damage: number; // the hp decrease for this attack
+  healing?: number; // the hp increase for this attack
+  cooldown?: number; // the number of turns before the attack can be used again
+  disableDuration?: number; // the number of turns the attack deprives the other player of
+  creature?: string; // the creature this attack belongs to; if empty, any creature can have this atatck
+  description?: string;
+}

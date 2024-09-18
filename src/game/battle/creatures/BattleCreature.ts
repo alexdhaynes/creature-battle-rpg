@@ -47,7 +47,7 @@ export class BattleCreature {
     }
 
     // Load the creature's attack list
-    this._creatureDetails.attackIds.forEach((attackId) => {
+    this._creatureDetails.attackIds.map((attackId) => {
       const attackData = BattleCreature._attackData.find(
         (attack: CreatureAttack) => attack.id === attackId
       );

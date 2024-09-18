@@ -1,9 +1,10 @@
-import { CREATURES } from "@game/constants/gameConstants";
+import { BattleStateManager } from "@game/battle/BattleStateManager";
+import { BattleCreature } from "@game/battle/creatures";
 
 import {
   battleUITextStyle,
   BattleMenuOptionLabels,
-} from "@game/battle/battleUIConstants";
+} from "@game/constants/battleUIConstants";
 
 import {
   createFullWidthBgRect,
@@ -16,6 +17,7 @@ export class BattleMainMenu {
   #mainMenuTextObjects!: Phaser.GameObjects.Text[];
   #mainMenuTextContainer: Phaser.GameObjects.Container;
   #mainMenuNav!: Phaser.GameObjects.Container;
+  #currentPlayer!: BattleCreature | null;
 
   constructor(scene: Phaser.Scene) {
     //this.#scene = scene;
@@ -75,9 +77,11 @@ export class BattleMainMenu {
   // Create text container for info pane text
   // TODO: this container should be shared by all submenus!
   #createBattleMenuInfoPane(scene: Phaser.Scene) {
+    const { currentPlayer } = BattleStateManager.getState();
+
     const { textContainer, textObjects } = createTextContainer(
       scene,
-      ["What should", `${CREATURES.ORANGE_CAT.name} do next?`],
+      ["What should", `${currentPlayer?.name} do next?`],
       0,
       0
     );

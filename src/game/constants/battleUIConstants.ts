@@ -13,8 +13,8 @@ export enum BattleMenuOptionLabels {
 }
 
 export enum AttackMenuOptionLabels {
-  MOVE_1 = "slash",
-  MOVE_2 = "hiss",
+  MOVE_1 = "MOVE_1",
+  MOVE_2 = "MOVE_2",
   MOVE_3 = "MOVE_3",
   MOVE_4 = "MOVE_4",
   NO_MOVE = "-",
@@ -33,20 +33,24 @@ export enum CursorPositions2x2 {
   BOTTOM_RIGHT = "BOTTOM_RIGHT",
 }
 
+// TODO: use this
+// export const menu2x2GridPositions = {
+//   [CursorPositions2x2.TOP_LEFT]: { x: 55, y: 22 },
+//   [CursorPositions2x2.TOP_RIGHT]: { x: 240, y: 22 },
+//   [CursorPositions2x2.BOTTOM_LEFT]: { x: 55, y: 70 },
+//   [CursorPositions2x2.BOTTOM_RIGHT]: { x: 240, y: 70 },
+// };
+
+export type AttackMenuGrid = {
+  [key in CursorPositions2x2]: string;
+};
+
 // label the 2x2 grid of options for the main menu
 export const battleMainMenu2x2Grid = {
   [CursorPositions2x2.TOP_LEFT]: BattleMenuOptionLabels.FIGHT,
   [CursorPositions2x2.TOP_RIGHT]: BattleMenuOptionLabels.SWITCH,
   [CursorPositions2x2.BOTTOM_LEFT]: BattleMenuOptionLabels.ITEM,
   [CursorPositions2x2.BOTTOM_RIGHT]: BattleMenuOptionLabels.FLEE,
-};
-
-// label the 2x2 grid of options for the attack menu
-export const battleAttackMenu2x2Grid = {
-  [CursorPositions2x2.TOP_LEFT]: AttackMenuOptionLabels.MOVE_1,
-  [CursorPositions2x2.TOP_RIGHT]: AttackMenuOptionLabels.MOVE_2,
-  [CursorPositions2x2.BOTTOM_LEFT]: AttackMenuOptionLabels.MOVE_3,
-  [CursorPositions2x2.BOTTOM_RIGHT]: AttackMenuOptionLabels.MOVE_4,
 };
 
 export type CursorCoordinates = {

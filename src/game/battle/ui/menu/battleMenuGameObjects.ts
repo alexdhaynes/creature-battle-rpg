@@ -1,4 +1,4 @@
-import { battleUITextStyle } from "@game/battle/battleUIConstants";
+import { battleUITextStyle } from "@game/constants/battleUIConstants";
 
 // Define the custom return type
 interface TextContainerResult {

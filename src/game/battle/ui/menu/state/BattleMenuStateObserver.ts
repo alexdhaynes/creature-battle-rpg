@@ -6,7 +6,7 @@ import { BattleMenuStates } from "@game/constants/gameConstants";
 import {
   CursorPositions2x2,
   battleMenuCursorInitialPosition,
-} from "@game/battle/battleUIConstants";
+} from "@game/constants/battleUIConstants";
 
 export interface StateChangeObserver {
   onStateChange(newState: BattleMenuStates): void;

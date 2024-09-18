@@ -1,9 +1,10 @@
-import {
-  BattleCreature,
-  CreatureDetails,
-} from "@game/battle/creatures/BattleCreature";
+import { BattleCreature } from "@game/battle/creatures/BattleCreature";
 
-import { Coordinate, PLAYER_POSITION } from "@game/constants/gameConstants";
+import {
+  Coordinate,
+  CreatureDetails,
+  PLAYER_POSITION,
+} from "@game/constants/gameConstants";
 
 export class PlayerBattleCreature extends BattleCreature {
   constructor(

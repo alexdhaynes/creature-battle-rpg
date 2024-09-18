@@ -1,6 +1,8 @@
-import { CursorPositions2x2 } from "@game/battle/battleUIConstants";
+import { CursorPositions2x2 } from "@game/constants/battleUIConstants";
 import { PlayerBattleCreature } from "@game/battle/creatures";
 import { BattleMenuStates } from "@game/constants/gameConstants";
+
+import { AttackMenuGrid } from "@game/constants/battleUIConstants";
 
 type BattleState = {
   currentMenuState: BattleMenuStates;
@@ -9,6 +11,7 @@ type BattleState = {
   currentEnemyAttack: string | null;
   currentMessage: string[];
   currentMenuCell: CursorPositions2x2;
+  currentAttackGrid: AttackMenuGrid;
 };
 
 export class BattleStateManager {
@@ -19,6 +22,12 @@ export class BattleStateManager {
     currentEnemyAttack: "",
     currentMessage: [""],
     currentMenuCell: CursorPositions2x2.TOP_LEFT,
+    currentAttackGrid: {
+      [CursorPositions2x2.TOP_LEFT]: "-",
+      [CursorPositions2x2.TOP_RIGHT]: "-",
+      [CursorPositions2x2.BOTTOM_LEFT]: "-",
+      [CursorPositions2x2.BOTTOM_RIGHT]: "-",
+    },
   };
 
   // Static method to set the state
@@ -57,76 +66,13 @@ export class BattleStateManager {
   }
 
   // Static method to store the current player
-  public static setCurrentPlayer(newPlayer: PlayerBattleCreature): void {
+  public static setCurrentPlayer(newPlayer: PlayerBattleCreature | null): void {
     this.setState({ currentPlayer: newPlayer });
-    console.log("new state ");
-    console.log(this.getState());
+  }
+
+  public static setCurrentAttackGrid(
+    newGrid: BattleState["currentAttackGrid"]
+  ) {
+    this.setState({ currentAttackGrid: newGrid });
   }
 }
-
-// import { BattleMenuStates } from "@game/battle/ui/menu/state/BattleMenuStateMachine";
-// import { CursorPositions2x2 } from "@game/battle/battleUIConstants";
-// import { PlayerBattleCreature } from "@game/battle/creatures";
-
-// type BattleState = {
-//   currentMenuState: BattleMenuStates;
-//   currentPlayer: PlayerBattleCreature | null;
-//   currentPlayerAttack: string | null;
-//   currentEnemyAttack: string | null;
-//   currentMessage: string[];
-//   currentMenuCell: CursorPositions2x2;
-// };
-
-// export class BattleStateManager {
-//   #state: BattleState;
-
-//   constructor() {
-//     this.#state = {
-//       currentMenuState: BattleMenuStates.Main,
-//       currentPlayerAttack: "",
-//       currentEnemyAttack: "",
-//       currentMessage: [""],
-//       currentMenuCell: CursorPositions2x2.TOP_LEFT,
-//       currentPlayer: null,
-//     };
-//   }
-
-//   setState(newState: Partial<BattleState>) {
-//     this.#state = { ...this.#state, ...newState };
-//   }
-
-//   // Get the entire state
-//   getState(): BattleState {
-//     return this.#state;
-//   }
-
-//   // Specific setters for state fields
-//   setCurrentMessage(messageList: string[]) {
-//     this.setState({ currentMessage: messageList });
-//   }
-
-//   setcurrentPlayerAttack(attack: string) {
-//     this.setState({ currentPlayerAttack: attack });
-//   }
-
-//   setcurrentEnemyAttack(attack: string) {
-//     this.setState({ currentEnemyAttack: attack });
-//   }
-
-//   // Store the currently visible Battle Menu
-//   setCurrentMenuState(newState: BattleMenuStates) {
-//     this.setState({ currentMenuState: newState });
-//   }
-
-//   // Store the current position of the cursor
-//   setCurrentMenuCell(newCell: CursorPositions2x2) {
-//     this.setState({ currentMenuCell: newCell });
-//   }
-
-//   // Store the current player
-//   setCurrentPlayer(newPlayer: PlayerBattleCreature) {
-//     this.setState({ currentPlayer: newPlayer });
-//     console.log("new state ");
-//     console.log(this.getState());
-//   }
-// }

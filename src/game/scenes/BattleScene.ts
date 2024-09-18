@@ -43,11 +43,7 @@ export class BattleScene extends BaseScene {
     );
     background.showBackground();
 
-    // instantiate then render the main menu (the main menu creates the submenus)
-    this.#battleMenu = new BattleMenu(this);
-    this.#battleMenu.init();
-
-    // add the enemy creature
+    // create the enemy creature
     this.#activeEnemyCreature = new EnemyBattleCreature(this, {
       name: CREATURES.TUXEDO_CAT.name,
       assetKey: CREATURES.TUXEDO_CAT.key,
@@ -61,7 +57,7 @@ export class BattleScene extends BaseScene {
       healthStatusScaleFactor: 0.8,
     });
 
-    // add the player creature
+    // create the player creature
     this.#playerCreature = new PlayerBattleCreature(this, {
       name: CREATURES.ORANGE_CAT.name,
       assetKey: CREATURES.ORANGE_CAT.key,
@@ -74,16 +70,20 @@ export class BattleScene extends BaseScene {
       currentLevel: 7,
     });
 
-    // add a reference to the player creature to the state manager
-    // this is so we don't have to prop drill the current player ref
-    // down into AttackMenu
+    // Set the player creature as the current player
+    // This MUST be done before the BattleMenu component is created!!
+    // Otherwise, the BattleMenu will not have the currentPlayer data
     BattleStateManager.setCurrentPlayer(this.#playerCreature);
 
-    // Show the main battle menu
-    this.#battleMenu.mainMenu.show();
+    // instantiate then render the main menu (the main menu creates the submenus)
+    this.#battleMenu = new BattleMenu(this);
+    this.#battleMenu.init();
 
     // Create hotkeys for keyboard input
     this.#cursorKeys = this.input.keyboard?.createCursorKeys();
+
+    // Show the main battle menu
+    this.#battleMenu.mainMenu.show();
   } //end create()
 
   // Update lifecycle method (called every frame of the game)

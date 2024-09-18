@@ -1,11 +1,9 @@
 import {
   battleMainMenu2x2Grid,
-  battleAttackMenu2x2Grid,
   battleMenuCursorInitialPosition,
   menu2x2NavigationMap,
   menu2x2CursorPositions,
-  CursorPositions2x2,
-} from "@game/battle/battleUIConstants";
+} from "@game/constants/battleUIConstants";
 
 import { Directions, InputActions } from "@game/constants/gameConstants";
 
@@ -46,8 +44,6 @@ export class BattleMenu {
   // the container for status messages
   #statusMessageContainer!: Phaser.GameObjects.Container;
   #statusMessageTextObjects!: Phaser.GameObjects.Text[];
-  // store the currently selected menu cell
-  #currentMenuCell!: CursorPositions2x2; // stores the currently selected cell of a 2x2 menu matrix
 
   // main menu
   mainMenu!: BattleMainMenu;
@@ -75,8 +71,7 @@ export class BattleMenu {
     this.menuCursor = new Cursor(
       menu2x2NavigationMap,
       menu2x2CursorPositions,
-      battleMenuCursorInitialPosition,
-      BattleStateManager
+      battleMenuCursorInitialPosition
     );
 
     // create the cursor game object
@@ -89,9 +84,6 @@ export class BattleMenu {
 
     // add the cursor to the main menu nav contaienr
     this.mainMenu.getContainer().add(this.menuCursorGameObject);
-
-    // store a reference to the current menu cell (stored by state manager)
-    this.#currentMenuCell = BattleStateManager.getState().currentMenuCell;
 
     // create battlemenuObserver
     // this observer will listen for state changes and update the menu accordingly
@@ -140,10 +132,8 @@ export class BattleMenu {
     if (input === InputActions.OK) {
       const menuItem =
         currentMenuState === BattleMenuStates.Attacks
-          ? battleAttackMenu2x2Grid[currentMenuCell]
+          ? BattleStateManager.getState().currentAttackGrid[currentMenuCell] // choose the correct attack based on the attack grid in state
           : battleMainMenu2x2Grid[currentMenuCell];
-      console.log("current menu cell from state manager ", currentMenuCell);
-      console.log("private prop current menu cell ", this.#currentMenuCell);
 
       this.stateMachine.dispatch(currentMenuState, InputActions.OK, {
         menuItem,

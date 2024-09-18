@@ -4,7 +4,7 @@ import {
   CursorPositions2x2,
   CursorPositions2x2Map,
   TBattleMenuOptionNavigationMap,
-} from "@game/battle/battleUIConstants";
+} from "@game/constants/battleUIConstants";
 
 import { UIAssetKeys } from "@game/constants/assetConstants";
 
@@ -16,19 +16,16 @@ export class Cursor {
   //#cursorIsDisabled: boolean; // keep track of whether the cursor is disabled or not
   #navigationMap!: TBattleMenuOptionNavigationMap; // store the navigation path for this cursor
   #cursorPositionsGrid!: CursorPositions2x2Map;
-  #stateManager!: BattleStateManager;
   #initialPosition: { x: number; y: number };
 
   constructor(
     navigationMap: TBattleMenuOptionNavigationMap, // map's a cursor's current cardinal position to its next (eg: Top Left to Bottom Left)
     cursorPositionsGrid: CursorPositions2x2Map, // maps a cursor's current (x,y) pos to its next (x,y) pos
-    intialPosition: { x: number; y: number },
-    stateManager: BattleStateManager
+    intialPosition: { x: number; y: number }
   ) {
     //this.#cursorIsDisabled = true;
     this.#navigationMap = navigationMap;
     this.#cursorPositionsGrid = cursorPositionsGrid;
-    this.#stateManager = stateManager;
     this.#initialPosition = intialPosition;
   }
 
@@ -65,7 +62,7 @@ export class Cursor {
   // Given a directional input, move the cursor to the appropriate cell
   moveCursor(direction: keyof typeof Directions) {
     // pass the current 2x2 cell to the navigation map
-    const { currentMenuCell } = this.#stateManager.getState();
+    const { currentMenuCell } = BattleStateManager.getState();
 
     const newCell = currentMenuCell
       ? this.#navigationMap[currentMenuCell][direction]
@@ -73,7 +70,7 @@ export class Cursor {
 
     if (newCell) {
       // update the current cursor location in state
-      this.#stateManager.setCurrentMenuCell(newCell);
+      BattleStateManager.setCurrentMenuCell(newCell);
 
       // Use navigation mapping to determine new cursor coords
       const { cursorX, cursorY } = this.#cursorPositionsGrid[newCell];
@@ -90,7 +87,7 @@ export class Cursor {
       this.#cursorPositionsGrid[CursorPositions2x2.TOP_LEFT];
 
     // reset the current cell to top left in state and on canvas
-    this.#stateManager.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
+    BattleStateManager.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
     this.#cursor.setPosition(cursorX, cursorY);
   }
 }

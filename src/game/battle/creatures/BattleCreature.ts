@@ -1,7 +1,11 @@
-import { Coordinate, CreatureTypes } from "@game/constants/gameConstants";
+import {
+  Coordinate,
+  CreatureTypes,
+  CreatureDetails,
+  CreatureAttack,
+} from "@game/constants/gameConstants";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
-import { CreatureDetails, CreatureAttack } from "@game/constants/gameConstants";
-import { DataAssetKeys } from "@game/constants/assetConstants";
+import { DataUtils } from "@game/utils/dataUtils";
 
 export class BattleCreature {
   private static _attackData: CreatureAttack[]; // static property to hold the attack data
@@ -39,18 +43,9 @@ export class BattleCreature {
     // Create the health status component for the creature
     this._healthStatus = this.#createHealthStatus();
 
-    // Load attack data only if it is not already loaded
-    if (!BattleCreature._attackData) {
-      BattleCreature._attackData = this._scene.cache.json.get(
-        DataAssetKeys.ATTACKS
-      );
-    }
-
     // Load the creature's attack list
     this._creatureDetails.attackIds.map((attackId) => {
-      const attackData = BattleCreature._attackData.find(
-        (attack: CreatureAttack) => attack.id === attackId
-      );
+      const attackData = DataUtils.getCreatureAttackbyId(this._scene, attackId);
 
       if (attackData) {
         this._creatureAttackList.push(attackData);

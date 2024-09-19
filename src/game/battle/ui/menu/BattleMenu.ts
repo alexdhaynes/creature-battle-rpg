@@ -170,22 +170,36 @@ export class BattleMenu {
   #playerAttack() {
     const player = BattleStateManager.getCurrentPlayer();
     const playerAttack = BattleStateManager.getCurrentPlayerAttack();
-    const damage = playerAttack?.damage || -1;
+    const damage = playerAttack?.damage || player?.baseAttackValue;
+    let message = [`${player?.name} used ${playerAttack?.name}`];
 
-    this.showStatusMessage(
-      [`${player?.name} used ${playerAttack?.name}`],
-      () => {
-        this.#scene.time.delayedCall(500, () => {
-          BattleStateManager.getCurrentEnemy()?.takeDamage(damage, () => {
+    if (damage && damage < 0) {
+      message = [`${player?.name} used a healing move: ${playerAttack?.name}`];
+    }
+
+    this.showStatusMessage(message, () => {
+      this.#scene.time.delayedCall(500, () => {
+        // If the damage is negative, heal the player instead
+        if (damage && damage < 0) {
+          // (call takeDamage on self with negative value to heal)
+          BattleStateManager.getCurrentPlayer()?.takeDamage(damage, () => {
             this.#enemyAttack();
           });
-        });
-      }
-    );
+        } else {
+          BattleStateManager.getCurrentEnemy()?.takeDamage(damage!, () => {
+            this.#enemyAttack();
+          });
+        }
+      });
+    });
   }
 
   #enemyAttack() {
     const enemy = BattleStateManager.getCurrentEnemy();
+    if (enemy?.isFainted) {
+      this.#postBattleSequence();
+      return;
+    }
     // choose an enemy attack
     const enemyAttackList = enemy?.attackList;
     if (enemyAttackList) {
@@ -202,7 +216,7 @@ export class BattleMenu {
         ],
         () => {
           const enemyAttack = BattleStateManager.getCurrentEnemyAttack();
-          const damage = enemyAttack?.damage || 1;
+          const damage = enemyAttack?.damage || enemy.baseAttackValue;
 
           this.#scene.time.delayedCall(500, () => {
             BattleStateManager.getCurrentPlayer()?.takeDamage(damage, () => {
@@ -215,7 +229,6 @@ export class BattleMenu {
   }
 
   #postBattleSequence() {
-    console.log("postBattleSequence");
     // if the opponent has fainted, show a message then transition to next scene
     if (BattleStateManager.getCurrentEnemy()?.isFainted) {
       this.showStatusMessage(
@@ -227,7 +240,7 @@ export class BattleMenu {
         ],
         () => {
           // transition to next scene after a short delay
-          this.#scene.time.delayedCall(800, () => {
+          this.#scene.time.delayedCall(500, () => {
             this.#transitionToNextScene();
           });
         }

@@ -11,8 +11,7 @@
     "id": 2,
     "name": "Purr",
     "animationKey": "PURR",
-    "damage": 0,
-    "healing": 5,
+    "damage": -5,
     "cooldown": 3
   },
   {

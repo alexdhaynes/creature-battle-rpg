@@ -1,5 +1,5 @@
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
-import { BattleStateManager } from "@game/battle/BattleStateManager";
+import { BattleStateManager } from "@game/state/BattleStateManager";
 
 import { BattleMenuStates } from "@game/constants/gameConstants";
 

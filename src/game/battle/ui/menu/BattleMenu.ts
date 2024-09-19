@@ -5,14 +5,15 @@ import {
   menu2x2CursorPositions,
 } from "@game/constants/battleUIConstants";
 
-import { Directions, InputActions } from "@game/constants/gameConstants";
-
 import {
-  BattleMenuStateMachine,
-  BattleMenuObserver,
-} from "@game/battle/ui/menu/state";
+  CreatureAttack,
+  Directions,
+  InputActions,
+} from "@game/constants/gameConstants";
 
-import { BattleStateManager } from "@game/battle/BattleStateManager";
+import { BattleMenuStateMachine, BattleMenuObserver } from "@game/state";
+
+import { BattleStateManager } from "@game/state/BattleStateManager";
 
 import { BattleMenuStates } from "@game/constants/gameConstants";
 
@@ -29,6 +30,7 @@ import {
   Cursor,
   InventoryMenu,
 } from "@game/battle/ui/menu/submenus/";
+import { SceneKeys } from "@game/constants/sceneConstants";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
@@ -165,17 +167,16 @@ export class BattleMenu {
     this.#playerAttack();
   }
 
-  // TODO: fix this callback hell
   #playerAttack() {
+    const player = BattleStateManager.getCurrentPlayer();
+    const playerAttack = BattleStateManager.getCurrentPlayerAttack();
+    const damage = playerAttack?.damage || -1;
+
     this.showStatusMessage(
-      [
-        `${
-          BattleStateManager.getCurrentPlayer()?.name
-        } used ${BattleStateManager.getCurrentPlayerAttack()}`,
-      ],
+      [`${player?.name} used ${playerAttack?.name}`],
       () => {
         this.#scene.time.delayedCall(500, () => {
-          BattleStateManager.getCurrentEnemy()?.takeDamage(5, () => {
+          BattleStateManager.getCurrentEnemy()?.takeDamage(damage, () => {
             this.#enemyAttack();
           });
         });
@@ -184,19 +185,84 @@ export class BattleMenu {
   }
 
   #enemyAttack() {
-    this.showStatusMessage(
-      [
-        `Opponent ${
-          BattleStateManager.getCurrentEnemy()?.name
-        } used ${BattleStateManager.getCurrentEnemyAttack()}`,
-      ],
-      () => {
-        this.#scene.time.delayedCall(500, () => {
-          BattleStateManager.getCurrentPlayer()?.takeDamage(5, () => {
-            // Show the main menu
-            this.stateMachine.updateMenuState(BattleMenuStates.Main);
+    const enemy = BattleStateManager.getCurrentEnemy();
+    // choose an enemy attack
+    const enemyAttackList = enemy?.attackList;
+    if (enemyAttackList) {
+      const randomIndex = Math.floor(Math.random() * enemyAttackList.length);
+      const newAttack = enemyAttackList[randomIndex];
+
+      BattleStateManager.setCurrentEnemyAttack(newAttack);
+
+      this.showStatusMessage(
+        [
+          `Opponent ${enemy?.name} used ${
+            BattleStateManager.getCurrentEnemyAttack()?.name
+          }`,
+        ],
+        () => {
+          const enemyAttack = BattleStateManager.getCurrentEnemyAttack();
+          const damage = enemyAttack?.damage || 1;
+
+          this.#scene.time.delayedCall(500, () => {
+            BattleStateManager.getCurrentPlayer()?.takeDamage(damage, () => {
+              this.#postBattleSequence();
+            });
           });
-        });
+        }
+      );
+    }
+  }
+
+  #postBattleSequence() {
+    console.log("postBattleSequence");
+    // if the opponent has fainted, show a message then transition to next scene
+    if (BattleStateManager.getCurrentEnemy()?.isFainted) {
+      this.showStatusMessage(
+        [
+          `Wild ${BattleStateManager.getCurrentEnemy()?.name} has fainted.`,
+          `${
+            BattleStateManager.getCurrentPlayer()?.name
+          } has gained somed experience.`,
+        ],
+        () => {
+          // transition to next scene after a short delay
+          this.#scene.time.delayedCall(800, () => {
+            this.#transitionToNextScene();
+          });
+        }
+      );
+      return;
+    }
+
+    // if the player has fainted, show a message and transition to next scene
+    if (BattleStateManager.getCurrentPlayer()?.isFainted) {
+      this.showStatusMessage(
+        [
+          `Wild ${BattleStateManager.getCurrentPlayer()?.name} has fainted.`,
+          `You have no more creatures, excaping to safety...`,
+        ],
+        () => {
+          // transition to next scene after a short delay
+          this.#scene.time.delayedCall(800, () => {
+            this.#transitionToNextScene();
+          });
+        }
+      );
+      return;
+    } else {
+      //otherwise, move back to the main menu
+      this.stateMachine.updateMenuState(BattleMenuStates.Main);
+    }
+  }
+
+  #transitionToNextScene() {
+    this.#scene.cameras.main.fadeOut(600, 0, 0, 0);
+    this.#scene.cameras.main.once(
+      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, //listen for the fade out event on the camera
+      () => {
+        // trigger a callback when the fade out is done
+        this.#scene.scene.start(SceneKeys.BATTLE_SCENE); //start the battle scene
       }
     );
   }

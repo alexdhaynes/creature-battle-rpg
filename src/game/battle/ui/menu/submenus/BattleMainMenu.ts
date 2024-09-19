@@ -1,4 +1,4 @@
-import { BattleStateManager } from "@game/battle/BattleStateManager";
+import { BattleStateManager } from "@game/state/BattleStateManager";
 import { BattleCreature } from "@game/battle/creatures";
 
 import {

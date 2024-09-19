@@ -1,6 +1,6 @@
 import { InputActions } from "@game/constants/gameConstants";
 import { StateMachine, TransitionPayload } from "@game/StateMachine";
-import { BattleStateManager } from "@game/battle/BattleStateManager";
+import { BattleStateManager } from "@game/state/BattleStateManager";
 import { BattleMenuOptionLabels } from "@game/constants/battleUIConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { BattleMenuStates } from "@game/constants/gameConstants";
@@ -68,6 +68,7 @@ export class BattleMenuStateMachine extends StateMachine<
       // If the Fight menu item is selected
       case BattleMenuOptionLabels.FIGHT:
         this.updateMenuState(BattleMenuStates.Attacks);
+        // set the attack to the correct CreatureAttack
         BattleStateManager.setCurrentPlayerAttack(payload.menuItem);
         break;
 
@@ -94,7 +95,15 @@ export class BattleMenuStateMachine extends StateMachine<
 
   handleAttacksOk(payload: TransitionPayload) {
     console.log(`handleAttacksOk()`);
-    BattleStateManager.setCurrentPlayerAttack(payload.menuItem);
+
+    // Find the CreatureAttack that corresponds to the menuItem string
+    const matchedAttack =
+      BattleStateManager.getCurrentPlayer()?.attackList.find(
+        (attack) => attack.name.toLowerCase() === payload.menuItem.toLowerCase()
+      );
+
+    // Update state with the current CreatureAttack from the player
+    if (matchedAttack) BattleStateManager.setCurrentPlayerAttack(matchedAttack);
 
     this.battleMenu.handleBattleSequence();
 

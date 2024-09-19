@@ -3,19 +3,28 @@ import {
   AttackMenuOptionLabels,
   CursorPositions2x2,
 } from "@game/constants/battleUIConstants";
+import { CreatureAttack } from "@game/constants/gameConstants";
 
-import { BattleStateManager } from "@game/battle/BattleStateManager";
+import { BattleStateManager } from "@game/state/BattleStateManager";
 
 export class AttackMenu {
   // #scene: Phaser.Scene;
   #attackMenu!: Phaser.GameObjects.Container;
+  #attackList: CreatureAttack[] | null;
 
   constructor(scene: Phaser.Scene) {
     // this.#scene = scene;
+
+    // Get the player's attack list from state and store it here
+    const { currentPlayer } = BattleStateManager.getState();
+    this.#attackList = [...(currentPlayer?.attackList || [])];
+
     const attackMenuContainer = this.#createAttackMenuNavContainer(scene);
 
+    // store a reference to the attack menu's container
     this.#attackMenu = attackMenuContainer;
-    // hide initially
+
+    // hide the attack menu initially
     this.hide();
   }
 
@@ -29,14 +38,11 @@ export class AttackMenu {
 
   // create attacks for a 2x2 grid
   #createAttackMenuNavContainer = (scene: Phaser.Scene) => {
-    const { currentPlayer } = BattleStateManager.getState();
-    const attackList = currentPlayer?.attackList || [];
-
     // Create an array to store 4 attack names
     const attackNames: string[] = Array(4).fill(AttackMenuOptionLabels.NO_MOVE);
 
     // Populate attackNames array with the attack names from attackList
-    attackList.forEach((attack, index) => {
+    this.#attackList?.forEach((attack, index) => {
       if (attack && index < 4) {
         attackNames[index] = attack.name;
       }

@@ -3,16 +3,19 @@ import {
   EnemyBattleCreature,
   PlayerBattleCreature,
 } from "@game/battle/creatures";
-import { BattleMenuStates } from "@game/constants/gameConstants";
+import {
+  BattleMenuStates,
+  CreatureAttack,
+} from "@game/constants/gameConstants";
 
 import { AttackMenuGrid } from "@game/constants/battleUIConstants";
 
 type BattleState = {
   currentMenuState: BattleMenuStates;
   currentPlayer: PlayerBattleCreature | null;
-  currentPlayerAttack: string | null;
+  currentPlayerAttack: CreatureAttack | null;
   currentEnemy: EnemyBattleCreature | null;
-  currentEnemyAttack: string | null;
+  currentEnemyAttack: CreatureAttack | null;
   currentMessage: string[];
   currentMenuCell: CursorPositions2x2;
   currentAttackGrid: AttackMenuGrid;
@@ -23,8 +26,8 @@ export class BattleStateManager {
     currentMenuState: BattleMenuStates.Main,
     currentPlayer: null,
     currentEnemy: null,
-    currentPlayerAttack: "",
-    currentEnemyAttack: "",
+    currentPlayerAttack: null,
+    currentEnemyAttack: null,
     currentMessage: [""],
     currentMenuCell: CursorPositions2x2.TOP_LEFT,
     currentAttackGrid: {
@@ -67,12 +70,12 @@ export class BattleStateManager {
   }
 
   // Static method to set the current player attack
-  public static setCurrentPlayerAttack(attack: string): void {
+  public static setCurrentPlayerAttack(attack: CreatureAttack): void {
     this.setState({ currentPlayerAttack: attack });
   }
 
   // Static method to set the current enemy attack
-  public static setCurrentEnemyAttack(attack: string): void {
+  public static setCurrentEnemyAttack(attack: CreatureAttack): void {
     this.setState({ currentEnemyAttack: attack });
   }
 

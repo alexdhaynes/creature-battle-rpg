@@ -7,7 +7,6 @@ import {
   Directions,
   InputActions,
   CREATURES,
-  BattleMenuStates,
 } from "@game/constants/gameConstants";
 
 import { BackgroundImage } from "@game/battle/Background";
@@ -17,7 +16,7 @@ import {
   EnemyBattleCreature,
 } from "@game/battle/creatures";
 
-import { BattleStateManager } from "@game/battle/BattleStateManager";
+import { BattleStateManager } from "@game/state/BattleStateManager";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
@@ -52,7 +51,7 @@ export class BattleScene extends BaseScene {
       assetFrame: 0,
       currentHp: 25,
       maxHp: 25,
-      baseAttackValue: 5,
+      baseAttackValue: 10,
       attackIds: [1, 7, 4, 5],
       currentLevel: 9,
       healthStatusScaleFactor: 0.8,
@@ -64,9 +63,9 @@ export class BattleScene extends BaseScene {
       assetKey: CREATURES.ORANGE_CAT.key,
       creatureType: CreatureTypes.PLAYER,
       assetFrame: 0,
-      currentHp: 15,
-      maxHp: 15,
-      baseAttackValue: 7,
+      currentHp: 25,
+      maxHp: 25,
+      baseAttackValue: 10,
       attackIds: [6, 3, 2, 8],
       currentLevel: 7,
     });

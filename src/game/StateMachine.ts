@@ -1,4 +1,4 @@
-import { StateChangeObserver } from "@game/battle/ui/menu/state/";
+import { StateChangeObserver } from "@game/state";
 
 import { BattleMenuStates } from "@game/constants/gameConstants";
 

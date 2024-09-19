@@ -7,6 +7,7 @@ import {
   Directions,
   InputActions,
   CREATURES,
+  BattleMenuStates,
 } from "@game/constants/gameConstants";
 
 import { BackgroundImage } from "@game/battle/Background";
@@ -74,6 +75,7 @@ export class BattleScene extends BaseScene {
     // This MUST be done before the BattleMenu component is created!!
     // Otherwise, the BattleMenu will not have the currentPlayer data
     BattleStateManager.setCurrentPlayer(this.#playerCreature);
+    BattleStateManager.setCurrentEnemy(this.#activeEnemyCreature);
 
     // instantiate then render the main menu (the main menu creates the submenus)
     this.#battleMenu = new BattleMenu(this);

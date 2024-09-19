@@ -94,11 +94,12 @@ export class BattleMenuStateMachine extends StateMachine<
 
   handleAttacksOk(payload: TransitionPayload) {
     console.log(`handleAttacksOk()`);
-
     BattleStateManager.setCurrentPlayerAttack(payload.menuItem);
 
+    this.battleMenu.handleBattleSequence();
+
     // Update the state to display the message about the chosen attack
-    this.updateMenuState(BattleMenuStates.DisplayTimedMessage);
+    // this.updateMenuState(BattleMenuStates.DisplayTimedMessage);
   }
 
   handleAttacksCancel() {

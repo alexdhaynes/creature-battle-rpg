@@ -32,7 +32,7 @@ export class AttackMenu {
     const { currentPlayer } = BattleStateManager.getState();
     const attackList = currentPlayer?.attackList || [];
 
-    // Prepare an array to store 4 attack names
+    // Create an array to store 4 attack names
     const attackNames: string[] = Array(4).fill(AttackMenuOptionLabels.NO_MOVE);
 
     // Populate attackNames array with the attack names from attackList
@@ -42,7 +42,7 @@ export class AttackMenu {
       }
     });
 
-    // Create the attack data grid
+    // Create the attack data grid (assuming 4 moves)
     const newAttackGrid = {
       [CursorPositions2x2.TOP_LEFT]: attackNames[0] || "-",
       [CursorPositions2x2.TOP_RIGHT]: attackNames[1] || "-",
@@ -50,7 +50,7 @@ export class AttackMenu {
       [CursorPositions2x2.BOTTOM_RIGHT]: attackNames[3] || "-",
     };
 
-    // update state with the attacks
+    // update state with the attack data grid
     BattleStateManager.setCurrentAttackGrid(newAttackGrid);
 
     // Create the phaser text objects for the attack menu

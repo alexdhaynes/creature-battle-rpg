@@ -44,6 +44,7 @@ export class StateMachine<TState extends string, TAction extends string> {
   // TYPE TODO: add more allowable state types
   protected _notifyObservers(newState: BattleMenuStates) {
     this.observers.forEach((observer) => observer.onStateChange(newState));
+    console.log(`[Observers Notified of new state]: ${newState}`);
   }
 
   // Dispatch an action based on the current state

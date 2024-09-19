@@ -18,6 +18,7 @@ export class PlayerBattleCreature extends BattleCreature {
   // override the takeDamage method
   takeDamage(damage: number, callback?: () => void) {
     super.takeDamage(damage, callback); // invoke the superclass methed
-    this._healthStatus.setCurrentHp(this._currentHp); // add additional logic
+    this._healthStatus.setCurrentHp(this._currentHp);
+    if (callback) callback();
   }
 }

@@ -1,5 +1,8 @@
 import { CursorPositions2x2 } from "@game/constants/battleUIConstants";
-import { PlayerBattleCreature } from "@game/battle/creatures";
+import {
+  EnemyBattleCreature,
+  PlayerBattleCreature,
+} from "@game/battle/creatures";
 import { BattleMenuStates } from "@game/constants/gameConstants";
 
 import { AttackMenuGrid } from "@game/constants/battleUIConstants";
@@ -8,6 +11,7 @@ type BattleState = {
   currentMenuState: BattleMenuStates;
   currentPlayer: PlayerBattleCreature | null;
   currentPlayerAttack: string | null;
+  currentEnemy: EnemyBattleCreature | null;
   currentEnemyAttack: string | null;
   currentMessage: string[];
   currentMenuCell: CursorPositions2x2;
@@ -18,6 +22,7 @@ export class BattleStateManager {
   private static _state: BattleState = {
     currentMenuState: BattleMenuStates.Main,
     currentPlayer: null,
+    currentEnemy: null,
     currentPlayerAttack: "",
     currentEnemyAttack: "",
     currentMessage: [""],
@@ -38,6 +43,22 @@ export class BattleStateManager {
   // Static method to get the entire state
   public static getState(): BattleState {
     return this._state;
+  }
+
+  public static getCurrentPlayer() {
+    return this._state.currentPlayer;
+  }
+
+  public static getCurrentPlayerAttack() {
+    return this._state.currentPlayerAttack;
+  }
+
+  public static getCurrentEnemy() {
+    return this._state.currentEnemy;
+  }
+
+  public static getCurrentEnemyAttack() {
+    return this._state.currentEnemyAttack;
   }
 
   // Static method to set the current message
@@ -68,6 +89,11 @@ export class BattleStateManager {
   // Static method to store the current player
   public static setCurrentPlayer(newPlayer: PlayerBattleCreature | null): void {
     this.setState({ currentPlayer: newPlayer });
+  }
+
+  // Static method to store the current enemy
+  public static setCurrentEnemy(newPlayer: EnemyBattleCreature | null): void {
+    this.setState({ currentEnemy: newPlayer });
   }
 
   public static setCurrentAttackGrid(

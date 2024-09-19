@@ -153,14 +153,64 @@ export class BattleMenu {
     }
   }
 
+  /* battle sequence flow:
+  show attack used, 
+  display message, 
+  play attack animation, pause
+  play healthbar animation, pause
+  transition to other creature and repeat steps
+  */
+  handleBattleSequence() {
+    console.log("handle battle sequence");
+    this.#playerAttack();
+  }
+
+  // TODO: fix this callback hell
+  #playerAttack() {
+    this.showStatusMessage(
+      [
+        `${
+          BattleStateManager.getCurrentPlayer()?.name
+        } used ${BattleStateManager.getCurrentPlayerAttack()}`,
+      ],
+      () => {
+        this.#scene.time.delayedCall(500, () => {
+          BattleStateManager.getCurrentEnemy()?.takeDamage(5, () => {
+            this.#enemyAttack();
+          });
+        });
+      }
+    );
+  }
+
+  #enemyAttack() {
+    this.showStatusMessage(
+      [
+        `Opponent ${
+          BattleStateManager.getCurrentEnemy()?.name
+        } used ${BattleStateManager.getCurrentEnemyAttack()}`,
+      ],
+      () => {
+        this.#scene.time.delayedCall(500, () => {
+          BattleStateManager.getCurrentPlayer()?.takeDamage(5, () => {
+            // Show the main menu
+            this.stateMachine.updateMenuState(BattleMenuStates.Main);
+          });
+        });
+      }
+    );
+  }
+
   // ========= All methods below either create or toggle game objects =========
 
-  showStatusMessage(newMessage: string[]) {
+  showStatusMessage(newMessage: string[], callback?: () => void) {
     // hide submenus
     this.attackMenu.hide();
     // show text container
     updateTextContainer(this.#statusMessageTextObjects, newMessage);
     this.#statusMessageContainer.setAlpha(1);
+
+    if (callback) callback();
   }
 
   hideStatusMessage() {

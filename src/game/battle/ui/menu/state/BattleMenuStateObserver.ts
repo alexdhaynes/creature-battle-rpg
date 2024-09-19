@@ -25,6 +25,7 @@ export class BattleMenuObserver implements StateChangeObserver {
 
     switch (newState) {
       case BattleMenuStates.Main:
+        console.log("state main");
         // hide whichever submenu is visible when this method is called
         // TODO: move this repetitve logic to helper function
         this.#battleMenu.hideCreaturesPane();
@@ -85,7 +86,7 @@ export class BattleMenuObserver implements StateChangeObserver {
         ]);
         setTimeout(() => {
           this.#battleMenu.stateMachine.updateMenuState(BattleMenuStates.Main);
-        }, 1500);
+        }, 500);
         break;
 
       case BattleMenuStates.Closed:

@@ -11,7 +11,7 @@ export class BattleCreature {
   private static _attackData: CreatureAttack[]; // static property to hold the attack data
   protected _scene: Phaser.Scene; // can't make private since this is a base class; but use _ notation to indicate "protected"
   protected _creatureDetails: CreatureDetails;
-  protected _gameObject: Phaser.GameObjects.Image;
+  protected _gameObject: Phaser.GameObjects.Image; // the game object for the creature
   protected _healthStatus: HealthStatus;
   protected _creatureType: CreatureTypes;
   protected _currentHp: number;
@@ -81,7 +81,7 @@ export class BattleCreature {
   // update current creature hp and animated the health bar
   takeDamage(damage: number, callback?: () => void) {
     this._currentHp -= damage;
-    if (this._currentHp < 0) {
+    if (this._currentHp <= 0) {
       this._currentHp = 0; // prevent damange from going negative
     }
     console.log(
@@ -92,6 +92,22 @@ export class BattleCreature {
       this._currentHp / this._maxHp,
       { callback }
     );
+  }
+
+  // animate faint
+  faint(fadeDirection: number = 1, callback?: () => void) {
+    let translateYValue = fadeDirection > 0 ? "+=500" : "-=500";
+
+    this._scene.tweens.add({
+      targets: this._gameObject,
+      alpha: 0,
+      y: translateYValue,
+      duration: 3000,
+      ease: Phaser.Math.Easing.Sine.Out,
+      onComplete: () => {
+        if (callback) callback();
+      },
+    });
   }
 
   // create the health status object for the creature

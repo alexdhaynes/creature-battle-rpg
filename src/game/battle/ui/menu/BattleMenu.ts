@@ -31,6 +31,7 @@ import {
   InventoryMenu,
 } from "@game/battle/ui/menu/submenus/";
 import { SceneKeys } from "@game/constants/sceneConstants";
+import { BattleCreature } from "@game/battle/creatures";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
@@ -196,6 +197,8 @@ export class BattleMenu {
 
   #enemyAttack() {
     const enemy = BattleStateManager.getCurrentEnemy();
+    const player = BattleStateManager.getCurrentPlayer();
+
     if (enemy?.isFainted) {
       this.#postBattleSequence();
       return;
@@ -209,17 +212,12 @@ export class BattleMenu {
       BattleStateManager.setCurrentEnemyAttack(newAttack);
 
       this.showStatusMessage(
-        [
-          `Opponent ${enemy?.name} used ${
-            BattleStateManager.getCurrentEnemyAttack()?.name
-          }`,
-        ],
+        [`Opponent ${enemy?.name} used ${newAttack?.name}`],
         () => {
-          const enemyAttack = BattleStateManager.getCurrentEnemyAttack();
-          const damage = enemyAttack?.damage || enemy.baseAttackValue;
+          const damage = newAttack?.damage || enemy.baseAttackValue;
 
           this.#scene.time.delayedCall(500, () => {
-            BattleStateManager.getCurrentPlayer()?.takeDamage(damage, () => {
+            player?.takeDamage(damage, () => {
               this.#postBattleSequence();
             });
           });
@@ -228,45 +226,56 @@ export class BattleMenu {
     }
   }
 
+  // TODO: rewrite using promises
   #postBattleSequence() {
-    // if the opponent has fainted, show a message then transition to next scene
-    if (BattleStateManager.getCurrentEnemy()?.isFainted) {
-      this.showStatusMessage(
-        [
-          `Wild ${BattleStateManager.getCurrentEnemy()?.name} has fainted.`,
-          `${
-            BattleStateManager.getCurrentPlayer()?.name
-          } has gained somed experience.`,
-        ],
-        () => {
+    const currentEnemy = BattleStateManager.getCurrentEnemy();
+    const currentPlayer = BattleStateManager.getCurrentPlayer();
+
+    const _handleFaint = (
+      entity: BattleCreature,
+      faintDirection: number,
+      faintMessage: string[],
+      callback: () => void
+    ) => {
+      this.showStatusMessage(faintMessage, () => {
+        entity.faint(faintDirection, () => {
+          console.log("ran faint animation");
           // transition to next scene after a short delay
-          this.#scene.time.delayedCall(500, () => {
-            this.#transitionToNextScene();
-          });
-        }
+          this.#scene.time.delayedCall(500, callback);
+        });
+      });
+    };
+
+    // if the opponent has fainted, show a message then transition to next scene
+    if (currentEnemy?.isFainted) {
+      _handleFaint(
+        currentEnemy,
+        -1,
+        [
+          `Wild ${currentEnemy?.name} has fainted.`,
+          `${currentPlayer?.name} has gained some experience.`,
+        ],
+        () => console.log("end faint") //this.#transitionToNextScene()
       );
       return;
     }
 
     // if the player has fainted, show a message and transition to next scene
-    if (BattleStateManager.getCurrentPlayer()?.isFainted) {
-      this.showStatusMessage(
+    if (currentPlayer?.isFainted) {
+      _handleFaint(
+        currentPlayer,
+        +1,
         [
-          `Wild ${BattleStateManager.getCurrentPlayer()?.name} has fainted.`,
-          `You have no more creatures, excaping to safety...`,
+          `Wild ${currentPlayer?.name} has fainted.`,
+          `You have no more creatures, escaping to safety...`,
         ],
-        () => {
-          // transition to next scene after a short delay
-          this.#scene.time.delayedCall(800, () => {
-            this.#transitionToNextScene();
-          });
-        }
+        () => console.log("end faint") //this.#transitionToNextScene(
       );
       return;
-    } else {
-      //otherwise, move back to the main menu
-      this.stateMachine.updateMenuState(BattleMenuStates.Main);
     }
+
+    // otherwise, move back to the main menu
+    this.stateMachine.updateMenuState(BattleMenuStates.Main);
   }
 
   #transitionToNextScene() {

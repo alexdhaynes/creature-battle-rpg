@@ -69,7 +69,7 @@ export class HealthStatus {
   // Create the Player's name text object
   #createCreatureName(creatureName: string) {
     return this.#scene.add.text(30, 20, creatureName, {
-      color: "#7e3d3f",
+      color: "#2B1F13",
       fontSize: "32px",
     });
   }
@@ -90,7 +90,7 @@ export class HealthStatus {
     if (this.#creatureType === CreatureTypes.PLAYER) {
       hpTextObject = this.#scene.add
         .text(443, 80, "25/25", {
-          color: "#7e3d3f",
+          color: "#2B1F13",
           fontSize: "16px",
         })
         .setOrigin(1, 0);
@@ -109,19 +109,20 @@ export class HealthStatus {
       // Add the Level text object to container
       // TODO: add a dynamic level for the creature here
       this.#scene.add.text(
-        nameTextObject.width + 35,
-        23,
+        nameTextObject.width + 42,
+        24,
         `L${this.#creatureLevel}`,
         {
-          color: "#ED474b",
+          color: "#612D05",
           fontSize: "28px",
+          fontStyle: "bold",
         }
       ),
       // Add the HP label to container
       this.#scene.add.text(30, 55, "HP", {
-        color: "#FF6505",
+        color: "#612D05",
         fontSize: "24px",
-        fontStyle: "italic",
+        fontStyle: "bold",
       }),
     ];
 

@@ -43,7 +43,7 @@ export const assetList: AssetList = [
   // Health bar assets
   {
     key: BattleAssetKeys.HEALTH_BAR_BACKGROUND,
-    path: `${KENNEYS_ASSET_PATH}/ui-space-expansion/custom-ui.png`,
+    path: `${WORKING_GRAPHICS_ASSET_PATH}/ui/health-status-bg.png`,
   },
   {
     key: HealthBarAssetKeys.LEFT_CAP,

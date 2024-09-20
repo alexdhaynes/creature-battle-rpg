@@ -3,6 +3,7 @@ import {
   CreatureTypes,
   CreatureDetails,
   CreatureAttack,
+  Polarity,
 } from "@game/constants/gameConstants";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
 import { DataUtils } from "@game/utils/dataUtils";
@@ -80,10 +81,18 @@ export class BattleCreature {
 
   // update current creature hp and animated the health bar
   takeDamage(damage: number, callback?: () => void) {
-    this._currentHp -= damage;
-    if (this._currentHp <= 0) {
-      this._currentHp = 0; // prevent damange from going negative
-    }
+    // Don't let hp go below zero or exceed the max
+    this._currentHp =
+      this._currentHp - damage <= 0
+        ? (this._currentHp = 0)
+        : this._currentHp - damage > this._maxHp
+        ? (this._currentHp = this._maxHp)
+        : (this._currentHp -= damage);
+
+    console.log(
+      `this._currentHp ${this._currentHp} - ${damage} =  this._currentHp ${this._currentHp}`
+    );
+
     console.log(
       `${this._creatureDetails.name} took ${damage} points of damage. Current HP is ${this._currentHp}.`
     );
@@ -95,7 +104,7 @@ export class BattleCreature {
   }
 
   // animate faint
-  faint(fadeDirection: number = 1, callback?: () => void) {
+  faint(fadeDirection: Polarity = Polarity.Positive, callback?: () => void) {
     let translateYValue = fadeDirection > 0 ? "+=500" : "-=500";
 
     this._scene.tweens.add({

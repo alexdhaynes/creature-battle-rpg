@@ -19,6 +19,11 @@ export enum Directions {
   NONE = "NONE",
 }
 
+export enum Polarity {
+  Positive = 1,
+  Negative = -1,
+}
+
 export enum InputActions {
   OK = "OK",
   CANCEL = "CANCEL",

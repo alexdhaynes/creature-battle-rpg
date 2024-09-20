@@ -9,6 +9,7 @@ import {
   CreatureAttack,
   Directions,
   InputActions,
+  Polarity,
 } from "@game/constants/gameConstants";
 
 import { BattleMenuStateMachine, BattleMenuObserver } from "@game/state";
@@ -250,12 +251,12 @@ export class BattleMenu {
     if (currentEnemy?.isFainted) {
       _handleFaint(
         currentEnemy,
-        -1,
+        Polarity.Negative,
         [
           `Wild ${currentEnemy?.name} has fainted.`,
           `${currentPlayer?.name} has gained some experience.`,
         ],
-        () => console.log("end faint") //this.#transitionToNextScene()
+        () => this.#transitionToNextScene()
       );
       return;
     }
@@ -264,12 +265,12 @@ export class BattleMenu {
     if (currentPlayer?.isFainted) {
       _handleFaint(
         currentPlayer,
-        +1,
+        Polarity.Positive,
         [
           `Wild ${currentPlayer?.name} has fainted.`,
           `You have no more creatures, escaping to safety...`,
         ],
-        () => console.log("end faint") //this.#transitionToNextScene(
+        () => this.#transitionToNextScene()
       );
       return;
     }

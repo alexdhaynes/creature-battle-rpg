@@ -38,7 +38,7 @@ export const assetList: AssetList = [
   // Backgrounds
   {
     key: BattleBackgroundAssetKeys.MEADOW,
-    path: `${WORKING_GRAPHICS_ASSET_PATH}/battle-backgrounds/meadow-background.png`,
+    path: `${WORKING_GRAPHICS_ASSET_PATH}/battle-backgrounds/meadow1pp-w-tree-background.png`,
   },
   // Health bar assets
   {

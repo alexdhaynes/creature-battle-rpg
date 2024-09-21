@@ -6,7 +6,6 @@ import {
 } from "@game/constants/battleUIConstants";
 
 import {
-  CreatureAttack,
   Directions,
   InputActions,
   Polarity,

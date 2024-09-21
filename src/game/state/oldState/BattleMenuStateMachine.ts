@@ -1,6 +1,6 @@
 import { InputActions } from "@game/constants/gameConstants";
 import { StateMachine, TransitionPayload } from "@game/StateMachine";
-import { BattleStateManager } from "@game/state/BattleStateManager";
+import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
 import { BattleMenuOptionLabels } from "@game/constants/battleUIConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { BattleMenuStates } from "@game/constants/gameConstants";

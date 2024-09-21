@@ -1,9 +1,9 @@
-import { BattleMenuStateMachine } from "./BattleMenuStateMachine";
+import { BattleMenuStateMachine } from "./oldState/BattleMenuStateMachine";
 
 import {
   StateChangeObserver,
   BattleMenuObserver,
-} from "./BattleMenuStateObserver";
+} from "./oldState/BattleMenuStateObserver";
 
 export type { StateChangeObserver };
 export { BattleMenuStateMachine, BattleMenuObserver };

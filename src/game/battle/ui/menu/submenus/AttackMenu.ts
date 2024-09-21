@@ -5,7 +5,7 @@ import {
 } from "@game/constants/battleUIConstants";
 import { CreatureAttack } from "@game/constants/gameConstants";
 
-import { BattleStateManager } from "@game/state/BattleStateManager";
+import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
 
 export class AttackMenu {
   // #scene: Phaser.Scene;

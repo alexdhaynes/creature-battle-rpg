@@ -6,7 +6,7 @@ import {
   Polarity,
 } from "@game/constants/gameConstants";
 import { HealthStatus } from "@game/battle/ui/health/HealthStatus";
-import { DataUtils } from "@game/utils/dataUtils";
+import { DataUtils } from "@game/utils/DataUtils";
 
 export class BattleCreature {
   private static _attackData: CreatureAttack[]; // static property to hold the attack data

@@ -5,7 +5,7 @@ import {
 } from "@game/constants/battleUIConstants";
 import { CreatureAttack } from "@game/constants/gameConstants";
 
-import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
+import { BattleStateContext } from "@game/state/BattleStateContext";
 
 export class AttackMenu {
   // #scene: Phaser.Scene;
@@ -16,7 +16,7 @@ export class AttackMenu {
     // this.#scene = scene;
 
     // Get the player's attack list from state and store it here
-    const { currentPlayer } = BattleStateManager.getState();
+    const { currentPlayer } = BattleStateContext.getState();
     this.#attackList = [...(currentPlayer?.attackList || [])];
 
     const attackMenuContainer = this.#createAttackMenuNavContainer(scene);
@@ -57,7 +57,7 @@ export class AttackMenu {
     };
 
     // update state with the attack data grid
-    BattleStateManager.setCurrentAttackGrid(newAttackGrid);
+    BattleStateContext.setCurrentAttackGrid(newAttackGrid);
 
     // Create the phaser text objects for the attack menu
     const attackTextObjects = Object.entries(newAttackGrid).map(

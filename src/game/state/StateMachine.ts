@@ -1,6 +1,6 @@
 export type State = {
   name: string;
-  onEnter: () => void; // a method that runs when we have first entered the state
+  onEnter?: () => void; // a method that runs when we have first entered the state
 };
 
 export class StateMachine {

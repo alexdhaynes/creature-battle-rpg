@@ -1,4 +1,4 @@
-import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
+import { BattleStateContext } from "@game/state/BattleStateContext";
 import { BattleCreature } from "@game/battle/creatures";
 
 import {
@@ -77,7 +77,7 @@ export class BattleMainMenu {
   // Create text container for info pane text
   // TODO: this container should be shared by all submenus!
   #createBattleMenuInfoPane(scene: Phaser.Scene) {
-    const { currentPlayer } = BattleStateManager.getState();
+    const { currentPlayer } = BattleStateContext.getState();
 
     const { textContainer, textObjects } = createTextContainer(
       scene,

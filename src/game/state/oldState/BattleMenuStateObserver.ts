@@ -1,5 +1,5 @@
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
-import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
+import { BattleStateContext } from "@game/state/BattleStateContext";
 
 import { BattleMenuStates } from "@game/constants/gameConstants";
 
@@ -42,7 +42,7 @@ export class BattleMenuObserver implements StateChangeObserver {
           battleMenuCursorInitialPosition.y
         );
         // reset the current cell
-        BattleStateManager.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
+        BattleStateContext.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
 
         // show the Main Menu
         this.#battleMenu.mainMenu.show();
@@ -60,7 +60,7 @@ export class BattleMenuObserver implements StateChangeObserver {
           battleMenuCursorInitialPosition.y
         );
         // reset the current cell
-        BattleStateManager.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
+        BattleStateContext.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
 
         this.#battleMenu.attackMenu.show();
         break;
@@ -79,13 +79,13 @@ export class BattleMenuObserver implements StateChangeObserver {
         break;
 
       case BattleMenuStates.DisplayTimedMessage:
-        const { currentPlayerAttack } = BattleStateManager.getState();
+        const { currentPlayerAttack } = BattleStateContext.getState();
 
         this.#battleMenu.showStatusMessage([
           `You selected ${currentPlayerAttack} attack!`,
         ]);
         setTimeout(() => {
-          this.#battleMenu.stateMachine.updateMenuState(BattleMenuStates.Main);
+          //  this.#battleMenu.stateMachine.updateMenuState(BattleMenuStates.Main);
         }, 500);
         break;
 

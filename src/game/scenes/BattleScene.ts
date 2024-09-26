@@ -7,6 +7,7 @@ import {
   Directions,
   InputActions,
   CREATURES,
+  BattleStates,
 } from "@game/constants/gameConstants";
 
 import { BackgroundImage } from "@game/battle/Background";
@@ -16,13 +17,16 @@ import {
   EnemyBattleCreature,
 } from "@game/battle/creatures";
 
-import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
+import { BattleStateContext } from "@game/state/BattleStateContext";
+
+import { StateMachine } from "@game/state/StateMachine";
 
 export class BattleScene extends BaseScene {
   #battleMenu!: BattleMenu; // use ! to tell TS that these properties are defined
   #cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
   #activeEnemyCreature!: EnemyBattleCreature;
   #playerCreature!: PlayerBattleCreature;
+  #battleStateMachine: StateMachine;
 
   constructor() {
     super({
@@ -73,8 +77,8 @@ export class BattleScene extends BaseScene {
     // Set the player creature as the current player
     // This MUST be done before the BattleMenu component is created!!
     // Otherwise, the BattleMenu will not have the currentPlayer data
-    BattleStateManager.setCurrentPlayer(this.#playerCreature);
-    BattleStateManager.setCurrentEnemy(this.#activeEnemyCreature);
+    BattleStateContext.setCurrentPlayer(this.#playerCreature);
+    BattleStateContext.setCurrentEnemy(this.#activeEnemyCreature);
 
     // instantiate then render the main menu (the main menu creates the submenus)
     this.#battleMenu = new BattleMenu(this);
@@ -85,6 +89,9 @@ export class BattleScene extends BaseScene {
 
     // Show the main battle menu
     this.#battleMenu.mainMenu.show();
+
+    // Create battle state machine
+    this.#createBattleStateMachine();
   } //end create()
 
   // Update lifecycle method (called every frame of the game)
@@ -111,4 +118,102 @@ export class BattleScene extends BaseScene {
       }
     }
   } //end update()
+
+  #createBattleStateMachine() {
+    // Create state machine
+    this.#battleStateMachine = new StateMachine("battle", this);
+
+    // add all the states
+    this.#battleStateMachine.addState({
+      name: BattleStates.INTRO,
+      onEnter: () => {
+        // wait for scene setup and transitions to complete
+        // for now, just simulate the waiting using timer and then transition to PRE_BATTLE state
+        this.time.delayedCall(500, () => {
+          this.#battleStateMachine.setState(BattleStates.PRE_BATTLE);
+        });
+      },
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.PRE_BATTLE,
+      onEnter: () => {
+        // wait for enemy to appear on the screen, then notify the player about the creature
+        this.#battleMenu.updateTextContainer([
+          `A wild ${this.#activeEnemyCreature.name} appeared!`,
+        ]);
+        // wait for text animation to complete then move to next state
+        // for now, simulate the wait using timer
+        this.time.delayedCall(500, () => {
+          this.#battleStateMachine.setState(BattleStates.CREATURE_INTRO);
+        });
+      },
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.CREATURE_INTRO,
+      onEnter: () => {
+        // wait for the player's chosen creature to appear on screen
+        // then notify the player about their creature
+        this.#battleMenu.updateTextContainer([
+          `Go ${this.#playerCreature.name} appeared!`,
+        ]);
+        // wait for text animation to complete then move to next state
+        // for now, simulate the wait using timer
+        this.time.delayedCall(500, () => {
+          this.#battleStateMachine.setState(BattleStates.PLAYER_INPUT);
+        });
+      },
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.PLAYER_INPUT,
+      onEnter: () => {
+        // show the main battle menu
+        this.#battleMenu.mainMenu.show();
+        /* battle sequence flow:
+        show attack used, 
+        display message, 
+        play attack animation, pause
+        play healthbar animation, pause
+        transition to other creature and repeat steps
+        */
+        this.#battleMenu.playerAttack();
+      },
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.ENEMY_INPUT,
+      onEnter: () => {
+        // pick a random move for the enemy monster
+        // TODO: implement AI behavior
+        this.time.delayedCall(500, () => {
+          this.#battleStateMachine.setState(BattleStates.BATTLE);
+        });
+      },
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.BATTLE,
+      onEnter: () => {},
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.POST_BATTLE,
+      onEnter: () => {},
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.FINISHED,
+      onEnter: () => {},
+    });
+
+    this.#battleStateMachine.addState({
+      name: BattleStates.FLEE_ATTEMPT,
+      onEnter: () => {},
+    });
+
+    // Set the initial state
+    this.#battleStateMachine.setState("INTRO");
+  }
 }

@@ -11,9 +11,7 @@ import {
   Polarity,
 } from "@game/constants/gameConstants";
 
-import { BattleMenuStateMachine, BattleMenuObserver } from "@game/state";
-
-import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
+import { BattleStateContext } from "@game/state/BattleStateContext";
 
 import { BattleMenuStates } from "@game/constants/gameConstants";
 
@@ -37,9 +35,6 @@ export class BattleMenu {
   #scene: Phaser.Scene;
   // game objects
 
-  // State management
-  stateMachine!: BattleMenuStateMachine;
-
   // the containers for the menu items
   #inventoryContainer!: Phaser.GameObjects.Container;
   #creaturesContainer!: Phaser.GameObjects.Container;
@@ -61,14 +56,11 @@ export class BattleMenu {
   constructor(scene: Phaser.Scene) {
     this.#scene = scene;
 
-    // instantiate state machine
-    this.stateMachine = new BattleMenuStateMachine(this);
-
     // create Main Menu
     this.mainMenu = new BattleMainMenu(scene);
 
-    // Set the current menu state to the mian menu
-    BattleStateManager.setCurrentMenuState(BattleMenuStates.Main);
+    // Set the current menu to the main menu
+    BattleStateContext.setCurrentOpenMenu(BattleMenuStates.Main);
 
     // Create a cursor, which will be shared by all menus
     this.menuCursor = new Cursor(
@@ -87,11 +79,6 @@ export class BattleMenu {
 
     // add the cursor to the main menu nav contaienr
     this.mainMenu.getContainer().add(this.menuCursorGameObject);
-
-    // create battlemenuObserver
-    // this observer will listen for state changes and update the menu accordingly
-    const menuObserver = new BattleMenuObserver(this);
-    this.stateMachine.addObserver(menuObserver);
   }
 
   // Putting the class's initial states in an init method
@@ -116,31 +103,31 @@ export class BattleMenu {
   handlePlayerInput(
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
-    const { currentMenuState, currentMenuCell } = BattleStateManager.getState();
+    const { currentOpenMenu, currentMenuCell } = BattleStateContext.getState();
 
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed
       if (
-        BattleStateManager.getState().currentMenuState ===
+        BattleStateContext.getState().currentOpenMenu ===
         BattleMenuStates.Closed
       )
         return;
 
-      this.stateMachine.dispatch(currentMenuState, InputActions.CANCEL, {
-        menuItem: battleMainMenu2x2Grid[currentMenuCell],
-      });
+      console.log(
+        `input is cancel for menu item: ${battleMainMenu2x2Grid[currentMenuCell]}`
+      );
+
       return;
     }
     if (input === InputActions.OK) {
       const menuItem =
-        currentMenuState === BattleMenuStates.Attacks
-          ? BattleStateManager.getState().currentAttackGrid[currentMenuCell] // choose the correct attack based on the attack grid in state
+        currentOpenMenu === BattleMenuStates.Attacks
+          ? BattleStateContext.getState().currentAttackGrid[currentMenuCell] // choose the correct attack based on the attack grid in state
           : battleMainMenu2x2Grid[currentMenuCell];
 
-      this.stateMachine.dispatch(currentMenuState, InputActions.OK, {
-        menuItem,
-      });
+      console.log(`input is ok for menu item: ${menuItem}`);
+
       return;
     }
     // Move the cursor for directional input
@@ -156,21 +143,14 @@ export class BattleMenu {
     }
   }
 
-  /* battle sequence flow:
-  show attack used, 
-  display message, 
-  play attack animation, pause
-  play healthbar animation, pause
-  transition to other creature and repeat steps
-  */
-  handleBattleSequence() {
-    console.log("handle battle sequence");
-    this.#playerAttack();
+  // expose the updateTextContainer message
+  updateTextContainer(message: string[]) {
+    return updateTextContainer(this.#statusMessageTextObjects, message);
   }
 
-  #playerAttack() {
-    const player = BattleStateManager.getCurrentPlayer();
-    const playerAttack = BattleStateManager.getCurrentPlayerAttack();
+  playerAttack() {
+    const player = BattleStateContext.getCurrentPlayer();
+    const playerAttack = BattleStateContext.getCurrentPlayerAttack();
     const damage = playerAttack?.damage || player?.baseAttackValue;
     let message = [`${player?.name} used ${playerAttack?.name}`];
 
@@ -183,11 +163,11 @@ export class BattleMenu {
         // If the damage is negative, heal the player instead
         if (damage && damage < 0) {
           // (call takeDamage on self with negative value to heal)
-          BattleStateManager.getCurrentPlayer()?.takeDamage(damage, () => {
+          BattleStateContext.getCurrentPlayer()?.takeDamage(damage, () => {
             this.#enemyAttack();
           });
         } else {
-          BattleStateManager.getCurrentEnemy()?.takeDamage(damage!, () => {
+          BattleStateContext.getCurrentEnemy()?.takeDamage(damage!, () => {
             this.#enemyAttack();
           });
         }
@@ -196,8 +176,8 @@ export class BattleMenu {
   }
 
   #enemyAttack() {
-    const enemy = BattleStateManager.getCurrentEnemy();
-    const player = BattleStateManager.getCurrentPlayer();
+    const enemy = BattleStateContext.getCurrentEnemy();
+    const player = BattleStateContext.getCurrentPlayer();
 
     if (enemy?.isFainted) {
       this.#postBattleSequence();
@@ -209,7 +189,7 @@ export class BattleMenu {
       const randomIndex = Math.floor(Math.random() * enemyAttackList.length);
       const newAttack = enemyAttackList[randomIndex];
 
-      BattleStateManager.setCurrentEnemyAttack(newAttack);
+      BattleStateContext.setCurrentEnemyAttack(newAttack);
 
       this.showStatusMessage(
         [`Opponent ${enemy?.name} used ${newAttack?.name}`],
@@ -228,8 +208,8 @@ export class BattleMenu {
 
   // TODO: rewrite using promises
   #postBattleSequence() {
-    const currentEnemy = BattleStateManager.getCurrentEnemy();
-    const currentPlayer = BattleStateManager.getCurrentPlayer();
+    const currentEnemy = BattleStateContext.getCurrentEnemy();
+    const currentPlayer = BattleStateContext.getCurrentPlayer();
 
     const _handleFaint = (
       entity: BattleCreature,
@@ -275,7 +255,9 @@ export class BattleMenu {
     }
 
     // otherwise, move back to the main menu
-    this.stateMachine.updateMenuState(BattleMenuStates.Main);
+    // BACK TO MAIN MENU
+    this.hideStatusMessage();
+    this.mainMenu.show();
   }
 
   #transitionToNextScene() {

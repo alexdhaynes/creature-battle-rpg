@@ -11,7 +11,7 @@ import {
 import { AttackMenuGrid } from "@game/constants/battleUIConstants";
 
 type BattleState = {
-  currentMenuState: BattleMenuStates;
+  currentOpenMenu: BattleMenuStates;
   currentPlayer: PlayerBattleCreature | null;
   currentPlayerAttack: CreatureAttack | null;
   currentEnemy: EnemyBattleCreature | null;
@@ -21,9 +21,9 @@ type BattleState = {
   currentAttackGrid: AttackMenuGrid;
 };
 
-export class BattleStateManager {
+export class BattleStateContext {
   private static _state: BattleState = {
-    currentMenuState: BattleMenuStates.Main,
+    currentOpenMenu: BattleMenuStates.Main,
     currentPlayer: null,
     currentEnemy: null,
     currentPlayerAttack: null,
@@ -80,8 +80,8 @@ export class BattleStateManager {
   }
 
   // Static method to store the currently visible Battle Menu
-  public static setCurrentMenuState(newState: BattleMenuStates): void {
-    this.setState({ currentMenuState: newState });
+  public static setCurrentOpenMenu(newState: BattleMenuStates): void {
+    this.setState({ currentOpenMenu: newState });
   }
 
   // Static method to store the current position of the cursor

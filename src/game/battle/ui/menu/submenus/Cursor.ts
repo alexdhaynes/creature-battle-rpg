@@ -8,7 +8,7 @@ import {
 
 import { UIAssetKeys } from "@game/constants/assetConstants";
 
-import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
+import { BattleStateContext } from "@game/state/BattleStateContext";
 
 // A Cursor class which takes in a cursor Game Object and other properties
 export class Cursor {
@@ -62,7 +62,7 @@ export class Cursor {
   // Given a directional input, move the cursor to the appropriate cell
   moveCursor(direction: keyof typeof Directions) {
     // pass the current 2x2 cell to the navigation map
-    const { currentMenuCell } = BattleStateManager.getState();
+    const { currentMenuCell } = BattleStateContext.getState();
 
     const newCell = currentMenuCell
       ? this.#navigationMap[currentMenuCell][direction]
@@ -70,7 +70,7 @@ export class Cursor {
 
     if (newCell) {
       // update the current cursor location in state
-      BattleStateManager.setCurrentMenuCell(newCell);
+      BattleStateContext.setCurrentMenuCell(newCell);
 
       // Use navigation mapping to determine new cursor coords
       const { cursorX, cursorY } = this.#cursorPositionsGrid[newCell];
@@ -87,7 +87,7 @@ export class Cursor {
       this.#cursorPositionsGrid[CursorPositions2x2.TOP_LEFT];
 
     // reset the current cell to top left in state and on canvas
-    BattleStateManager.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
+    BattleStateContext.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
     this.#cursor.setPosition(cursorX, cursorY);
   }
 }

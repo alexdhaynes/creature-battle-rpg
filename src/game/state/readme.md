@@ -12,7 +12,7 @@
 - Handles transitions between states.
 - Has references to:
   - `BattleMenu`
-  - `BattleStateManager`
+  - `BattleStateContext`
 
 ## Battle Menu State Observer
 
@@ -29,13 +29,13 @@
 2. A key is pressed.
 3. `BattleScene > update() > this.#battleMenu.handlePlayerInput(InputAction)` is called.
 4. `BattleMenu > handlePlayerInput()` dispatches:
-   - The current state (`BattleMenu.stateMachine.battleStateManager.getState()`)
+   - The current state (`BattleMenu.stateMachine.BattleStateContext.getState()`)
    - The input action
    - A payload
 5. `BattleMenuStateMachine`
    - dispatches the appropriate `transition()` functon based on the `BattleMenuState` and the `InputAction`
    - the `transition()` function invokes `updateState()`
-     - `updateMenuState()` triggers a state update in the `BattleStateManager`
+     - `updateMenuState()` triggers a state update in the `BattleStateContext`
      - `updateMenuState()` notfies observer of new state
 6. `BattleMenuStateObserver > onStateChange()` is triggered by state change
    - updates UI

@@ -93,3 +93,16 @@ export enum BattleMenuStates {
   DisplayTimedMessage = "BATTLE_MENU_TIMED_MESSAGE",
   Closed = "BATTLE_MENU_CLOSED",
 }
+
+// for new state machine
+export enum BattleStates {
+  INTRO = "INTRO",
+  PRE_BATTLE = "PRE_BATTLE",
+  CREATURE_INTRO = "CREATURE_INTRO", // the creatures appear on screen
+  PLAYER_INPUT = "PLAYER_INPUT",
+  ENEMY_INPUT = "ENEMY_INPUT",
+  BATTLE = "BATTLE",
+  POST_BATTLE = "POST_BATTLE",
+  FINISHED = "FINISHED", // battle has eneded
+  FLEE_ATTEMPT = "FLEE_ATTEMPT",
+}

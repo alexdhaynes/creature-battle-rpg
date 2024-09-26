@@ -1,6 +1,9 @@
 import { InputActions } from "@game/constants/gameConstants";
-import { StateMachine, TransitionPayload } from "@game/StateMachine";
-import { BattleStateManager } from "@game/state/oldState/BattleStateManager";
+import {
+  StateMachine,
+  TransitionPayload,
+} from "@game/state/oldState/StateMachine";
+import { BattleStateContext } from "@game/state/BattleStateContext";
 import { BattleMenuOptionLabels } from "@game/constants/battleUIConstants";
 import { BattleMenu } from "@game/battle/ui/menu/BattleMenu";
 import { BattleMenuStates } from "@game/constants/gameConstants";
@@ -20,8 +23,8 @@ export class BattleMenuStateMachine extends StateMachine<
 
   // Update menu state and notify observers when that has been done
   updateMenuState(newState: BattleMenuStates) {
-    // Update BattleStateManager state
-    BattleStateManager.setCurrentMenuState(newState);
+    // Update BattleStateContext state
+    BattleStateContext.setCurrentOpenMenu(newState);
     // Notify observers of the state change
     this._notifyObservers(newState);
   }
@@ -69,7 +72,7 @@ export class BattleMenuStateMachine extends StateMachine<
       case BattleMenuOptionLabels.FIGHT:
         this.updateMenuState(BattleMenuStates.Attacks);
         // set the attack to the correct CreatureAttack
-        BattleStateManager.setCurrentPlayerAttack(payload.menuItem);
+        BattleStateContext.setCurrentPlayerAttack(payload.menuItem);
         break;
 
       // If the Item (Inventory) menu item is selected
@@ -98,14 +101,14 @@ export class BattleMenuStateMachine extends StateMachine<
 
     // Find the CreatureAttack that corresponds to the menuItem string
     const matchedAttack =
-      BattleStateManager.getCurrentPlayer()?.attackList.find(
+      BattleStateContext.getCurrentPlayer()?.attackList.find(
         (attack) => attack.name.toLowerCase() === payload.menuItem.toLowerCase()
       );
 
     // Update state with the current CreatureAttack from the player
-    if (matchedAttack) BattleStateManager.setCurrentPlayerAttack(matchedAttack);
+    if (matchedAttack) BattleStateContext.setCurrentPlayerAttack(matchedAttack);
 
-    this.battleMenu.handleBattleSequence();
+    //this.battleMenu.handleBattleSequence();
 
     // Update the state to display the message about the chosen attack
     // this.updateMenuState(BattleMenuStates.DisplayTimedMessage);

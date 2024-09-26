@@ -41,12 +41,12 @@ export enum CursorPositions2x2 {
 //   [CursorPositions2x2.BOTTOM_RIGHT]: { x: 240, y: 70 },
 // };
 
-export type AttackMenuGrid = {
+export type BattleMenuNav = {
   [key in CursorPositions2x2]: string;
 };
 
 // label the 2x2 grid of options for the main menu
-export const battleMainMenu2x2Grid = {
+export const battleMainMenu2x2Grid: BattleMenuNav = {
   [CursorPositions2x2.TOP_LEFT]: BattleMenuOptionLabels.FIGHT,
   [CursorPositions2x2.TOP_RIGHT]: BattleMenuOptionLabels.SWITCH,
   [CursorPositions2x2.BOTTOM_LEFT]: BattleMenuOptionLabels.ITEM,

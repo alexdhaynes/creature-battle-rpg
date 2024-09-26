@@ -51,6 +51,14 @@ export class BattleScene extends BaseScene {
     // instantiate and initialize the Battle State Context
     this.#battleStateContext = BattleStateContext.getInstance(this);
 
+    // Register a callback, which will run when the battle state is updated
+    this.#battleStateContext.onBattleStateUpdated((newState) => {
+      console.log(
+        "BattleScene > onBattleStateUpdated() > Battle State Updated to new state:",
+        newState
+      );
+    });
+
     // create the enemy creature
     this.#activeEnemyCreature = new EnemyBattleCreature(this, {
       name: CREATURES.TUXEDO_CAT.name,

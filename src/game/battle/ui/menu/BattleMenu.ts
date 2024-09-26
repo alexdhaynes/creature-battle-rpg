@@ -123,11 +123,10 @@ export class BattleMenu {
 
       return;
     }
+    // Show the selected nav menu
     if (input === InputActions.OK) {
       const menuItem =
-        currentOpenMenu === BattleMenuStates.Attacks
-          ? this.#battleStateContext.getCurrentAttackGrid()[currentMenuCell] // choose the correct attack based on the attack grid in state
-          : battleMainMenu2x2Grid[currentMenuCell];
+        this.#battleStateContext.getCurrentMenuNav()[currentMenuCell]; // choose the correct menu item based on the currently visible menu
 
       console.log(`input is ok for menu item: ${menuItem}`);
 

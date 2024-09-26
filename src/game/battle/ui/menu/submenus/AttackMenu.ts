@@ -53,19 +53,19 @@ export class AttackMenu {
       }
     });
 
-    // Create the attack data grid (assuming 4 moves)
-    const newAttackGrid = {
+    // Create the attack menu using data from the attackList
+    const attackMenu = {
       [CursorPositions2x2.TOP_LEFT]: attackNames[0] || "-",
       [CursorPositions2x2.TOP_RIGHT]: attackNames[1] || "-",
       [CursorPositions2x2.BOTTOM_LEFT]: attackNames[2] || "-",
       [CursorPositions2x2.BOTTOM_RIGHT]: attackNames[3] || "-",
     };
 
-    // update state with the attack data grid
-    this.#battleStateContext.setCurrentAttackGrid(newAttackGrid);
+    // update the current menu nav in state with the attack data
+    this.#battleStateContext.setCurrentMenuNav(attackMenu);
 
     // Create the phaser text objects for the attack menu
-    const attackTextObjects = Object.entries(newAttackGrid).map(
+    const attackTextObjects = Object.entries(attackMenu).map(
       ([position, defaultLabel], index) => {
         const attackName = attackNames[index] || defaultLabel;
 

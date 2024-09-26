@@ -8,7 +8,9 @@ import {
   CreatureAttack,
 } from "@game/constants/gameConstants";
 
-import { AttackMenuGrid } from "@game/constants/battleUIConstants";
+import { battleMainMenu2x2Grid } from "@game/constants/battleUIConstants";
+
+import { BattleMenuNav } from "@game/constants/battleUIConstants";
 
 type BattleState = {
   currentOpenMenu: BattleMenuStates;
@@ -18,15 +20,19 @@ type BattleState = {
   currentEnemyAttack: CreatureAttack | null;
   currentMessage: string[];
   currentMenuCell: CursorPositions2x2;
-  currentAttackGrid: AttackMenuGrid;
+  currentMenuNav: BattleMenuNav;
 };
 
 export class BattleStateContext extends Phaser.Data.DataManager {
   // Static instance to store the single instance of the class
   private static instance: BattleStateContext;
+  #eventEmitter: Phaser.Events.EventEmitter;
 
   private constructor(scene: Phaser.Scene) {
     super(scene);
+
+    // Initialize the event emitter
+    this.#eventEmitter = new Phaser.Events.EventEmitter();
 
     // Set the initial battle state
     this.set("battleState", {
@@ -37,12 +43,7 @@ export class BattleStateContext extends Phaser.Data.DataManager {
       currentEnemyAttack: null,
       currentMessage: [""],
       currentMenuCell: CursorPositions2x2.TOP_LEFT,
-      currentAttackGrid: {
-        [CursorPositions2x2.TOP_LEFT]: "-",
-        [CursorPositions2x2.TOP_RIGHT]: "-",
-        [CursorPositions2x2.BOTTOM_LEFT]: "-",
-        [CursorPositions2x2.BOTTOM_RIGHT]: "-",
-      },
+      currentMenuNav: battleMainMenu2x2Grid, // set the default menu
     });
   }
 
@@ -59,18 +60,27 @@ export class BattleStateContext extends Phaser.Data.DataManager {
     return this.get("battleState") as BattleState;
   }
 
-  getBattleState(): BattleState {
-    return this.get("battleState") as BattleState;
-  }
-
   // Helper method to set the updated battleState
   #setBattleState(updatedState: Partial<BattleState>): void {
     const currentState = this.#getBattleState();
     this.set("battleState", { ...currentState, ...updatedState });
   }
 
+  // Emit an event when battle state is updated
+  #emitBattleStateUpdated(): void {
+    this.#eventEmitter.emit("battleStateUpdated", this.get("battleState"));
+  }
+
+  // Method to listen to events
+  onBattleStateUpdated(callback: (battleState: BattleState) => void): void {
+    console.log("BattleStateContext > onBattleStateUpdated() cal");
+    this.#eventEmitter.on("battleStateUpdated", callback);
+  }
+
   setCurrentPlayer(player: PlayerBattleCreature | null): void {
     this.#setBattleState({ currentPlayer: player });
+    // Emit battle state update event
+    this.#emitBattleStateUpdated();
   }
 
   getCurrentPlayer(): PlayerBattleCreature | null {
@@ -125,11 +135,12 @@ export class BattleStateContext extends Phaser.Data.DataManager {
     return this.#getBattleState().currentMenuCell;
   }
 
-  setCurrentAttackGrid(grid: BattleState["currentAttackGrid"]): void {
-    this.#setBattleState({ currentAttackGrid: grid });
+  setCurrentMenuNav(grid: BattleState["currentMenuNav"]): void {
+    this.#setBattleState({ currentMenuNav: grid });
   }
 
-  getCurrentAttackGrid(): BattleState["currentAttackGrid"] {
-    return this.#getBattleState().currentAttackGrid;
+  getCurrentMenuNav(): BattleState["currentMenuNav"] {
+    console.log("CURRENT MENU NAV IS ", this.#getBattleState().currentMenuNav);
+    return this.#getBattleState().currentMenuNav;
   }
 }

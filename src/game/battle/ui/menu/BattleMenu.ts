@@ -42,6 +42,8 @@ export class BattleMenu {
   // the container for status messages
   #statusMessageContainer!: Phaser.GameObjects.Container;
   #statusMessageTextObjects!: Phaser.GameObjects.Text[];
+  // battle state context reference
+  #battleStateContext: BattleStateContext;
 
   // main menu
   mainMenu!: BattleMainMenu;
@@ -59,11 +61,15 @@ export class BattleMenu {
     // create Main Menu
     this.mainMenu = new BattleMainMenu(scene);
 
+    // Access the BattleStateContext instance
+    this.#battleStateContext = BattleStateContext.getInstance(scene);
+
     // Set the current menu to the main menu
-    BattleStateContext.setCurrentOpenMenu(BattleMenuStates.Main);
+    this.#battleStateContext.setCurrentOpenMenu(BattleMenuStates.Main);
 
     // Create a cursor, which will be shared by all menus
     this.menuCursor = new Cursor(
+      this.#scene,
       menu2x2NavigationMap,
       menu2x2CursorPositions,
       battleMenuCursorInitialPosition
@@ -103,16 +109,13 @@ export class BattleMenu {
   handlePlayerInput(
     input: keyof typeof InputActions | keyof typeof Directions
   ) {
-    const { currentOpenMenu, currentMenuCell } = BattleStateContext.getState();
+    const currentOpenMenu = this.#battleStateContext.getCurrentOpenMenu();
+    const currentMenuCell = this.#battleStateContext.getCurrentMenuCell();
 
     // Dispatch state actions
     if (input === InputActions.CANCEL) {
       // do nothing if a cancel action is triggered when the Battle Menu state is Closed
-      if (
-        BattleStateContext.getState().currentOpenMenu ===
-        BattleMenuStates.Closed
-      )
-        return;
+      if (currentOpenMenu === BattleMenuStates.Closed) return;
 
       console.log(
         `input is cancel for menu item: ${battleMainMenu2x2Grid[currentMenuCell]}`
@@ -123,7 +126,7 @@ export class BattleMenu {
     if (input === InputActions.OK) {
       const menuItem =
         currentOpenMenu === BattleMenuStates.Attacks
-          ? BattleStateContext.getState().currentAttackGrid[currentMenuCell] // choose the correct attack based on the attack grid in state
+          ? this.#battleStateContext.getCurrentAttackGrid()[currentMenuCell] // choose the correct attack based on the attack grid in state
           : battleMainMenu2x2Grid[currentMenuCell];
 
       console.log(`input is ok for menu item: ${menuItem}`);
@@ -149,8 +152,8 @@ export class BattleMenu {
   }
 
   playerAttack() {
-    const player = BattleStateContext.getCurrentPlayer();
-    const playerAttack = BattleStateContext.getCurrentPlayerAttack();
+    const player = this.#battleStateContext.getCurrentPlayer();
+    const playerAttack = this.#battleStateContext.getCurrentPlayerAttack();
     const damage = playerAttack?.damage || player?.baseAttackValue;
     let message = [`${player?.name} used ${playerAttack?.name}`];
 
@@ -163,21 +166,25 @@ export class BattleMenu {
         // If the damage is negative, heal the player instead
         if (damage && damage < 0) {
           // (call takeDamage on self with negative value to heal)
-          BattleStateContext.getCurrentPlayer()?.takeDamage(damage, () => {
-            this.#enemyAttack();
-          });
+          this.#battleStateContext
+            .getCurrentPlayer()
+            ?.takeDamage(damage, () => {
+              this.#enemyAttack();
+            });
         } else {
-          BattleStateContext.getCurrentEnemy()?.takeDamage(damage!, () => {
-            this.#enemyAttack();
-          });
+          this.#battleStateContext
+            .getCurrentEnemy()
+            ?.takeDamage(damage!, () => {
+              this.#enemyAttack();
+            });
         }
       });
     });
   }
 
   #enemyAttack() {
-    const enemy = BattleStateContext.getCurrentEnemy();
-    const player = BattleStateContext.getCurrentPlayer();
+    const enemy = this.#battleStateContext.getCurrentEnemy();
+    const player = this.#battleStateContext.getCurrentPlayer();
 
     if (enemy?.isFainted) {
       this.#postBattleSequence();
@@ -189,7 +196,7 @@ export class BattleMenu {
       const randomIndex = Math.floor(Math.random() * enemyAttackList.length);
       const newAttack = enemyAttackList[randomIndex];
 
-      BattleStateContext.setCurrentEnemyAttack(newAttack);
+      this.#battleStateContext.setCurrentEnemyAttack(newAttack);
 
       this.showStatusMessage(
         [`Opponent ${enemy?.name} used ${newAttack?.name}`],
@@ -208,8 +215,8 @@ export class BattleMenu {
 
   // TODO: rewrite using promises
   #postBattleSequence() {
-    const currentEnemy = BattleStateContext.getCurrentEnemy();
-    const currentPlayer = BattleStateContext.getCurrentPlayer();
+    const currentEnemy = this.#battleStateContext.getCurrentEnemy();
+    const currentPlayer = this.#battleStateContext.getCurrentPlayer();
 
     const _handleFaint = (
       entity: BattleCreature,

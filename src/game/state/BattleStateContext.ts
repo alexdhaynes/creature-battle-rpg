@@ -21,87 +21,115 @@ type BattleState = {
   currentAttackGrid: AttackMenuGrid;
 };
 
-export class BattleStateContext {
-  private static _state: BattleState = {
-    currentOpenMenu: BattleMenuStates.Main,
-    currentPlayer: null,
-    currentEnemy: null,
-    currentPlayerAttack: null,
-    currentEnemyAttack: null,
-    currentMessage: [""],
-    currentMenuCell: CursorPositions2x2.TOP_LEFT,
-    currentAttackGrid: {
-      [CursorPositions2x2.TOP_LEFT]: "-",
-      [CursorPositions2x2.TOP_RIGHT]: "-",
-      [CursorPositions2x2.BOTTOM_LEFT]: "-",
-      [CursorPositions2x2.BOTTOM_RIGHT]: "-",
-    },
-  };
+export class BattleStateContext extends Phaser.Data.DataManager {
+  // Static instance to store the single instance of the class
+  private static instance: BattleStateContext;
 
-  // Static method to set the state
-  public static setState(newState: Partial<BattleState>): void {
-    this._state = { ...this._state, ...newState };
+  private constructor(scene: Phaser.Scene) {
+    super(scene);
+
+    // Set the initial battle state
+    this.set("battleState", {
+      currentOpenMenu: BattleMenuStates.Main,
+      currentPlayer: null,
+      currentEnemy: null,
+      currentPlayerAttack: null,
+      currentEnemyAttack: null,
+      currentMessage: [""],
+      currentMenuCell: CursorPositions2x2.TOP_LEFT,
+      currentAttackGrid: {
+        [CursorPositions2x2.TOP_LEFT]: "-",
+        [CursorPositions2x2.TOP_RIGHT]: "-",
+        [CursorPositions2x2.BOTTOM_LEFT]: "-",
+        [CursorPositions2x2.BOTTOM_RIGHT]: "-",
+      },
+    });
   }
 
-  // Static method to get the entire state
-  public static getState(): BattleState {
-    return this._state;
+  // Static method to get the singleton instance
+  public static getInstance(scene: Phaser.Scene): BattleStateContext {
+    if (!BattleStateContext.instance) {
+      BattleStateContext.instance = new BattleStateContext(scene);
+    }
+    return BattleStateContext.instance;
   }
 
-  public static getCurrentPlayer() {
-    return this._state.currentPlayer;
+  // Helper method to get the full battleState
+  #getBattleState(): BattleState {
+    return this.get("battleState") as BattleState;
   }
 
-  public static getCurrentPlayerAttack() {
-    return this._state.currentPlayerAttack;
+  getBattleState(): BattleState {
+    return this.get("battleState") as BattleState;
   }
 
-  public static getCurrentEnemy() {
-    return this._state.currentEnemy;
+  // Helper method to set the updated battleState
+  #setBattleState(updatedState: Partial<BattleState>): void {
+    const currentState = this.#getBattleState();
+    this.set("battleState", { ...currentState, ...updatedState });
   }
 
-  public static getCurrentEnemyAttack() {
-    return this._state.currentEnemyAttack;
+  setCurrentPlayer(player: PlayerBattleCreature | null): void {
+    this.#setBattleState({ currentPlayer: player });
   }
 
-  // Static method to set the current message
-  public static setCurrentMessage(messageList: string[]): void {
-    this.setState({ currentMessage: messageList });
+  getCurrentPlayer(): PlayerBattleCreature | null {
+    return this.#getBattleState().currentPlayer;
   }
 
-  // Static method to set the current player attack
-  public static setCurrentPlayerAttack(attack: CreatureAttack): void {
-    this.setState({ currentPlayerAttack: attack });
+  setCurrentEnemy(enemy: EnemyBattleCreature | null): void {
+    this.#setBattleState({ currentEnemy: enemy });
   }
 
-  // Static method to set the current enemy attack
-  public static setCurrentEnemyAttack(attack: CreatureAttack): void {
-    this.setState({ currentEnemyAttack: attack });
+  getCurrentEnemy(): EnemyBattleCreature | null {
+    return this.#getBattleState().currentEnemy;
   }
 
-  // Static method to store the currently visible Battle Menu
-  public static setCurrentOpenMenu(newState: BattleMenuStates): void {
-    this.setState({ currentOpenMenu: newState });
+  setCurrentPlayerAttack(attack: CreatureAttack | null): void {
+    this.#setBattleState({ currentPlayerAttack: attack });
   }
 
-  // Static method to store the current position of the cursor
-  public static setCurrentMenuCell(newCell: CursorPositions2x2): void {
-    this.setState({ currentMenuCell: newCell });
+  getCurrentPlayerAttack(): CreatureAttack | null {
+    return this.#getBattleState().currentPlayerAttack;
   }
 
-  // Static method to store the current player
-  public static setCurrentPlayer(newPlayer: PlayerBattleCreature | null): void {
-    this.setState({ currentPlayer: newPlayer });
+  setCurrentEnemyAttack(attack: CreatureAttack | null): void {
+    this.#setBattleState({ currentEnemyAttack: attack });
   }
 
-  // Static method to store the current enemy
-  public static setCurrentEnemy(newPlayer: EnemyBattleCreature | null): void {
-    this.setState({ currentEnemy: newPlayer });
+  getCurrentEnemyAttack(): CreatureAttack | null {
+    return this.#getBattleState().currentEnemyAttack;
   }
 
-  public static setCurrentAttackGrid(
-    newGrid: BattleState["currentAttackGrid"]
-  ) {
-    this.setState({ currentAttackGrid: newGrid });
+  setCurrentMessage(messageList: string[]): void {
+    this.#setBattleState({ currentMessage: messageList });
+  }
+
+  getCurrentMessage(): string[] {
+    return this.#getBattleState().currentMessage;
+  }
+
+  setCurrentOpenMenu(menuState: BattleMenuStates): void {
+    this.#setBattleState({ currentOpenMenu: menuState });
+  }
+
+  getCurrentOpenMenu(): BattleMenuStates {
+    return this.#getBattleState().currentOpenMenu;
+  }
+
+  setCurrentMenuCell(cell: CursorPositions2x2): void {
+    this.#setBattleState({ currentMenuCell: cell });
+  }
+
+  getCurrentMenuCell(): CursorPositions2x2 {
+    return this.#getBattleState().currentMenuCell;
+  }
+
+  setCurrentAttackGrid(grid: BattleState["currentAttackGrid"]): void {
+    this.#setBattleState({ currentAttackGrid: grid });
+  }
+
+  getCurrentAttackGrid(): BattleState["currentAttackGrid"] {
+    return this.#getBattleState().currentAttackGrid;
   }
 }

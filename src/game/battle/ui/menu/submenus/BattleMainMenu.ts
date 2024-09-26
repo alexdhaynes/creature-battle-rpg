@@ -18,9 +18,11 @@ export class BattleMainMenu {
   #mainMenuTextContainer: Phaser.GameObjects.Container;
   #mainMenuNav!: Phaser.GameObjects.Container;
   #currentPlayer!: BattleCreature | null;
+  #battleStateContext: BattleStateContext;
 
   constructor(scene: Phaser.Scene) {
-    //this.#scene = scene;
+    // Access the BattleStateContext instance
+    this.#battleStateContext = BattleStateContext.getInstance(scene);
 
     // create the main menu game objects
     const { mainMenuNav, textObjects, textContainer } =
@@ -77,7 +79,7 @@ export class BattleMainMenu {
   // Create text container for info pane text
   // TODO: this container should be shared by all submenus!
   #createBattleMenuInfoPane(scene: Phaser.Scene) {
-    const { currentPlayer } = BattleStateContext.getState();
+    const currentPlayer = this.#battleStateContext.getCurrentPlayer();
 
     const { textContainer, textObjects } = createTextContainer(
       scene,

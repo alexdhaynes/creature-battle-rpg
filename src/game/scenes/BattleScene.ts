@@ -27,6 +27,7 @@ export class BattleScene extends BaseScene {
   #activeEnemyCreature!: EnemyBattleCreature;
   #playerCreature!: PlayerBattleCreature;
   #battleStateMachine: StateMachine;
+  #battleStateContext: BattleStateContext;
 
   constructor() {
     super({
@@ -46,6 +47,9 @@ export class BattleScene extends BaseScene {
       BattleBackgroundAssetKeys.MEADOW
     );
     background.showBackground();
+
+    // instantiate and initialize the Battle State Context
+    this.#battleStateContext = BattleStateContext.getInstance(this);
 
     // create the enemy creature
     this.#activeEnemyCreature = new EnemyBattleCreature(this, {
@@ -77,8 +81,8 @@ export class BattleScene extends BaseScene {
     // Set the player creature as the current player
     // This MUST be done before the BattleMenu component is created!!
     // Otherwise, the BattleMenu will not have the currentPlayer data
-    BattleStateContext.setCurrentPlayer(this.#playerCreature);
-    BattleStateContext.setCurrentEnemy(this.#activeEnemyCreature);
+    this.#battleStateContext.setCurrentPlayer(this.#playerCreature);
+    this.#battleStateContext.setCurrentEnemy(this.#activeEnemyCreature);
 
     // instantiate then render the main menu (the main menu creates the submenus)
     this.#battleMenu = new BattleMenu(this);

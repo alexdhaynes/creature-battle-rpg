@@ -17,8 +17,10 @@ export class Cursor {
   #navigationMap!: TBattleMenuOptionNavigationMap; // store the navigation path for this cursor
   #cursorPositionsGrid!: CursorPositions2x2Map;
   #initialPosition: { x: number; y: number };
+  #battleStateContext: BattleStateContext;
 
   constructor(
+    scene: Phaser.Scene,
     navigationMap: TBattleMenuOptionNavigationMap, // map's a cursor's current cardinal position to its next (eg: Top Left to Bottom Left)
     cursorPositionsGrid: CursorPositions2x2Map, // maps a cursor's current (x,y) pos to its next (x,y) pos
     intialPosition: { x: number; y: number }
@@ -27,6 +29,9 @@ export class Cursor {
     this.#navigationMap = navigationMap;
     this.#cursorPositionsGrid = cursorPositionsGrid;
     this.#initialPosition = intialPosition;
+
+    // Access the BattleStateContext instance
+    this.#battleStateContext = BattleStateContext.getInstance(scene);
   }
 
   createGameObject(scene: Phaser.Scene) {
@@ -62,7 +67,7 @@ export class Cursor {
   // Given a directional input, move the cursor to the appropriate cell
   moveCursor(direction: keyof typeof Directions) {
     // pass the current 2x2 cell to the navigation map
-    const { currentMenuCell } = BattleStateContext.getState();
+    const currentMenuCell = this.#battleStateContext.getCurrentMenuCell();
 
     const newCell = currentMenuCell
       ? this.#navigationMap[currentMenuCell][direction]
@@ -70,7 +75,7 @@ export class Cursor {
 
     if (newCell) {
       // update the current cursor location in state
-      BattleStateContext.setCurrentMenuCell(newCell);
+      this.#battleStateContext.setCurrentMenuCell(newCell);
 
       // Use navigation mapping to determine new cursor coords
       const { cursorX, cursorY } = this.#cursorPositionsGrid[newCell];
@@ -87,7 +92,7 @@ export class Cursor {
       this.#cursorPositionsGrid[CursorPositions2x2.TOP_LEFT];
 
     // reset the current cell to top left in state and on canvas
-    BattleStateContext.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
+    this.#battleStateContext.setCurrentMenuCell(CursorPositions2x2.TOP_LEFT);
     this.#cursor.setPosition(cursorX, cursorY);
   }
 }

@@ -3,9 +3,11 @@ import {
   battleMenuCursorInitialPosition,
   menu2x2NavigationMap,
   menu2x2CursorPositions,
+  BattleMenuOptionLabels,
 } from "@game/constants/battleUIConstants";
 
 import {
+  CreatureAttack,
   Directions,
   InputActions,
   Polarity,
@@ -118,8 +120,11 @@ export class BattleMenu {
       if (currentOpenMenu === BattleMenuStates.Closed) return;
 
       console.log(
-        `input is cancel for menu item: ${battleMainMenu2x2Grid[currentMenuCell]}`
+        `CANCEL menu item: ${battleMainMenu2x2Grid[currentMenuCell]}`
       );
+
+      // move to the main menu
+      this.moveToMainMenu();
 
       return;
     }
@@ -128,9 +133,26 @@ export class BattleMenu {
       const menuItem =
         this.#battleStateContext.getCurrentMenuNav()[currentMenuCell]; // choose the correct menu item based on the currently visible menu
 
-      console.log(`input is ok for menu item: ${menuItem}`);
+      // If the user clicks "ok" on a Main menu nav item
+      if (
+        [
+          BattleMenuOptionLabels.FIGHT,
+          BattleMenuOptionLabels.FLEE,
+          BattleMenuOptionLabels.ITEM,
+          BattleMenuOptionLabels.SWITCH,
+        ].includes(menuItem as BattleMenuOptionLabels)
+      ) {
+        this.handleMainMenuNavItemOk(menuItem);
+      }
 
-      return;
+      // If the user clicks "ok" on an Attack menu nav item
+      const attackListStrings = this.attackMenu.attackList?.map(
+        (attack) => attack.name
+      );
+      // Update the context with the selected attack
+      if (attackListStrings?.includes(menuItem)) {
+        this.handleAttackMenuNavItemOk(menuItem);
+      }
     }
     // Move the cursor for directional input
     if (
@@ -179,6 +201,75 @@ export class BattleMenu {
         }
       });
     });
+  }
+
+  // Move to the main menu
+  // Show all the main menu game objects; hide all the irrelvant game objects
+  moveToMainMenu() {
+    // move to the main menu
+    this.mainMenu.show();
+    // hide all the submenus
+    this.attackMenu.hide();
+    this.hideInventoryPane();
+    this.hideCreaturesPane();
+    this.hideFleePane();
+    // add the cursor to the main menu nav contaienr
+    this.mainMenu.getContainer().add(this.menuCursorGameObject);
+    // reset the cursor position
+    this.menuCursor.resetCursorPosition();
+    // set the main menu as the current menu in state
+    this.#battleStateContext.setCurrentMenuNav(battleMainMenu2x2Grid);
+  }
+
+  handleMainMenuNavItemOk(menuItem: string) {
+    console.log(`OK man nav menu item ${menuItem}`);
+    // Main menu items
+    switch (menuItem) {
+      // Move to the fight menu
+      case BattleMenuOptionLabels.FIGHT:
+        this.mainMenu.hide();
+        this.attackMenu.show();
+        // add the cursor to the attack menu nav contaienr
+        this.attackMenu.getContainer().add(this.menuCursorGameObject);
+        // reset the cursor
+        this.menuCursor.resetCursorPosition();
+        // get the attack menu
+        const attackMenu = this.#battleStateContext.getAttackMenuNav();
+        // set the attack menu as the current menu in state
+        this.#battleStateContext.setCurrentMenuNav(attackMenu);
+        break;
+
+      // Move to the inventory
+      case BattleMenuOptionLabels.ITEM:
+        this.mainMenu.hide();
+        this.showInventoryPane();
+        break;
+
+      // Move to the creature pane
+      case BattleMenuOptionLabels.SWITCH:
+        this.mainMenu.hide();
+        this.showCreaturesPane();
+        break;
+
+      // Move to the flee pane
+      case BattleMenuOptionLabels.FLEE:
+        this.mainMenu.hide();
+        this.showFleePane();
+        break;
+    }
+  }
+
+  handleAttackMenuNavItemOk(menuItem: string) {
+    console.log(`OK attack nav menu item ${menuItem}`);
+    const currentAttack = this.attackMenu.attackList?.filter(
+      (attack) => attack.name === menuItem
+    );
+    // If the current attack exists, update the context
+    if (currentAttack) {
+      this.#battleStateContext.setCurrentPlayerAttack(currentAttack[0]);
+      // invoke player attack
+      this.playerAttack();
+    }
   }
 
   #enemyAttack() {
@@ -263,7 +354,7 @@ export class BattleMenu {
     // otherwise, move back to the main menu
     // BACK TO MAIN MENU
     this.hideStatusMessage();
-    this.mainMenu.show();
+    this.moveToMainMenu();
   }
 
   #transitionToNextScene() {

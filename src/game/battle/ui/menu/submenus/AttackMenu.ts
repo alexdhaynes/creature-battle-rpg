@@ -41,6 +41,10 @@ export class AttackMenu {
     return this.#attackMenu;
   }
 
+  get attackList() {
+    return this.#attackList;
+  }
+
   // create attacks for a 2x2 grid
   #createAttackMenuNavContainer = (scene: Phaser.Scene) => {
     // Create an array to store 4 attack names
@@ -61,8 +65,8 @@ export class AttackMenu {
       [CursorPositions2x2.BOTTOM_RIGHT]: attackNames[3] || "-",
     };
 
-    // update the current menu nav in state with the attack data
-    this.#battleStateContext.setCurrentMenuNav(attackMenu);
+    // update the attack menu nav in state with the attack data
+    this.#battleStateContext.setAttackMenuNav(attackMenu);
 
     // Create the phaser text objects for the attack menu
     const attackTextObjects = Object.entries(attackMenu).map(

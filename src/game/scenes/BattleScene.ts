@@ -190,7 +190,7 @@ export class BattleScene extends BaseScene {
         play healthbar animation, pause
         transition to other creature and repeat steps
         */
-        this.#battleMenu.playerAttack();
+        //this.#battleMenu.playerAttack();
       },
     });
 

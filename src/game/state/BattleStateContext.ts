@@ -21,6 +21,7 @@ type BattleState = {
   currentMessage: string[];
   currentMenuCell: CursorPositions2x2;
   currentMenuNav: BattleMenuNav;
+  attackMenuNav: BattleMenuNav;
 };
 
 export class BattleStateContext extends Phaser.Data.DataManager {
@@ -44,6 +45,7 @@ export class BattleStateContext extends Phaser.Data.DataManager {
       currentMessage: [""],
       currentMenuCell: CursorPositions2x2.TOP_LEFT,
       currentMenuNav: battleMainMenu2x2Grid, // set the default menu
+      currentAttackMenu: null, // store the attack menu
     });
   }
 
@@ -140,7 +142,14 @@ export class BattleStateContext extends Phaser.Data.DataManager {
   }
 
   getCurrentMenuNav(): BattleState["currentMenuNav"] {
-    console.log("CURRENT MENU NAV IS ", this.#getBattleState().currentMenuNav);
     return this.#getBattleState().currentMenuNav;
+  }
+
+  setAttackMenuNav(grid: BattleState["attackMenuNav"]): void {
+    this.#setBattleState({ attackMenuNav: grid });
+  }
+
+  getAttackMenuNav(): BattleState["attackMenuNav"] {
+    return this.#getBattleState().attackMenuNav;
   }
 }

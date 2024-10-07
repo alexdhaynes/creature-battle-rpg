@@ -89,14 +89,6 @@ export class BattleCreature {
         ? (this._currentHp = this._maxHp)
         : (this._currentHp -= damage);
 
-    console.log(
-      `this._currentHp ${this._currentHp} - ${damage} =  this._currentHp ${this._currentHp}`
-    );
-
-    console.log(
-      `${this._creatureDetails.name} took ${damage} points of damage. Current HP is ${this._currentHp}.`
-    );
-
     this._healthStatus.healthBar.setHealthBarPercentageAnimated(
       this._currentHp / this._maxHp,
       { callback }

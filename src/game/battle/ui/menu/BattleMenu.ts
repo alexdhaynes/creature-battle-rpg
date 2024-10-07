@@ -330,8 +330,9 @@ export class BattleMenu {
         () => {
           const damage = newAttack?.damage || enemy.baseAttackValue;
 
-          this.#scene.time.delayedCall(500, () => {
-            player?.takeDamage(damage, () => {
+          // after takeDamage() finishes animating, move onto postBattleSequence after a short delay
+          player?.takeDamage(damage, () => {
+            this.#scene.time.delayedCall(500, () => {
               this.#postBattleSequence();
             });
           });

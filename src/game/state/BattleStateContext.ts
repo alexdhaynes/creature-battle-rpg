@@ -5,6 +5,7 @@ import {
 } from "@game/battle/creatures";
 import {
   BattleMenuStates,
+  BattleStates,
   CreatureAttack,
 } from "@game/constants/gameConstants";
 
@@ -14,6 +15,7 @@ import { BattleMenuNav } from "@game/constants/battleUIConstants";
 
 type BattleState = {
   currentOpenMenu: BattleMenuStates;
+  currentBattleState: BattleStates | null;
   currentPlayer: PlayerBattleCreature | null;
   currentPlayerAttack: CreatureAttack | null;
   currentEnemy: EnemyBattleCreature | null;
@@ -38,6 +40,7 @@ export class BattleStateContext extends Phaser.Data.DataManager {
     // Set the initial battle state
     this.set("battleState", {
       currentOpenMenu: BattleMenuStates.Main,
+      currentBattleState: null,
       currentPlayer: null,
       currentEnemy: null,
       currentPlayerAttack: null,
@@ -83,6 +86,14 @@ export class BattleStateContext extends Phaser.Data.DataManager {
     this.#setBattleState({ currentPlayer: player });
     // Emit battle state update event
     this.#emitBattleStateUpdated();
+  }
+
+  getCurrentBattleState(): BattleStates | null {
+    return this.#getBattleState().currentBattleState;
+  }
+
+  setCurrentBattleState(battleState: BattleStates | null) {
+    this.#setBattleState({ currentBattleState: battleState });
   }
 
   getCurrentPlayer(): PlayerBattleCreature | null {

@@ -7,7 +7,7 @@ import {
 } from "@game/constants/battleUIConstants";
 
 import {
-  CreatureAttack,
+  BattleStates,
   Directions,
   InputActions,
   Polarity,
@@ -32,6 +32,7 @@ import {
 } from "@game/battle/ui/menu/submenus/";
 import { SceneKeys } from "@game/constants/sceneConstants";
 import { BattleCreature } from "@game/battle/creatures";
+import { StateMachine } from "@game/state/StateMachine";
 
 export class BattleMenu {
   #scene: Phaser.Scene;
@@ -47,6 +48,9 @@ export class BattleMenu {
   // battle state context reference
   #battleStateContext: BattleStateContext;
 
+  // reference to battle state machine
+  #battleStateMachine: StateMachine;
+
   // main menu
   mainMenu!: BattleMainMenu;
   // attackMenu
@@ -57,8 +61,11 @@ export class BattleMenu {
   menuCursorGameObject!: Phaser.GameObjects.Image;
 
   // Set initial states
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, stateMachine: StateMachine) {
     this.#scene = scene;
+
+    // Store a reference to the battle state machine (defined in BattleScene)
+    this.#battleStateMachine = stateMachine;
 
     // create Main Menu
     this.mainMenu = new BattleMainMenu(scene);
@@ -128,12 +135,35 @@ export class BattleMenu {
 
       return;
     }
-    // Show the selected nav menu
+    // Handle "OK" action on the Main Menu or any submenus
+    // Submenus include Status Message and all Nav menus
     if (input === InputActions.OK) {
-      const menuItem =
-        this.#battleStateContext.getCurrentMenuNav()[currentMenuCell]; // choose the correct menu item based on the currently visible menu
+      // Handle "OK" on Status Messages:
 
-      // If the user clicks "ok" on a Main menu nav item
+      // if the user clicks ok on a prebattle status message,
+      // proceed to creature intro
+      if (
+        this.#battleStateContext.getCurrentBattleState() ==
+        BattleStates.PRE_BATTLE
+      ) {
+        this.#battleStateMachine.setState(BattleStates.CREATURE_INTRO);
+        return;
+      }
+
+      // if the user clicks ok on a creature intro status message,
+      // proceed to player_input
+      if (
+        this.#battleStateContext.getCurrentBattleState() ==
+        BattleStates.CREATURE_INTRO
+      ) {
+        this.#battleStateMachine.setState(BattleStates.PLAYER_INPUT);
+        return;
+      }
+
+      // Handle "OK" on Submenus:
+      const menuItem =
+        this.#battleStateContext.getCurrentMenuNav()[currentMenuCell];
+
       if (
         [
           BattleMenuOptionLabels.FIGHT,
@@ -142,7 +172,10 @@ export class BattleMenu {
           BattleMenuOptionLabels.SWITCH,
         ].includes(menuItem as BattleMenuOptionLabels)
       ) {
+        // choose the correct menu item based on the currently visible menu
+        // If the user clicks "ok" on a Main menu nav item
         this.handleMainMenuNavItemOk(menuItem);
+        return;
       }
 
       // If the user clicks "ok" on an Attack menu nav item
@@ -153,7 +186,9 @@ export class BattleMenu {
       if (attackListStrings?.includes(menuItem)) {
         this.handleAttackMenuNavItemOk(menuItem);
       }
+      return;
     }
+
     // Move the cursor for directional input
     if (
       input === Directions.UP ||

@@ -92,15 +92,18 @@ export class BattleScene extends BaseScene {
     this.#battleStateContext.setCurrentPlayer(this.#playerCreature);
     this.#battleStateContext.setCurrentEnemy(this.#activeEnemyCreature);
 
-    // instantiate then render the main menu (the main menu creates the submenus)
-    this.#battleMenu = new BattleMenu(this);
-    this.#battleMenu.init();
-
     // Create hotkeys for keyboard input
     this.#cursorKeys = this.input.keyboard?.createCursorKeys();
 
     // Create battle state machine
     this.#createBattleStateMachine();
+
+    // Set the initial battle state
+    this.#battleStateMachine.setState("INTRO");
+
+    // instantiate then render the main menu (the main menu creates the submenus)
+    this.#battleMenu = new BattleMenu(this, this.#battleStateMachine);
+    this.#battleMenu.init();
   } //end create()
 
   // Update lifecycle method (called every frame of the game)
@@ -136,7 +139,9 @@ export class BattleScene extends BaseScene {
     this.#battleStateMachine.addState({
       name: BattleStates.INTRO,
       onEnter: () => {
-        // wait for scene setup and transitions to complete
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(BattleStates.INTRO);
+        // TODO: wait for scene setup and transitions to complete
         // for now, just simulate the waiting using timer and then transition to PRE_BATTLE state
         this.time.delayedCall(800, () => {
           this.#battleStateMachine.setState(BattleStates.PRE_BATTLE);
@@ -147,53 +152,49 @@ export class BattleScene extends BaseScene {
     this.#battleStateMachine.addState({
       name: BattleStates.PRE_BATTLE,
       onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(BattleStates.PRE_BATTLE);
         // wait for enemy to appear on the screen, then notify the player about the creature
         this.#battleMenu.showStatusMessage([
           `A wild ${this.#activeEnemyCreature.name} appeared!`,
         ]);
-        // wait for text animation to complete then move to next state
-        // for now, simulate the wait using timer
-        this.time.delayedCall(800, () => {
-          this.#battleStateMachine.setState(BattleStates.CREATURE_INTRO);
-        });
       },
     });
 
     this.#battleStateMachine.addState({
       name: BattleStates.CREATURE_INTRO,
       onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(
+          BattleStates.CREATURE_INTRO
+        );
         // wait for the player's chosen creature to appear on screen
         // then notify the player about their creature
         this.#battleMenu.showStatusMessage([
           `Go ${this.#playerCreature.name}!`,
         ]);
-        // wait for text animation to complete then move to next state
-        // for now, simulate the wait using timer
-        this.time.delayedCall(500, () => {
-          this.#battleStateMachine.setState(BattleStates.PLAYER_INPUT);
-        });
       },
     });
 
     this.#battleStateMachine.addState({
       name: BattleStates.PLAYER_INPUT,
       onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(
+          BattleStates.PLAYER_INPUT
+        );
         // show the main battle menu
         this.#battleMenu.moveToMainMenu();
-        /* battle sequence flow:
-        show attack used, 
-        display message, 
-        play attack animation, pause
-        play healthbar animation, pause
-        transition to other creature and repeat steps
-        */
-        //this.#battleMenu.playerAttack();
       },
     });
 
     this.#battleStateMachine.addState({
       name: BattleStates.ENEMY_INPUT,
       onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(
+          BattleStates.ENEMY_INPUT
+        );
         // pick a random move for the enemy monster
         // TODO: implement AI behavior
         this.time.delayedCall(500, () => {
@@ -204,25 +205,38 @@ export class BattleScene extends BaseScene {
 
     this.#battleStateMachine.addState({
       name: BattleStates.BATTLE,
-      onEnter: () => {},
+      onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(BattleStates.BATTLE);
+      },
     });
 
     this.#battleStateMachine.addState({
       name: BattleStates.POST_BATTLE,
-      onEnter: () => {},
+      onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(
+          BattleStates.POST_BATTLE
+        );
+      },
     });
 
     this.#battleStateMachine.addState({
       name: BattleStates.FINISHED,
-      onEnter: () => {},
+      onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(BattleStates.FINISHED);
+      },
     });
 
     this.#battleStateMachine.addState({
       name: BattleStates.FLEE_ATTEMPT,
-      onEnter: () => {},
+      onEnter: () => {
+        // set the battle state context
+        this.#battleStateContext.setCurrentBattleState(
+          BattleStates.FLEE_ATTEMPT
+        );
+      },
     });
-
-    // Set the initial state
-    this.#battleStateMachine.setState("INTRO");
   }
 }

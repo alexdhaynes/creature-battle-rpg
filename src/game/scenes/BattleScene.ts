@@ -99,9 +99,6 @@ export class BattleScene extends BaseScene {
     // Create hotkeys for keyboard input
     this.#cursorKeys = this.input.keyboard?.createCursorKeys();
 
-    // Show the main battle menu
-    this.#battleMenu.mainMenu.show();
-
     // Create battle state machine
     this.#createBattleStateMachine();
   } //end create()
@@ -141,7 +138,7 @@ export class BattleScene extends BaseScene {
       onEnter: () => {
         // wait for scene setup and transitions to complete
         // for now, just simulate the waiting using timer and then transition to PRE_BATTLE state
-        this.time.delayedCall(500, () => {
+        this.time.delayedCall(800, () => {
           this.#battleStateMachine.setState(BattleStates.PRE_BATTLE);
         });
       },
@@ -151,12 +148,12 @@ export class BattleScene extends BaseScene {
       name: BattleStates.PRE_BATTLE,
       onEnter: () => {
         // wait for enemy to appear on the screen, then notify the player about the creature
-        this.#battleMenu.updateTextContainer([
+        this.#battleMenu.showStatusMessage([
           `A wild ${this.#activeEnemyCreature.name} appeared!`,
         ]);
         // wait for text animation to complete then move to next state
         // for now, simulate the wait using timer
-        this.time.delayedCall(500, () => {
+        this.time.delayedCall(800, () => {
           this.#battleStateMachine.setState(BattleStates.CREATURE_INTRO);
         });
       },
@@ -167,8 +164,8 @@ export class BattleScene extends BaseScene {
       onEnter: () => {
         // wait for the player's chosen creature to appear on screen
         // then notify the player about their creature
-        this.#battleMenu.updateTextContainer([
-          `Go ${this.#playerCreature.name} appeared!`,
+        this.#battleMenu.showStatusMessage([
+          `Go ${this.#playerCreature.name}!`,
         ]);
         // wait for text animation to complete then move to next state
         // for now, simulate the wait using timer
@@ -182,7 +179,7 @@ export class BattleScene extends BaseScene {
       name: BattleStates.PLAYER_INPUT,
       onEnter: () => {
         // show the main battle menu
-        this.#battleMenu.mainMenu.show();
+        this.#battleMenu.moveToMainMenu();
         /* battle sequence flow:
         show attack used, 
         display message, 

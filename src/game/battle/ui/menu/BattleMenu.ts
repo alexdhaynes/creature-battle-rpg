@@ -167,11 +167,6 @@ export class BattleMenu {
     }
   }
 
-  // expose the updateTextContainer message
-  updateTextContainer(message: string[]) {
-    return updateTextContainer(this.#statusMessageTextObjects, message);
-  }
-
   playerAttack() {
     const player = this.#battleStateContext.getCurrentPlayer();
     const playerAttack = this.#battleStateContext.getCurrentPlayerAttack();
@@ -206,19 +201,26 @@ export class BattleMenu {
   // Move to the main menu
   // Show all the main menu game objects; hide all the irrelvant game objects
   moveToMainMenu() {
+    // hide all the submenus
+    this.hideSubmenus();
     // move to the main menu
     this.mainMenu.show();
-    // hide all the submenus
-    this.attackMenu.hide();
-    this.hideInventoryPane();
-    this.hideCreaturesPane();
-    this.hideFleePane();
     // add the cursor to the main menu nav contaienr
     this.mainMenu.getContainer().add(this.menuCursorGameObject);
     // reset the cursor position
     this.menuCursor.resetCursorPosition();
     // set the main menu as the current menu in state
     this.#battleStateContext.setCurrentMenuNav(battleMainMenu2x2Grid);
+  }
+
+  // Hide all the submenus
+  hideSubmenus() {
+    // hide any status messages and all the submenus
+    this.hideStatusMessage();
+    this.attackMenu.hide();
+    this.hideInventoryPane();
+    this.hideCreaturesPane();
+    this.hideFleePane();
   }
 
   handleMainMenuNavItemOk(menuItem: string) {
@@ -372,7 +374,7 @@ export class BattleMenu {
 
   showStatusMessage(newMessage: string[], callback?: () => void) {
     // hide submenus
-    this.attackMenu.hide();
+    this.hideSubmenus();
     // show text container
     updateTextContainer(this.#statusMessageTextObjects, newMessage);
     this.#statusMessageContainer.setAlpha(1);

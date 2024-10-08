@@ -197,9 +197,7 @@ export class BattleScene extends BaseScene {
         );
         // pick a random move for the enemy monster
         // TODO: implement AI behavior
-        this.time.delayedCall(500, () => {
-          this.#battleStateMachine.setState(BattleStates.BATTLE);
-        });
+        this.#battleMenu.enemyAttack();
       },
     });
 

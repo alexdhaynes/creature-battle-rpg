@@ -220,13 +220,15 @@ export class BattleMenu {
           this.#battleStateContext
             .getCurrentPlayer()
             ?.takeDamage(damage, () => {
-              this.#enemyAttack();
+              // set battle state machine to enemy input
+              this.#battleStateMachine.setState(BattleStates.ENEMY_INPUT);
             });
         } else {
           this.#battleStateContext
             .getCurrentEnemy()
             ?.takeDamage(damage!, () => {
-              this.#enemyAttack();
+              // set battle state machine to enemy input
+              this.#battleStateMachine.setState(BattleStates.ENEMY_INPUT);
             });
         }
       });
@@ -309,7 +311,7 @@ export class BattleMenu {
     }
   }
 
-  #enemyAttack() {
+  enemyAttack() {
     const enemy = this.#battleStateContext.getCurrentEnemy();
     const player = this.#battleStateContext.getCurrentPlayer();
 
@@ -341,8 +343,10 @@ export class BattleMenu {
     }
   }
 
-  // TODO: rewrite using promises
   #postBattleSequence() {
+    // update battle State Machine
+    this.#battleStateMachine.setState(BattleStates.POST_BATTLE);
+
     const currentEnemy = this.#battleStateContext.getCurrentEnemy();
     const currentPlayer = this.#battleStateContext.getCurrentPlayer();
 
@@ -389,10 +393,9 @@ export class BattleMenu {
       return;
     }
 
-    // otherwise, move back to the main menu
-    // BACK TO MAIN MENU
-    this.hideStatusMessage();
-    this.moveToMainMenu();
+    // otherwise, update the state to Player Input
+    // (which moves back to main menu)
+    this.#battleStateMachine.setState(BattleStates.PLAYER_INPUT);
   }
 
   #transitionToNextScene() {

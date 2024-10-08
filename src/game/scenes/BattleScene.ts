@@ -111,6 +111,9 @@ export class BattleScene extends BaseScene {
     // If #cursorKeys are defined, exit
     if (!this.#cursorKeys) return;
 
+    // update the state machine
+    this.#battleStateMachine.update();
+
     // Mapping of key presses to actions
     const keyPressActions = [
       { keyboardKey: this.#cursorKeys.space, action: InputActions.OK },
@@ -216,6 +219,8 @@ export class BattleScene extends BaseScene {
         this.#battleStateContext.setCurrentBattleState(
           BattleStates.POST_BATTLE
         );
+        // TODO: postBattleSequence() shouldn't be in battleMenu
+        this.#battleMenu.postBattleSequence();
       },
     });
 
@@ -224,6 +229,9 @@ export class BattleScene extends BaseScene {
       onEnter: () => {
         // set the battle state context
         this.#battleStateContext.setCurrentBattleState(BattleStates.FINISHED);
+
+        //TODO: move transitionToNextScene out of BattleMenu
+        this.#battleMenu.transitionToNextScene();
       },
     });
 
@@ -234,6 +242,8 @@ export class BattleScene extends BaseScene {
         this.#battleStateContext.setCurrentBattleState(
           BattleStates.FLEE_ATTEMPT
         );
+
+        this.#battleMenu.showStatusMessage([`You got away safely!`]);
       },
     });
   }

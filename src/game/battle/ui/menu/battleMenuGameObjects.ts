@@ -91,26 +91,6 @@ export const createHalfBgRect = (scene: Phaser.Scene) => {
 
 /* ========================  Components ======================== */
 
-export const createFleePane = (scene: Phaser.Scene) => {
-  // Create text container for switch pane text
-  const { textContainer, textObjects } = createTextContainer(
-    scene,
-    ["You have fled the battle."],
-    0,
-    0
-  );
-
-  const fleeContainer = scene.add
-    .container(0, 448, [textContainer])
-    .setAlpha(0); // hide initially
-
-  return {
-    fleeContainer,
-    textContainer,
-    textObjects,
-  };
-};
-
 // This is a text display pane that will display over the battle menu
 export const createFullWidthTextDisplayPane = (
   scene: Phaser.Scene,

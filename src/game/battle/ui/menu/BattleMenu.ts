@@ -18,7 +18,6 @@ import { BattleStateContext } from "@game/state/BattleStateContext";
 import { BattleMenuStates } from "@game/constants/gameConstants";
 
 import {
-  createFleePane,
   createFullWidthTextDisplayPane,
   updateTextContainer,
 } from "@game/battle/ui/menu/battleMenuGameObjects";
@@ -41,7 +40,6 @@ export class BattleMenu {
   // the containers for the menu items
   #inventoryContainer!: Phaser.GameObjects.Container;
   #creaturesContainer!: Phaser.GameObjects.Container;
-  #fleeContainer!: Phaser.GameObjects.Container;
   // the container for status messages
   #statusMessageContainer!: Phaser.GameObjects.Container;
   #statusMessageTextObjects!: Phaser.GameObjects.Text[];
@@ -103,9 +101,6 @@ export class BattleMenu {
     this.#inventoryContainer = new InventoryMenu(this.#scene).getGameObject();
 
     this.#creaturesContainer = new CreaturesMenu(this.#scene).getGameObject();
-
-    const { fleeContainer } = createFleePane(this.#scene);
-    this.#fleeContainer = fleeContainer;
 
     const { displayTextContainer, displayTextObjects } =
       createFullWidthTextDisplayPane(this.#scene, [""]);
@@ -257,7 +252,6 @@ export class BattleMenu {
     this.attackMenu.hide();
     this.hideInventoryPane();
     this.hideCreaturesPane();
-    this.hideFleePane();
   }
 
   handleMainMenuNavItemOk(menuItem: string) {
@@ -290,10 +284,10 @@ export class BattleMenu {
         this.showCreaturesPane();
         break;
 
-      // Move to the flee pane
+      // Show flee text
       case BattleMenuOptionLabels.FLEE:
         this.mainMenu.hide();
-        this.showFleePane();
+        this.#battleStateMachine.setState(BattleStates.FLEE_ATTEMPT);
         break;
     }
   }
@@ -316,7 +310,8 @@ export class BattleMenu {
     const player = this.#battleStateContext.getCurrentPlayer();
 
     if (enemy?.isFainted) {
-      this.#postBattleSequence();
+      // update battle State Machine to post-battle
+      this.#battleStateMachine.setState(BattleStates.FINISHED);
       return;
     }
     // choose an enemy attack
@@ -335,7 +330,8 @@ export class BattleMenu {
           // after takeDamage() finishes animating, move onto postBattleSequence after a short delay
           player?.takeDamage(damage, () => {
             this.#scene.time.delayedCall(500, () => {
-              this.#postBattleSequence();
+              // update battle State Machine to post-battle
+              this.#battleStateMachine.setState(BattleStates.POST_BATTLE);
             });
           });
         }
@@ -343,53 +339,53 @@ export class BattleMenu {
     }
   }
 
-  #postBattleSequence() {
-    // update battle State Machine
-    this.#battleStateMachine.setState(BattleStates.POST_BATTLE);
+  handleFaint(
+    entity: BattleCreature,
+    faintDirection: number,
+    faintMessage: string[],
+    callback: () => void
+  ) {
+    this.showStatusMessage(faintMessage, () => {
+      entity.faint(faintDirection, () => {
+        // execute the callback
+        callback();
+      });
+    });
+  }
 
+  postBattleSequence() {
     const currentEnemy = this.#battleStateContext.getCurrentEnemy();
     const currentPlayer = this.#battleStateContext.getCurrentPlayer();
 
-    const _handleFaint = (
-      entity: BattleCreature,
-      faintDirection: number,
-      faintMessage: string[],
-      callback: () => void
-    ) => {
-      this.showStatusMessage(faintMessage, () => {
-        entity.faint(faintDirection, () => {
-          console.log("ran faint animation");
-          // transition to next scene after a short delay
-          this.#scene.time.delayedCall(500, callback);
-        });
-      });
-    };
-
-    // if the opponent has fainted, show a message then transition to next scene
+    // if the opponent has fainted, show a message then update the battle state
     if (currentEnemy?.isFainted) {
-      _handleFaint(
+      this.handleFaint(
         currentEnemy,
         Polarity.Negative,
         [
           `Wild ${currentEnemy?.name} has fainted.`,
           `${currentPlayer?.name} has gained some experience.`,
         ],
-        () => this.#transitionToNextScene()
+        () => this.#battleStateMachine.setState(BattleStates.FINISHED)
       );
+
       return;
     }
 
-    // if the player has fainted, show a message and transition to next scene
+    // if the player has fainted, show a message and then update the battle state
     if (currentPlayer?.isFainted) {
-      _handleFaint(
+      this.#battleStateMachine.setState(BattleStates.FINISHED);
+
+      this.handleFaint(
         currentPlayer,
         Polarity.Positive,
         [
           `Wild ${currentPlayer?.name} has fainted.`,
           `You have no more creatures, escaping to safety...`,
         ],
-        () => this.#transitionToNextScene()
+        () => this.#battleStateMachine.setState(BattleStates.FINISHED)
       );
+
       return;
     }
 
@@ -398,7 +394,7 @@ export class BattleMenu {
     this.#battleStateMachine.setState(BattleStates.PLAYER_INPUT);
   }
 
-  #transitionToNextScene() {
+  transitionToNextScene() {
     this.#scene.cameras.main.fadeOut(600, 0, 0, 0);
     this.#scene.cameras.main.once(
       Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, //listen for the fade out event on the camera
@@ -440,13 +436,5 @@ export class BattleMenu {
 
   hideCreaturesPane() {
     this.#creaturesContainer.setAlpha(0);
-  }
-
-  showFleePane() {
-    this.#fleeContainer.setAlpha(1);
-  }
-
-  hideFleePane() {
-    this.#fleeContainer.setAlpha(0);
   }
 }

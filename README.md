@@ -10,7 +10,7 @@ _Demo link soon!_
 
 - 🎮 2D RPG gameplay inspired by Pokémon.
 - 🧙🏿‍♀️ Wild magical creatures with battle mechanics.
-- 🍝 A [custom state management system](/src/game/battle/ui/menu/state/readme.md) which makes use of: a Finite State Machine, an Observer, and a State Manager. Likely to be replaced by a state management library, but will work with the custom solution until it fails.
+- 🍝 Finite state machine for non-spaghetti state management
 
 ## 🛠️ Tech Stack
 

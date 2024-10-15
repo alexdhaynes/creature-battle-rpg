@@ -1,6 +1,6 @@
 # Creature Battle
 
-An **Creature-collecting RPG** where your character can battle and collect wild magical creatures. 🐉
+An **Creature-collecting RPG** where your character can battle and collect ~~wild magical creatures~~ probably just cats. 🐉 🐈
 
 _Demo link soon!_
 
